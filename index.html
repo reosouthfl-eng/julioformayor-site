@@ -1,0 +1,772 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Julio Guzman For Mayor â€” 2023 Archive (julioformayor.com)</title>
+  <style>
+    /* =====================================================
+       ARCHIVE RECONSTRUCTION â€” julioformayor.com
+       Captured: September 7, 2023 (Wayback Machine)
+       Reconstructed from: page text extraction + screenshots
+    ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    /* â”€â”€ NAV â”€â”€ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo-text {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .nav-logo-text .julio { color: #1b3a6e; }
+    .nav-logo-text .guzman { color: #f5a623; }
+    .nav-logo-box {
+      border: 2px solid #1b3a6e;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #1b3a6e;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .nav-links a:hover { color: #f5a623; }
+    .nav-donate {
+      background: #f5a623; color: #1b3a6e !important;
+      padding: 8px 20px;
+      border-radius: 4px;
+    }
+    .nav-donate:hover { background: #d48a0f !important; color: #fff !important; }
+
+    /* â”€â”€ HERO â”€â”€ */
+    .hero {
+      margin-top: 60px;
+      min-height: 90vh;
+      background: linear-gradient(135deg, #1b3a6e 0%, #0d2147 60%, #f5a623 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 80px 80px 60px;
+      gap: 60px;
+    }
+    .hero-text .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 16px;
+    }
+    .hero-logo-large {
+      margin-bottom: 24px;
+    }
+    .hero-logo-large .name-line {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .hero-logo-large .name-julio { color: #fff; }
+    .hero-logo-large .name-guzman { color: #f5a623; }
+    .hero-logo-large .for-mayor-box {
+      display: inline-block;
+      border: 3px solid #fff;
+      padding: 6px 20px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #fff;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .hero-taglines {
+      margin-bottom: 24px;
+    }
+    .hero-taglines p {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      max-width: 460px;
+      margin-bottom: 32px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: #f5a623; color: #1b3a6e;
+      padding: 14px 36px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #d48a0f; }
+    .btn-outline-white {
+      display: inline-block;
+      border: 2px solid #fff;
+      color: #fff;
+      padding: 14px 36px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-left: 12px;
+    }
+    .hero-photo {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .hero-photo img {
+      max-height: 520px;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+    }
+    .hero-photo-placeholder {
+      width: 320px;
+      height: 480px;
+      background: rgba(255,255,255,0.08);
+      border: 2px dashed rgba(255,255,255,0.3);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      text-align: center;
+      gap: 8px;
+    }
+
+    /* â”€â”€ CONTACT BAR â”€â”€ */
+    .contact-bar {
+      background: #1b3a6e;
+      padding: 12px 80px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    .contact-bar a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .contact-bar a:hover { color: #fff; }
+
+    /* â”€â”€ QUICK-ACTION BAR â”€â”€ */
+    .quick-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .quick-bar a {
+      padding: 18px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .quick-bar .qb-get-involved { background: #1b3a6e; color: #fff; }
+    .quick-bar .qb-contribute { background: #f5a623; color: #1b3a6e; }
+    .quick-bar a:hover { opacity: 0.9; }
+
+    /* â”€â”€ SECTION SHARED â”€â”€ */
+    section { padding: 80px 80px; }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #f5a623;
+      margin-bottom: 10px;
+    }
+    .section-heading {
+      font-size: 38px;
+      font-weight: 800;
+      color: #1b3a6e;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: #f5a623;
+      margin-bottom: 24px;
+    }
+
+    /* â”€â”€ ABOUT / HERO REPEAT â”€â”€ */
+    .about-hero {
+      background: #f8f9fa;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .about-hero .about-photo {
+      text-align: center;
+    }
+    .about-hero .about-photo img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+    }
+    .about-bio { font-size: 16px; color: #444; line-height: 1.7; margin-bottom: 16px; }
+
+    /* â”€â”€ MISSION â”€â”€ */
+    .mission { background: #fff; }
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .mission-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 32px;
+      border-top: 4px solid #1b3a6e;
+    }
+    .mission-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1b3a6e;
+      margin-bottom: 12px;
+    }
+    .mission-card p { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 16px; }
+    .read-plan {
+      font-size: 12px;
+      font-weight: 700;
+      color: #f5a623;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    /* â”€â”€ ISSUES â”€â”€ */
+    .issues { background: #1b3a6e; }
+    .issues .section-heading { color: #fff; }
+    .issues .section-eyebrow { color: rgba(255,255,255,0.6); }
+    .issues-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .issue-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 28px;
+      border-left: 4px solid #f5a623;
+    }
+    .issue-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .issue-card p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 14px; }
+    .read-more {
+      font-size: 12px;
+      font-weight: 700;
+      color: #f5a623;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    /* â”€â”€ CTA BAND â”€â”€ */
+    .cta-band {
+      background: #0d2147;
+      text-align: center;
+      padding: 60px 80px;
+    }
+    .cta-band p {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    /* â”€â”€ DONATE â”€â”€ */
+    .donate { background: #f8f9fa; }
+    .donate-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .donate-text .section-heading { color: #1b3a6e; }
+    .donate-sub { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 8px; }
+    .donate-amounts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .amt-btn {
+      border: 2px solid #1b3a6e;
+      background: #fff;
+      color: #1b3a6e;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .amt-btn:hover, .amt-btn.active {
+      background: #1b3a6e;
+      color: #fff;
+    }
+    .donate-now-btn {
+      width: 100%;
+      background: #f5a623; color: #1b3a6e;
+      border: none;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .donate-now-btn:hover { background: #d48a0f; }
+
+    /* â”€â”€ BIO â”€â”€ */
+    .bio { background: #fff; }
+    .bio-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .bio-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+    .bio-text p { font-size: 16px; color: #444; line-height: 1.7; margin-bottom: 16px; }
+
+    /* â”€â”€ BOARDS â”€â”€ */
+    .boards { background: #1b3a6e; }
+    .boards .section-heading { color: #fff; }
+    .boards .section-eyebrow { color: rgba(255,255,255,0.5); }
+    .boards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .board-card {
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 24px;
+      border-top: 3px solid #f5a623;
+    }
+    .board-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .board-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+    /* â”€â”€ EVENTS / COMMUNITY â”€â”€ */
+    .community { background: #f8f9fa; text-align: center; }
+    .community .section-heading { color: #1b3a6e; }
+    .events-btn {
+      display: inline-block;
+      border: 2px solid #1b3a6e;
+      color: #1b3a6e;
+      padding: 12px 32px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+    .events-btn:hover { background: #1b3a6e; color: #fff; }
+
+    /* â”€â”€ JOIN TEAM â”€â”€ */
+    .join { background: #0d2147; text-align: center; }
+    .join .section-heading { color: #fff; }
+    .join p { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+
+    /* â”€â”€ FOOTER â”€â”€ */
+    footer {
+      background: #0a1a38;
+      color: rgba(255,255,255,0.6);
+      padding: 48px 80px 24px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+    .footer-brand .name-line { font-size: 28px; font-weight: 900; }
+    .footer-brand .name-julio { color: #fff; }
+    .footer-brand .name-guzman { color: #f5a623; }
+    .footer-brand .for-mayor-box {
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,0.4);
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 6px;
+    }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 12px; line-height: 1.5; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; margin-bottom: 8px; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-contact { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+    /* â”€â”€ ARCHIVE NOTICE â”€â”€ */
+    .archive-notice {
+      background: #f5a623;
+      color: #1a2333;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Archive notice -->
+<div class="archive-notice">
+  ARCHIVE â€” julioformayor.com as captured September 7, 2023 via Wayback Machine. Reconstructed for reference.
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text">
+      <span class="julio">JULIO </span><span class="guzman">GUZMAN</span>
+    </div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#plan">My Plan</a>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="#donate" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">Homestead, Florida Â· Mayoral Campaign 2023</div>
+    <div class="hero-logo-large">
+      <div class="name-line"><span class="name-julio">JULIO</span></div>
+      <div class="name-line"><span class="name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+    </div>
+    <div class="hero-taglines">
+      <p>Our Children</p>
+      <p>Our Community</p>
+      <p>&amp; Our Future</p>
+    </div>
+    <p class="hero-sub">
+      Together, we're building a brighter future for Homestead. Join us on the journey of progress and community empowerment.
+    </p>
+    <a href="#donate" class="btn-primary">Donate Today</a>
+    <a href="#about" class="btn-outline-white">Meet Julio</a>
+  </div>
+  <div class="hero-photo">
+    <div class="hero-photo-placeholder">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span>Julio Guzman<br>Campaign Photo<br><small style="font-size:10px;opacity:.7">(navy suit, striped tie)</small></span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT BAR -->
+<div class="contact-bar" id="contact">
+  <a href="mailto:info@julioformayor.com">âœ‰ info@julioformayor.com</a>
+  <a href="tel:+13059631591">ðŸ“ž +1 (305) 963-1591</a>
+</div>
+
+<!-- QUICK-ACTION BAR -->
+<div class="quick-bar">
+  <a href="#volunteer" class="qb-get-involved">Get Involved</a>
+  <a href="#donate" class="qb-contribute">Contribute</a>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="about-hero">
+  <div>
+    <div class="section-eyebrow">About Julio</div>
+    <h2 class="section-heading">Vote for<br>Julio Guzman</h2>
+    <div class="divider"></div>
+    <p class="about-bio">
+      Julio Guzman, a dedicated Homestead resident who is passionate about building a prosperous community. As Vice-Mayor and a licensed Real Estate Broker, Julio works tirelessly to address important issues such as job creation, downtown revitalization, traffic improvement, and overall beautification.
+    </p>
+    <p class="about-bio">
+      A husband and father of three, Julio has called Homestead home for over four decades. He attended Carson Newman University on a dual sports scholarship in football and baseball, was drafted by the Arizona Diamondbacks, and later earned a Master's degree from Florida International University.
+    </p>
+    <a href="#" class="btn-primary">Learn More</a>
+  </div>
+  <div class="about-photo">
+    <div class="bio-photo-placeholder" style="max-width:400px;aspect-ratio:3/4">
+      <span>Candidate headshot<br>(recovered from archive)</span>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION & VISION -->
+<section id="plan" class="mission">
+  <div class="section-eyebrow">Mission &amp; Vision</div>
+  <h2 class="section-heading">Know more about<br>Our Mission &amp; Vision</h2>
+  <div class="divider"></div>
+  <p style="font-size:18px;color:#555;max-width:600px;line-height:1.6;margin-bottom:8px;">
+    We the people achieve more than any single person could ever do alone.
+  </p>
+  <div class="mission-grid">
+    <div class="mission-card">
+      <h3>Building Community</h3>
+      <p>Our city's potential is limitless, and with your support, we can unlock a future full of possibilities. Join us on this exciting journey.</p>
+      <a href="#" class="read-plan">Read Plan</a>
+    </div>
+    <div class="mission-card">
+      <h3>Supporting Our Jobs</h3>
+      <p>Every action we take brings us closer to the Homestead we envision. Let's keep pushing forward, together. We're building a brighter Homestead.</p>
+      <a href="#" class="read-plan">Read Plan</a>
+    </div>
+    <div class="mission-card">
+      <h3>Faith and Future</h3>
+      <p>Let's invest in education, mentorship, and opportunities for our young leaders to thrive. They are the key to Homestead's success.</p>
+      <a href="#" class="read-plan">Read Plan</a>
+    </div>
+  </div>
+</section>
+
+<!-- ISSUES -->
+<section class="issues">
+  <div class="section-eyebrow">Key Issues</div>
+  <h2 class="section-heading">Where Julio Stands</h2>
+  <div class="divider" style="background:rgba(255,255,255,0.3)"></div>
+  <div class="issues-grid">
+    <div class="issue-card">
+      <h3>Traffic Management</h3>
+      <p>Homestead's rapidly increasing population has caused traffic issues in recent years. Julio has a comprehensive plan to reduce gridlock and improve commute times for all residents.</p>
+      <a href="#" class="read-more">Read more</a>
+    </div>
+    <div class="issue-card">
+      <h3>Housing Affordability</h3>
+      <p>Previous development patterns implemented by previous leaders have lowered housing affordability for Homestead residents. Julio will advance policies that keep homeownership within reach.</p>
+      <a href="#" class="read-more">Read more</a>
+    </div>
+    <div class="issue-card">
+      <h3>Employment Opportunities</h3>
+      <p>Emphasizing economic development stimulates growth and boosts the local economy. Julio will attract major employers and support entrepreneurship in Homestead.</p>
+      <a href="#" class="read-more">Read more</a>
+    </div>
+    <div class="issue-card">
+      <h3>Modernizing Homestead</h3>
+      <p>Homestead can modernize the city and still maintain its historic charm by revitalizing downtown and making it a destination for dining, entertainment, and walkable streets.</p>
+      <a href="#" class="read-more">Read more</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <p>Together, we're building a brighter future for Homestead.</p>
+  <a href="#donate" class="btn-primary">Donate Today</a>
+</div>
+
+<!-- DONATE -->
+<section id="donate" class="donate">
+  <div class="donate-inner">
+    <div class="donate-text">
+      <div class="section-eyebrow">Empower Change</div>
+      <h2 class="section-heading">Donate for a<br>brighter tomorrow!</h2>
+      <div class="divider"></div>
+      <p class="donate-sub">Your contribution powers this campaign and helps Julio Guzman reach every voter in Homestead.</p>
+      <p class="donate-sub" style="font-size:13px;color:#888;">Paid political ad paid for and approved by Julio Guzman Campaign.</p>
+    </div>
+    <div class="donate-widget">
+      <div class="donate-amounts">
+        <div class="amt-btn">$50</div>
+        <div class="amt-btn active">$100</div>
+        <div class="amt-btn">$250</div>
+        <div class="amt-btn">$500</div>
+        <div class="amt-btn">$1,000</div>
+        <div class="amt-btn" style="font-size:14px;">Custom</div>
+      </div>
+      <button class="donate-now-btn">Donate Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- BOARDS / INVOLVEMENT -->
+<section class="boards">
+  <div class="section-eyebrow">Working Together</div>
+  <h2 class="section-heading">Improving the Future of Homestead</h2>
+  <p style="color:rgba(255,255,255,0.65);font-size:16px;margin-top:8px;">
+    Julio currently serves on numerous boards where he collaborates with other leaders to improve the quality of life for residents.
+  </p>
+  <div class="boards-grid">
+    <div class="board-card">
+      <h4>South Dade Chamber of Commerce</h4>
+      <p>Job Creation and Economic Growth</p>
+    </div>
+    <div class="board-card">
+      <h4>Homestead's Tourism Advisory Committee</h4>
+      <p>Creating additional cultural events, attract tourists</p>
+    </div>
+    <div class="board-card">
+      <h4>Greater Miami Convention &amp; Visitors Bureau</h4>
+      <p>Generating travel demand to Homestead</p>
+    </div>
+    <div class="board-card">
+      <h4>Miami Commercial Board of Governors</h4>
+      <p>Boost commercial development, attract more employers</p>
+    </div>
+    <div class="board-card">
+      <h4>Miami Countryside Agritourism Association</h4>
+      <p>Advocating &amp; fighting for the agritourism industry in Homestead</p>
+    </div>
+    <div class="board-card">
+      <h4>Rotary Club of Homestead</h4>
+      <p>Humanitarian approach uniting leaders to impact and create lasting change within their communities</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY / EVENTS -->
+<section id="volunteer" class="community">
+  <div class="section-eyebrow">Community</div>
+  <h2 class="section-heading">Get Involved!! Visit an Event</h2>
+  <div class="divider" style="margin:16px auto"></div>
+  <p style="font-size:16px;color:#555;max-width:500px;margin:0 auto;">
+    Join the Julio Guzman campaign at community events across Homestead. Meet your neighbors and help build a brighter future.
+  </p>
+  <a href="#" class="events-btn">View Events</a>
+</section>
+
+<!-- JOIN THE TEAM -->
+<section class="join">
+  <div class="section-eyebrow" style="color:rgba(255,255,255,0.4)">Campaign</div>
+  <h2 class="section-heading">Don't miss any news!</h2>
+  <p>Together, let's forge a path toward a brighter future for Homestead. Join us in this collective journey of progress and empowerment for our community.</p>
+  <a href="#" class="btn-primary">Join Today</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div>
+        <span class="name-line name-julio" style="font-size:28px;font-weight:900">JULIO </span><span class="name-line name-guzman" style="font-size:28px;font-weight:900">GUZMAN</span>
+      </div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Join us on the journey of progress and community empowerment.</p>
+      <p class="footer-contact">ðŸ“ž +1 (305) 963-1591</p>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <a href="#plan">My Plan</a>
+      <a href="#about">About Julio</a>
+      <a href="#donate">Donate</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Latest News</h4>
+      <a href="#">Campaign Team Meet â€” Saturday, July 15th</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    Paid political ad paid for and approved by Julio Guzman Campaign.
+  </div>
+</footer>
+
+<script>
+  // Donate amount selector
+  document.querySelectorAll('.amt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
+
+
