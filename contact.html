@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact -- Julio Guzman For Mayor</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .contact-info { display: flex; flex-direction: column; gap: 28px; }
+    .info-card { background: #f8f9fa; border-radius: 8px; padding: 28px; border-left: 4px solid #f5a623; }
+    .info-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #f5a623; margin-bottom: 10px; }
+    .info-card p, .info-card a { font-size: 16px; color: #333; text-decoration: none; display: block; line-height: 1.6; }
+    .info-card a:hover { color: #1b3a6e; }
+    .social-links { display: flex; flex-direction: column; gap: 10px; }
+    .social-link { display: flex; align-items: center; gap: 12px; font-size: 15px; color: #333; text-decoration: none; font-weight: 500; }
+    .social-link:hover { color: #f5a623; }
+    .social-icon { width: 40px; height: 40px; background: #1b3a6e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .form-card { background: #fff; border-radius: 8px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #eee; }
+    .form-card h3 { font-size: 26px; font-weight: 800; color: #1b3a6e; margin-bottom: 6px; }
+    .form-card p { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: #333; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 12px 16px; border: 2px solid #ddd; border-radius: 4px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: #1b3a6e; }
+    .form-group textarea { height: 130px; resize: vertical; }
+    .submit-btn { width: 100%; background: #f5a623; color: #1b3a6e; border: none; padding: 16px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+    .submit-btn:hover { background: #d48a0f; }
+    .success-msg { display: none; background: #e8f5e9; border: 2px solid #4caf50; border-radius: 4px; padding: 16px; font-size: 15px; color: #2e7d32; font-weight: 600; text-align: center; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Contact</div>
+  <h1>Get in Touch<br>with the Campaign</h1>
+</div>
+
+<section style="background:#fff;">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="section-eyebrow">Campaign Contact</div>
+      <h2 class="section-heading" style="font-size:28px">We'd Love to Hear From You</h2>
+      <div class="divider"></div>
+
+      <div class="info-card">
+        <h3>Email</h3>
+        <a href="mailto:info@julioformayor.com">info@julioformayor.com</a>
+      </div>
+
+      <div class="info-card">
+        <h3>Phone</h3>
+        <a href="tel:+17862290157">+1 (786) 229-0157</a>
+      </div>
+
+      <div class="info-card">
+        <h3>Follow the Campaign</h3>
+        <div class="social-links">
+          <a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank" rel="noopener" class="social-link">
+            <div class="social-icon">f</div>
+            Facebook -- CouncilmanGuzman
+          </a>
+          <a href="https://x.com/julioguzman44" target="_blank" rel="noopener" class="social-link">
+            <div class="social-icon">X</div>
+            X / Twitter -- @julioguzman44
+          </a>
+          <a href="#" class="social-link">
+            <div class="social-icon">in</div>
+            Instagram -- Coming Soon
+          </a>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>Get Involved</h3>
+        <p>Want to volunteer or host an event?</p>
+        <a href="volunteer.html" style="margin-top:12px;display:inline-block;background:#f5a623;color:#1b3a6e;padding:10px 24px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-radius:4px;text-decoration:none;">Sign Up to Volunteer</a>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h3>Send a Message</h3>
+      <p>Have a question, concern, or just want to say hello? We read every message.</p>
+      <form id="contact-form" onsubmit="handleContact(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" name="name" required placeholder="Full name" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone (optional)</label>
+          <input type="tel" name="phone" placeholder="(305) 000-0000" />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" required placeholder="What's on your mind?"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message</button>
+        <div class="success-msg" id="contact-success">Thank you for reaching out! We will get back to you shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="#">Instagram</a></div>
+  </div>
+  <div class="footer-bottom">Paid political ad paid for and approved by Julio Guzman Campaign.</div>
+</footer>
+
+<script>
+function handleContact(e) {
+  e.preventDefault();
+  document.getElementById('contact-form').style.opacity = '0.4';
+  document.getElementById('contact-success').style.display = 'block';
+}
+</script>
+</body>
+</html>

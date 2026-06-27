@@ -1,0 +1,40 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; background: #fff; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: #fff; border-bottom: 1px solid #eee; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-text { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; }
+.nav-logo-text .julio { color: #1b3a6e; }
+.nav-logo-text .guzman { color: #f5a623; }
+.nav-logo-box { border: 2px solid #1b3a6e; padding: 3px 10px; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #1b3a6e; text-transform: uppercase; }
+.nav-links { display: flex; gap: 30px; align-items: center; }
+.nav-links a { text-decoration: none; color: #333; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+.nav-links a:hover { color: #f5a623; }
+.nav-donate { background: #f5a623; color: #1b3a6e !important; padding: 8px 20px; border-radius: 4px; }
+.nav-donate:hover { background: #d48a0f !important; }
+
+.page-hero { margin-top: 60px; background: linear-gradient(135deg, #1b3a6e 0%, #0d2147 100%); padding: 70px 80px; }
+.page-hero .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #f5a623; margin-bottom: 12px; }
+.page-hero h1 { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.1; }
+
+section { padding: 80px; }
+.section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #f5a623; margin-bottom: 10px; }
+.section-heading { font-size: 38px; font-weight: 800; color: #1b3a6e; line-height: 1.2; margin-bottom: 16px; }
+.divider { width: 48px; height: 3px; background: #f5a623; margin-bottom: 24px; }
+
+.btn-primary { display: inline-block; background: #f5a623; color: #1b3a6e; padding: 14px 36px; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; text-decoration: none; border: none; cursor: pointer; }
+.btn-primary:hover { background: #d48a0f; }
+.btn-outline { display: inline-block; border: 2px solid #1b3a6e; color: #1b3a6e; padding: 14px 36px; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; text-decoration: none; margin-left: 12px; }
+.btn-outline:hover { background: #1b3a6e; color: #fff; }
+
+footer { background: #0a1a38; color: rgba(255,255,255,0.6); padding: 48px 80px 24px; }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+.footer-brand .name-line { font-size: 28px; font-weight: 900; }
+.footer-brand .name-julio { color: #fff; }
+.footer-brand .name-guzman { color: #f5a623; }
+.footer-brand .for-mayor-box { display: inline-block; border: 2px solid rgba(255,255,255,0.4); padding: 3px 10px; font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 12px; line-height: 1.5; }
+.footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+.footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; margin-bottom: 8px; }
+.footer-col a:hover { color: #fff; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); }

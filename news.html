@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News -- Julio Guzman For Mayor</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 48px; }
+    .news-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e8e8e8; display: flex; flex-direction: column; }
+    .news-card-img { background: #1b3a6e; height: 180px; display: flex; align-items: center; justify-content: center; }
+    .news-card-img span { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .news-card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .news-tag { display: inline-block; background: #f5a623; color: #1b3a6e; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
+    .news-card-body h3 { font-size: 18px; font-weight: 700; color: #1b3a6e; line-height: 1.3; margin-bottom: 10px; }
+    .news-card-body p { font-size: 14px; color: #555; line-height: 1.6; flex: 1; }
+    .news-date { font-size: 12px; color: #999; margin-top: 16px; }
+    .news-read { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; color: #f5a623; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; }
+    .press-sec { background: #1b3a6e; }
+    .press-sec .section-heading { color: #fff; }
+    .press-sec .section-eyebrow { color: rgba(255,255,255,0.5); }
+    .press-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 36px; }
+    .press-card { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 28px; border-left: 4px solid #f5a623; }
+    .press-card .outlet { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #f5a623; margin-bottom: 10px; }
+    .press-card blockquote { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; }
+    .press-card .press-date { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 12px; }
+    .signup-sec { background: #f8f9fa; text-align: center; }
+    .signup-sec .section-heading { color: #1b3a6e; }
+    .signup-sec p { font-size: 16px; color: #555; max-width: 500px; margin: 0 auto 28px; line-height: 1.6; }
+    .email-form { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; }
+    .email-form input { flex: 1; padding: 14px 18px; border: 2px solid #ddd; border-radius: 4px; font-size: 15px; outline: none; }
+    .email-form input:focus { border-color: #1b3a6e; }
+    .email-form button { background: #f5a623; color: #1b3a6e; border: none; padding: 14px 28px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Latest News</div>
+  <h1>Campaign Updates &amp;<br>Press Coverage</h1>
+</div>
+
+<section style="background:#fff;">
+  <div class="section-eyebrow">Campaign News</div>
+  <h2 class="section-heading">What's Happening</h2>
+  <div class="divider"></div>
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-card-img"><span>Campaign Photo</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Event</span>
+        <h3>Campaign Team Meet -- Join Us This Saturday</h3>
+        <p>Join Julio and the campaign team as we kick off our grassroots organizing effort. Meet volunteers, learn how to get involved, and hear directly from Julio about his vision for Homestead.</p>
+        <span class="news-date">Saturday, July 15th</span>
+        <a href="volunteer.html" class="news-read">Get Involved</a>
+      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-card-img"><span>Campaign Photo</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Announcement</span>
+        <h3>Julio Guzman Announces Mayoral Campaign</h3>
+        <p>Former Vice-Mayor and longtime Homestead resident Julio Guzman has officially announced his candidacy for Mayor of Homestead, running on a platform of economic growth, infrastructure, and community empowerment.</p>
+        <span class="news-date">Campaign Launch</span>
+        <a href="about.html" class="news-read">Meet Julio</a>
+      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-card-img"><span>Campaign Photo</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Community</span>
+        <h3>Julio Meets with South Dade Business Leaders</h3>
+        <p>Julio sat down with members of the South Dade Chamber of Commerce to discuss his economic development plan and hear directly from business owners about what they need to grow and thrive in Homestead.</p>
+        <span class="news-date">Campaign Trail</span>
+        <a href="plan.html" class="news-read">Read the Plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="press-sec">
+  <div class="section-eyebrow">Press Coverage</div>
+  <h2 class="section-heading">What They're Saying</h2>
+  <div class="divider" style="background:rgba(255,255,255,0.3)"></div>
+  <div class="press-grid">
+    <div class="press-card">
+      <div class="outlet">Miami Community Newspapers</div>
+      <blockquote>"A respected community leader with deep roots in Homestead -- Julio Guzman brings real experience to this race."</blockquote>
+      <div class="press-date">Campaign Coverage</div>
+    </div>
+    <div class="press-card">
+      <div class="outlet">South Dade News Leader</div>
+      <blockquote>"Guzman's record of public service, combined with his business background, makes him a serious candidate for the city's top office."</blockquote>
+      <div class="press-date">Campaign Coverage</div>
+    </div>
+  </div>
+</section>
+
+<section class="signup-sec">
+  <div class="section-eyebrow">Stay Informed</div>
+  <h2 class="section-heading">Don't Miss Any News!</h2>
+  <div class="divider" style="margin:0 auto 24px"></div>
+  <p>Sign up for campaign updates delivered straight to your inbox. Be the first to know about events, announcements, and ways to get involved.</p>
+  <form class="email-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=\'color:#1b3a6e;font-weight:700;font-size:16px\'>Thank you for signing up!</p>'">
+    <input type="email" placeholder="Your email address" required />
+    <button type="submit">Sign Up</button>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="#">Instagram</a></div>
+  </div>
+  <div class="footer-bottom">Paid political ad paid for and approved by Julio Guzman Campaign.</div>
+</footer>
+
+</body>
+</html>

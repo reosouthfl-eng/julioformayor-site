@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donate -- Julio Guzman For Mayor</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .donate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .donate-why h3 { font-size: 20px; font-weight: 700; color: #1b3a6e; margin-bottom: 10px; }
+    .donate-why p { font-size: 16px; color: #444; line-height: 1.7; margin-bottom: 20px; }
+    .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .impact-card { background: #f8f9fa; border-radius: 8px; padding: 20px; border-top: 3px solid #f5a623; }
+    .impact-card .amount { font-size: 28px; font-weight: 900; color: #1b3a6e; }
+    .impact-card p { font-size: 13px; color: #555; line-height: 1.5; margin-top: 6px; }
+    .donate-widget { background: #fff; border-radius: 8px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #eee; position: sticky; top: 90px; }
+    .donate-widget h3 { font-size: 26px; font-weight: 800; color: #1b3a6e; margin-bottom: 6px; }
+    .donate-widget p { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .freq-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 2px solid #1b3a6e; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+    .freq-btn { padding: 10px; text-align: center; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; background: #fff; color: #1b3a6e; border: none; }
+    .freq-btn.active { background: #1b3a6e; color: #fff; }
+    .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .amt-btn { border: 2px solid #1b3a6e; background: #fff; color: #1b3a6e; padding: 14px; font-size: 20px; font-weight: 700; text-align: center; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+    .amt-btn:hover, .amt-btn.active { background: #1b3a6e; color: #fff; }
+    .donate-now-btn { width: 100%; background: #f5a623; color: #1b3a6e; border: none; padding: 18px; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+    .donate-now-btn:hover { background: #d48a0f; }
+    .legal { font-size: 11px; color: #999; line-height: 1.5; margin-top: 16px; text-align: center; }
+    .rules-sec { background: #1b3a6e; }
+    .rules-sec .section-heading { color: #fff; }
+    .rules-sec .section-eyebrow { color: rgba(255,255,255,0.5); }
+    .rules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+    .rule-card { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 24px; border-left: 4px solid #f5a623; }
+    .rule-card h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .rule-card p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Donate</div>
+  <h1>Invest in a Better<br>Homestead</h1>
+</div>
+
+<section style="background:#fff;">
+  <div class="donate-grid">
+    <div class="donate-why">
+      <div class="section-eyebrow">Empower Change</div>
+      <h2 class="section-heading" style="font-size:32px">Your Contribution<br>Makes a Difference</h2>
+      <div class="divider"></div>
+      <p>Every dollar donated to the Julio Guzman for Mayor campaign goes directly toward reaching voters across Homestead -- through door knocking, mailers, digital outreach, and community events.</p>
+      <p>We're running a grassroots campaign powered by people like you who believe Homestead deserves strong, accountable leadership. Together, we're building a brighter future for our children, our community, and our future.</p>
+
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="amount">$50</div>
+          <p>Covers door hangers for an entire neighborhood block</p>
+        </div>
+        <div class="impact-card">
+          <div class="amount">$100</div>
+          <p>Funds a phone banking session reaching 50+ voters</p>
+        </div>
+        <div class="impact-card">
+          <div class="amount">$250</div>
+          <p>Prints campaign literature for a community event</p>
+        </div>
+        <div class="impact-card">
+          <div class="amount">$500</div>
+          <p>Powers a week of digital outreach to Homestead residents</p>
+        </div>
+        <div class="impact-card" style="grid-column:1/-1;">
+          <div class="amount">$1,000</div>
+          <p>Maximum individual or business contribution -- funds a full precinct canvassing operation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="donate-widget">
+      <h3>Donate Today</h3>
+      <p>Paid political ad paid for and approved by Julio Guzman Campaign.</p>
+
+      <div class="freq-toggle">
+        <button class="freq-btn active" onclick="setFreq(this, 'one-time')">One-Time</button>
+        <button class="freq-btn" onclick="setFreq(this, 'monthly')">Monthly</button>
+      </div>
+
+      <div class="amounts-grid">
+        <div class="amt-btn" onclick="setAmt(this)">$50</div>
+        <div class="amt-btn active" onclick="setAmt(this)">$100</div>
+        <div class="amt-btn" onclick="setAmt(this)">$250</div>
+        <div class="amt-btn" onclick="setAmt(this)">$500</div>
+        <div class="amt-btn" onclick="setAmt(this)" style="grid-column:span 2;">$1,000</div>
+      </div>
+
+      <button class="donate-now-btn" onclick="alert('Donation processor integration coming soon. Please contact info@julioformayor.com to donate.')">
+        Donate Now
+      </button>
+
+      <p class="legal">Contributions are limited to $1,000 per individual or business. By donating you confirm you are a U.S. citizen or permanent resident and this contribution is not from a corporation, foreign national, or federal contractor. Paid political advertisement paid for by Julio Guzman for Mayor Campaign.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rules-sec">
+  <div class="section-eyebrow">Contribution Rules</div>
+  <h2 class="section-heading">What You Need to Know</h2>
+  <div class="divider" style="background:rgba(255,255,255,0.3)"></div>
+  <div class="rules-grid">
+    <div class="rule-card">
+      <h4>Contribution Limit</h4>
+      <p>The maximum contribution per individual or business is $1,000. This limit applies to each election (primary and general separately).</p>
+    </div>
+    <div class="rule-card">
+      <h4>Who Can Donate</h4>
+      <p>U.S. citizens and permanent residents may contribute. Contributions from foreign nationals, corporations, and federal contractors are prohibited by law.</p>
+    </div>
+    <div class="rule-card">
+      <h4>Disclosure</h4>
+      <p>All contributions are publicly disclosed as required by Florida campaign finance law. Your name, address, occupation, and employer may be reported.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="#">Instagram</a></div>
+  </div>
+  <div class="footer-bottom">Paid political ad paid for and approved by Julio Guzman Campaign.</div>
+</footer>
+
+<script>
+  function setAmt(el) {
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function setFreq(el, freq) {
+    document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
