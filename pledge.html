@@ -690,6 +690,13 @@
     <h2>Are You in This City's Voting Area?</h2>
     <p>Enter your home address to see if you can vote in this city, then sign the petition to help Julio Guzman qualify for the mayoral ballot.</p>
 
+    <div class="row">
+      <label for="citySelect">Select your city:</label>
+      <select id="citySelect">
+        <option value="homestead" selected>Homestead</option>
+        <option value="floridacity">Florida City</option>
+      </select>
+    </div>
 
     <div class="row">
       <label for="addressInput">Your home address: <span style="color:var(--red)">*</span></label>
@@ -876,7 +883,8 @@
     // on load and after a successful submit.
 
     const stickyBar         = document.getElementById('stickyBar');
-        const addressInput      = document.getElementById('addressInput');
+    const citySelect        = document.getElementById('citySelect');
+    const addressInput      = document.getElementById('addressInput');
     const resultEl          = document.getElementById('result');
     const legendChip        = document.getElementById('legendChip');
     const mapError          = document.getElementById('mapError');
@@ -903,10 +911,13 @@
         file: './homestead_boundary.geojson',
         center: { lat: 25.4687, lng: -80.4776 }
       },
+      floridacity: {
+        name: 'Florida City',
+        file: './floridacity_boundary.geojson',
+        center: { lat: 25.4477, lng: -80.4809 }
+      }
     };
 
-    // citySelect shim — Homestead only
-    const citySelect = { value: 'homestead', addEventListener: () => {} };
     let map, autocomplete, marker, geocoder;
     let boundaryGeoJSON = null;
     const cityCache = {};
@@ -1036,7 +1047,7 @@
       resultEl.classList.remove('outside');
       resultEl.innerHTML = `
         <div><strong>✅ Yes! Your address is in ${cityName}.</strong></div>
-        <div class="small">You can vote in this race. Complete the petition below to help Julio qualify for the ballot.</div>
+        <div class="small">You can vote in this race — sign below and help Julio reach 3,500 committed voters before qualifying in September 2027.</div>
       `;
     }
 
@@ -1070,6 +1081,11 @@
       drawPolygonForCity(city, currentBoundaryStatus);
       legendChip.textContent = `${CITY_CONFIG[city].name} boundary`;
 
+      const other = city === 'homestead' ? 'floridacity' : 'homestead';
+      if (polygons[other]) {
+        polygons[other].setMap(null);
+        delete polygons[other];
+      }
 
       if (fit && map) fitBoundsToFeature(feature);
     }
@@ -1080,16 +1096,20 @@
       lastLat = typeof latLng.lat === 'function' ? latLng.lat() : latLng.lat;
       lastLng = typeof latLng.lng === 'function' ? latLng.lng() : latLng.lng;
 
-      const inSelected = pointInPolygon(latLng, cityCache['homestead']);
+      const selected = citySelect.value;
+      const other = selected === 'homestead' ? 'floridacity' : 'homestead';
+      const inSelected = pointInPolygon(latLng, cityCache[selected]);
 
       if (inSelected) {
         currentBoundaryStatus = 'inside';
-        drawPolygonForCity('homestead', 'inside');
-        showInside('Homestead');
+        drawPolygonForCity(selected, 'inside');
+        showInside(CITY_CONFIG[selected].name);
       } else {
+        const otherFeat = await loadBoundary(other);
+        const inOther = pointInPolygon(latLng, otherFeat);
         currentBoundaryStatus = 'outside';
-        drawPolygonForCity('homestead', 'outside');
-        showOutside('Homestead', false, null);
+        drawPolygonForCity(selected, 'outside');
+        showOutside(CITY_CONFIG[selected].name, inOther, inOther ? other : null);
       }
 
       if (!marker) {
@@ -1411,6 +1431,12 @@
           addressInput.value = '';
           resultEl.style.display = 'none';
           currentBoundaryStatus = null;
+        });
+
+        citySelect.addEventListener('change', async () => {
+          currentBoundaryStatus = null;
+          resultEl.style.display = 'none';
+          await renderForCity(citySelect.value);
         });
 
         await renderForCity(citySelect.value);
