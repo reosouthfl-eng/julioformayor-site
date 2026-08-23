@@ -675,7 +675,7 @@
 
   <div class="hero">
     <h1 class="hero-name">Help <span>Julio Guzman</span> reach the ballot</h1>
-    <p class="hero-sub">Sign the petition to qualify for the mayoral ballot.<br>Goal: <strong style="color:var(--gold)">3,500 signatures</strong></p>
+    <p class="hero-sub">Sign the pledge to qualify for the mayoral ballot.<br>Goal: <strong style="color:var(--gold)">3,500 signatures</strong></p>
     <div class="progress-wrap">
       <div class="progress-header">
         <span class="progress-label">SIGNATURES SO FAR</span>
@@ -688,15 +688,7 @@
 
   <div class="form-card">
     <h2>Are You in This City's Voting Area?</h2>
-    <p>Enter your home address to see if you can vote in this city, then sign the petition to help Julio Guzman qualify for the mayoral ballot.</p>
-
-    <div class="row">
-      <label for="citySelect">Select your city:</label>
-      <select id="citySelect">
-        <option value="homestead" selected>Homestead</option>
-        <option value="floridacity">Florida City</option>
-      </select>
-    </div>
+    <p>Enter your home address to see if you can vote in this city, then sign the pledge to help Julio Guzman qualify for the mayoral ballot.</p>
 
     <div class="row">
       <label for="addressInput">Your home address: <span style="color:var(--red)">*</span></label>
@@ -742,7 +734,7 @@
       <input type="text" id="signatureInputMain" placeholder="Type your full name to sign" />
     </div>
 
-    <button id="submitBtn" class="btn-submit" type="button" aria-describedby="submitAssistiveText">✍️ Sign the Petition &amp; Help Julio Reach 3,500</button>
+    <button id="submitBtn" class="btn-submit" type="button" aria-describedby="submitAssistiveText">✍️ Sign the Pledge &amp; Help Julio Reach 3,500</button>
     <span id="submitAssistiveText" class="sr-only">Submits your pledge and contact details.</span>
     <div id="formError" role="alert"></div>
     <div id="supabaseStatus" aria-live="polite"></div>
@@ -883,7 +875,6 @@
     // on load and after a successful submit.
 
     const stickyBar         = document.getElementById('stickyBar');
-    const citySelect        = document.getElementById('citySelect');
     const addressInput      = document.getElementById('addressInput');
     const resultEl          = document.getElementById('result');
     const legendChip        = document.getElementById('legendChip');
@@ -910,14 +901,11 @@
         name: 'Homestead',
         file: './homestead_boundary.geojson',
         center: { lat: 25.4687, lng: -80.4776 }
-      },
-      floridacity: {
-        name: 'Florida City',
-        file: './floridacity_boundary.geojson',
-        center: { lat: 25.4477, lng: -80.4809 }
       }
     };
 
+    // citySelect shim — Homestead only
+    const citySelect = { value: 'homestead', addEventListener: () => {} };
     let map, autocomplete, marker, geocoder;
     let boundaryGeoJSON = null;
     const cityCache = {};
@@ -1081,12 +1069,6 @@
       drawPolygonForCity(city, currentBoundaryStatus);
       legendChip.textContent = `${CITY_CONFIG[city].name} boundary`;
 
-      const other = city === 'homestead' ? 'floridacity' : 'homestead';
-      if (polygons[other]) {
-        polygons[other].setMap(null);
-        delete polygons[other];
-      }
-
       if (fit && map) fitBoundsToFeature(feature);
     }
 
@@ -1097,7 +1079,6 @@
       lastLng = typeof latLng.lng === 'function' ? latLng.lng() : latLng.lng;
 
       const selected = citySelect.value;
-      const other = selected === 'homestead' ? 'floridacity' : 'homestead';
       const inSelected = pointInPolygon(latLng, cityCache[selected]);
 
       if (inSelected) {
@@ -1105,11 +1086,9 @@
         drawPolygonForCity(selected, 'inside');
         showInside(CITY_CONFIG[selected].name);
       } else {
-        const otherFeat = await loadBoundary(other);
-        const inOther = pointInPolygon(latLng, otherFeat);
         currentBoundaryStatus = 'outside';
         drawPolygonForCity(selected, 'outside');
-        showOutside(CITY_CONFIG[selected].name, inOther, inOther ? other : null);
+        showOutside(CITY_CONFIG[selected].name, false, null);
       }
 
       if (!marker) {
@@ -1241,7 +1220,7 @@
 
     function wireShare() {
       const cityName = CITY_CONFIG[citySelect.value].name;
-      const msg = `I just signed the petition to get Julio Guzman on the mayoral ballot in ${cityName}. Sign here:`;
+      const msg = `I just signed the pledge to get Julio Guzman on the mayoral ballot in ${cityName}. Sign here:`;
       const nameSlug = (nameInput.value || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
       const phone4 = normalizePhone(phoneNumberInput.value).slice(-4);
       const myCode = (nameSlug + phone4) || 'friend';
@@ -1324,7 +1303,7 @@
         formError.textContent = 'This looks like a recent duplicate submission. Please wait or contact campaign staff if this is a mistake.';
         formError.style.display = 'block';
         submitBtn.disabled = false;
-        submitBtn.textContent = '✍️ Sign the Petition & Help Julio Reach 3,500';
+        submitBtn.textContent = '✍️ Sign the Pledge & Help Julio Reach 3,500';
         return;
       }
 
@@ -1366,7 +1345,7 @@
       persistLocalData();
 
       submitBtn.disabled = false;
-      submitBtn.textContent = '✍️ Sign the Petition & Help Julio Reach 3,500';
+      submitBtn.textContent = '✍️ Sign the Pledge & Help Julio Reach 3,500';
 
       if (supabaseOk || sheetsOk) {
         showStatusMsg('✓ Saved to campaign systems', 'ok');
