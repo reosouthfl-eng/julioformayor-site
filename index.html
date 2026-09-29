@@ -272,6 +272,50 @@
       object-position: center 55%;
       border-radius: 8px;
     }
+    .about-gallery {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      aspect-ratio: 4 / 3;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #e7eaf0;
+    }
+    .about-hero .about-gallery img {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      aspect-ratio: auto;
+      object-fit: cover;
+      border-radius: 0;
+      display: block;
+    }
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(13,33,71,.78);
+      color: #fff;
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .gallery-prev { left: 12px; }
+    .gallery-next { right: 12px; }
+    .gallery-arrow:hover, .gallery-arrow:focus-visible { background: #1b3a6e; outline: 2px solid #f5a623; }
+    .gallery-dots { display: flex; justify-content: center; gap: 9px; margin-top: 14px; }
+    .gallery-dots button {
+      width: 10px; height: 10px; padding: 0; border: 0;
+      border-radius: 50%; background: #aab3c1; cursor: pointer;
+    }
+    .gallery-dots button.is-active { background: #1b3a6e; }
+    .gallery-dots button:focus-visible { outline: 2px solid #f5a623; outline-offset: 3px; }
+    .gallery-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     .about-bio { font-size: 16px; color: #444; line-height: 1.7; margin-bottom: 16px; }
 
     /* â”€â”€ MISSION â”€â”€ */
@@ -598,7 +642,18 @@
     <a href="#" class="btn-primary">Learn More</a>
   </div>
   <div class="about-photo">
-    <img src="images/campaign-community.jpg" alt="Community members attending Julio Guzman’s campaign kickoff">
+    <div class="about-gallery" aria-label="Photos from Julio Guzman's campaign">
+      <img id="about-gallery-image" src="images/campaign-community.jpg" alt="Community members attending Julio Guzman's campaign kickoff" style="object-position:center 55%;">
+      <button class="gallery-arrow gallery-prev" type="button" aria-label="Previous photo">&#8249;</button>
+      <button class="gallery-arrow gallery-next" type="button" aria-label="Next photo">&#8250;</button>
+    </div>
+    <div class="gallery-dots" aria-label="Choose a photo">
+      <button type="button" class="is-active" aria-label="Show photo 1 of 4" aria-current="true"></button>
+      <button type="button" aria-label="Show photo 2 of 4"></button>
+      <button type="button" aria-label="Show photo 3 of 4"></button>
+      <button type="button" aria-label="Show photo 4 of 4"></button>
+    </div>
+    <p id="about-gallery-status" class="gallery-status" aria-live="polite">Photo 1 of 4: Campaign kickoff gathering</p>
   </div>
 </section>
 
@@ -818,6 +873,47 @@
 <div class="paid-notice">
   Paid by Julio Guzman, Non-Partisan, for Homestead Mayor &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a>
 </div>
+<script>
+  (() => {
+    const gallery = document.querySelector('.about-gallery');
+    if (!gallery) return;
+    const image = document.getElementById('about-gallery-image');
+    const status = document.getElementById('about-gallery-status');
+    const dots = [...document.querySelectorAll('.gallery-dots button')];
+    const photos = [
+      { src: 'images/campaign-community.jpg', alt: "Community members attending Julio Guzman's campaign kickoff", label: 'Campaign kickoff gathering', position: 'center 55%' },
+      { src: 'images/julio-emily-event.jpg', alt: 'Julio Guzman and Emily at a campaign event', label: 'Julio and Emily', position: 'center 38%' },
+      { src: 'images/campaign-event.jpg', alt: 'Julio Guzman with supporters at a campaign event', label: 'With supporters', position: 'center 38%' },
+      { src: 'images/julio-speaking-wide.jpg', alt: 'Julio Guzman speaking at the campaign kickoff', label: 'Speaking to the community', position: 'center 48%' }
+    ];
+    let current = 0;
+    function show(index) {
+      current = (index + photos.length) % photos.length;
+      const photo = photos[current];
+      image.src = photo.src;
+      image.alt = photo.alt;
+      image.style.objectPosition = photo.position;
+      status.textContent = 'Photo ' + (current + 1) + ' of ' + photos.length + ': ' + photo.label;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === current);
+        if (i === current) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+    }
+    gallery.querySelector('.gallery-prev').addEventListener('click', () => show(current - 1));
+    gallery.querySelector('.gallery-next').addEventListener('click', () => show(current + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => show(i)));
+    let touchStartX = null;
+    gallery.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    gallery.addEventListener('touchend', e => {
+      if (touchStartX === null) return;
+      const distance = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(distance) > 45) show(current + (distance < 0 ? 1 : -1));
+      touchStartX = null;
+    }, { passive: true });
+  })();
+</script>
+
   <script src="site.js" defer></script>
 </body>
 </html>
