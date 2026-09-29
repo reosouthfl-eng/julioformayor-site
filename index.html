@@ -10,7 +10,7 @@
   <meta property="og:title" content="Julio Guzman for Mayor of Homestead" />
   <meta property="og:description" content="Official campaign website of Julio Guzman for Mayor of Homestead." />
   <meta property="og:url" content="https://reosouthfl-eng.github.io/julioformayor-site/" />
-  <meta property="og:image" content="https://reosouthfl-eng.github.io/julioformayor-site/images/julio-speaking.jpg" />
+  <meta property="og:image" content="https://reosouthfl-eng.github.io/julioformayor-site/images/julio-speaking-wide.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 <title>Julio Guzman for Mayor of Homestead</title>
   <style>
@@ -163,14 +163,22 @@
       margin-left: 12px;
     }
     .hero-photo {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
+      position: relative;
+      align-self: stretch;
+      min-height: 620px;
+      margin: -80px -80px -60px -20px;
+      overflow: hidden;
     }
     .hero-photo img {
-      max-height: 520px;
-      object-fit: contain;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 45%;
+      /* Let the photograph dissolve into the existing hero colors. */
+      -webkit-mask-image: radial-gradient(ellipse 86% 78% at 52% 48%, #000 48%, transparent 100%);
+      mask-image: radial-gradient(ellipse 86% 78% at 52% 48%, #000 48%, transparent 100%);
     }
     .hero-photo-placeholder {
       width: 320px;
@@ -556,7 +564,7 @@
     <a href="#about" class="btn-outline-white">Meet Julio</a>
   </div>
   <div class="hero-photo">
-    <img src="images/julio-speaking.jpg" alt="Julio Guzman for Mayor of Homestead" style="width:100%;max-width:380px;border-radius:8px;display:block;">
+    <img src="images/julio-speaking-wide.jpg" alt="Julio Guzman speaking at a campaign event">
   </div>
 </section>
 

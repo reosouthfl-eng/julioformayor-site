@@ -66,7 +66,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .hero { grid-template-columns: 1fr !important; padding: 56px 22px 42px !important; gap: 30px !important; min-height: auto !important; }
   .hero-logo-large .name-line { font-size: clamp(44px, 14vw, 64px) !important; }
   .hero-taglines p { font-size: clamp(22px, 7vw, 28px) !important; }
-  .hero-photo img { max-height: 420px !important; }
+  .hero-photo { min-height: 390px !important; margin: 0 !important; }
+  .hero-photo img { max-height: none !important; }
   .contact-bar { padding: 12px 22px !important; flex-wrap: wrap; gap: 10px 20px !important; }
   .quick-bar { grid-template-columns: 1fr !important; }
 }
