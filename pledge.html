@@ -836,10 +836,6 @@
     const TABLE_NAME        = 'pledges';
     const MANUAL_FLOOR      = 0;
     const GOAL              = 3500;
-    const SHEETS_ENDPOINT   = 'https://script.google.com/macros/s/AKfycbzA6No5ywnQjdJAO5T8urtHgw3seEHn3AQmJSZMJAiVnAGKB8T5fzAmSrrxBGhpTJdiRA/exec';
-    const LOCAL_PLEDGES_KEY = 'pledges';
-    const PENDING_SYNC_KEY  = 'pendingPledgeSync';
-    const DUPLICATE_WINDOW_MS = 1000 * 60 * 10;
     // Referral + source tracking from URL (?ref=CODE&src=CHANNEL)
     const URL_PARAMS = new URLSearchParams(location.search);
     const REF_CODE = URL_PARAMS.get('ref') || null;
@@ -858,7 +854,7 @@
     }
 
     async function loadProgress() {
-      let dbCount = 0;
+      let dbCount = null;
 
       if (sbClient) {
         try {
@@ -871,9 +867,14 @@
         }
       }
 
+      const display = document.getElementById('pledgeCountDisplay');
+      if (dbCount === null) {
+        display.textContent = 'Unavailable';
+        document.getElementById('progressFill').style.width = '0%';
+        return;
+      }
       const total = MANUAL_FLOOR + dbCount;
-      document.getElementById('pledgeCountDisplay').textContent = total.toLocaleString();
-
+      display.textContent = total.toLocaleString();
       setTimeout(() => {
         document.getElementById('progressFill').style.width = Math.min((total / GOAL) * 100, 100) + '%';
       }, 200);
@@ -924,20 +925,6 @@
     let currentBoundaryStatus = null;
     let mapsReady = false;
     let lastLat = null, lastLng = null;
-
-    let pledges = [];
-    let pendingSyncQueue = [];
-    try {
-      const s = localStorage.getItem(LOCAL_PLEDGES_KEY);
-      if (s) pledges = JSON.parse(s);
-    } catch (e) {}
-    try {
-      const queue = localStorage.getItem(PENDING_SYNC_KEY);
-      if (queue) pendingSyncQueue = JSON.parse(queue);
-    } catch (e) {}
-
-    window.addEventListener('online', () => { syncPendingQueue(); });
-    setInterval(() => { syncPendingQueue(); }, 30000);
 
     function showMapError(message) {
       mapError.textContent = message;
@@ -1128,70 +1115,6 @@
       return (v || '').replace(/\D/g, '');
     }
 
-    function pledgeFingerprint(pledge) {
-      return [
-        (pledge.supporter_full_name || '').toLowerCase().trim(),
-        (pledge.email || '').toLowerCase().trim(),
-        normalizePhone(pledge.phone),
-        (pledge.full_address || '').toLowerCase().trim()
-      ].join('|');
-    }
-
-    function isLikelyDuplicate(pledge) {
-      const fingerprint = pledgeFingerprint(pledge);
-      const now = Date.now();
-      return pledges.some((existing) => {
-        const existingTs = Date.parse(existing.timestamp || '');
-        const withinWindow = Number.isFinite(existingTs) && (now - existingTs <= DUPLICATE_WINDOW_MS);
-        return withinWindow && pledgeFingerprint(existing) === fingerprint;
-      });
-    }
-
-    function persistLocalData() {
-      try {
-        localStorage.setItem(LOCAL_PLEDGES_KEY, JSON.stringify(pledges));
-        localStorage.setItem(PENDING_SYNC_KEY, JSON.stringify(pendingSyncQueue));
-      } catch (e) {
-        console.warn('Local persistence failed:', e);
-      }
-    }
-
-    async function sendToSheets(pledge) {
-      if (!SHEETS_ENDPOINT) return false;
-      try {
-        await fetch(SHEETS_ENDPOINT, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(pledge)
-        });
-        return true;
-      } catch (err) {
-        console.warn('Sheets sync failed:', err);
-        return false;
-      }
-    }
-
-    async function syncPendingQueue() {
-      if (!pendingSyncQueue.length) return;
-      const stillPending = [];
-      for (const item of pendingSyncQueue) {
-        let supabaseOk = false;
-        if (sbClient) {
-          try {
-            const { error } = await sbClient.from(TABLE_NAME).insert([item.dbRecord]);
-            supabaseOk = !error;
-          } catch (err) {
-            supabaseOk = false;
-          }
-        }
-        const sheetsOk = await sendToSheets(item.rawPledge);
-        if (!supabaseOk && !sheetsOk) stillPending.push(item);
-      }
-      pendingSyncQueue = stillPending;
-      persistLocalData();
-    }
-
     function validateForm() {
       if (!mapsReady) return 'The map is still loading. Please wait a moment and try again.';
       if (!addressInput.value.trim() || resultEl.style.display === 'none') {
@@ -1225,7 +1148,6 @@
         signatureInput.classList.add('error');
         return 'Your confirmation must match your full name.';
       }
-      if (!consentInline.checked) return 'Please check the box to agree to receive campaign updates.';
       return '';
     }
 
@@ -1310,14 +1232,6 @@
         inside_boundary: currentBoundaryStatus === 'inside'
       };
 
-      if (isLikelyDuplicate(pledge)) {
-        formError.textContent = 'This looks like a recent duplicate submission. Please wait or contact campaign staff if this is a mistake.';
-        formError.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Join 3,500 Supporters';
-        return;
-      }
-
       const dbRecord = {
         timestamp: pledge.timestamp,
         campaign_id: pledge.campaign_id,
@@ -1338,32 +1252,31 @@
         referrer_code: REF_CODE
       };
 
-      let supabaseOk = false;
-      if (sbClient) {
+      let saveError = null;
+      if (!sbClient) {
+        saveError = 'The pledge service is unavailable. Please try again later.';
+      } else {
         try {
           const { error } = await sbClient.from(TABLE_NAME).insert([dbRecord]);
-          supabaseOk = !error;
+          if (error) {
+            console.error('Pledge save failed:', error.code, error.message);
+            saveError = 'We could not save your pledge. Please try again later.';
+          }
         } catch (err) {
-          supabaseOk = false;
+          console.error('Pledge save failed:', err);
+          saveError = 'We could not connect to the pledge service. Please try again.';
         }
       }
-      const sheetsOk = await sendToSheets(pledge);
-
-      pledges.push(pledge);
-      if (!supabaseOk && !sheetsOk) {
-        pendingSyncQueue.push({ rawPledge: pledge, dbRecord });
-      }
-      persistLocalData();
 
       submitBtn.disabled = false;
       submitBtn.textContent = 'Join 3,500 Supporters';
-
-      if (supabaseOk || sheetsOk) {
-        showStatusMsg('✓ Saved to campaign systems', 'ok');
-      } else {
-        showStatusMsg('Saved locally. Admin sync will retry automatically.', 'error');
+      if (saveError) {
+        formError.textContent = saveError;
+        formError.style.display = 'block';
+        return;
       }
 
+      showStatusMsg('Pledge received by the campaign', 'ok');
       await loadProgress();
       wireShare();
       openThankYouModal();
