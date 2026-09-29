@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  
+
   <meta name="description" content="Campaign pledge page for Julio Guzman for Mayor of Homestead." />
   <link rel="canonical" href="https://reosouthfl-eng.github.io/julioformayor-site/pledge.html" />
   <meta property="og:type" content="website" />
@@ -685,12 +685,12 @@
   </nav>
 
   <div class="hero">
-    <h1 class="hero-name">Help <span>Julio Guzman</span> reach the ballot</h1>
-    <p class="hero-sub">Sign the pledge to qualify for the mayoral ballot.<br>Goal: <strong style="color:var(--gold)">3,500 signatures</strong></p>
+    <h1 class="hero-name">Stand with <span>Julio Guzman</span></h1>
+    <p class="hero-sub">Add your name to the campaign's supporter list.<br>Goal: <strong style="color:var(--gold)">3,500 supporters</strong></p>
     <div class="progress-wrap">
       <div class="progress-header">
-        <span class="progress-label">SIGNATURES SO FAR</span>
-        <span class="progress-count" id="pledgeCountDisplay">—</span>
+        <span class="progress-label">SUPPORTERS SO FAR</span>
+        <span class="progress-count" id="pledgeCountDisplay">Loading</span>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-goal">Goal: 3,500</div>
@@ -698,14 +698,14 @@
   </div>
 
   <div class="form-card">
-    <h2>Are You in This City's Voting Area?</h2>
-    <p>Enter your home address to see if you can vote in this city, then sign the pledge to help Julio Guzman qualify for the mayoral ballot.</p>
+    <h2>Check Your Homestead Address</h2>
+    <p>Enter your home address to check whether it is within Homestead, then add your name to the campaign's supporter list. This pledge is not an official candidate petition or a voter registration form.</p>
 
     <div class="row">
       <label for="addressInput">Your home address: <span style="color:var(--red)">*</span></label>
       <input type="text" id="addressInput" placeholder="Enter your home address" autocomplete="street-address" aria-describedby="addressHelp" />
     </div>
-    <p id="addressHelp" class="form-helper">Start typing and choose the exact address suggestion to improve boundary accuracy.</p>
+    <p id="addressHelp" class="form-helper">Start typing and choose the exact address suggestion. This map is a guide; confirm your voter registration with the Miami-Dade Supervisor of Elections.</p>
 
     <div class="map-container">
       <div id="legendChip">City boundary</div>
@@ -741,12 +741,12 @@
     </div>
 
     <div class="row">
-      <label for="signatureInputMain">Your signature (type your full name): <span style="color:var(--red)">*</span></label>
+      <label for="signatureInputMain">Confirm your pledge (type your full name): <span style="color:var(--red)">*</span></label>
       <input type="text" id="signatureInputMain" placeholder="Type your full name to sign" />
     </div>
 
-    <button id="submitBtn" class="btn-submit" type="button" aria-describedby="submitAssistiveText">✍️ Sign the Pledge &amp; Help Julio Reach 3,500</button>
-    <span id="submitAssistiveText" class="sr-only">Submits your pledge and contact details.</span>
+    <button id="submitBtn" class="btn-submit" type="button" aria-describedby="submitAssistiveText">Join 3,500 Supporters</button>
+    <span id="submitAssistiveText" class="sr-only">Submits your supporter pledge and contact details. This is not an official candidate petition.</span>
     <div id="formError" role="alert"></div>
     <div id="supabaseStatus" aria-live="polite"></div>
 
@@ -756,7 +756,7 @@
         <h3>Make sure your vote counts</h3>
       </div>
 
-      <p>Already registered? Request your mail-in ballot now — it's the easiest way to make sure your vote is counted for Julio.</p>
+      <p>Already registered? Review your vote-by-mail options and request a ballot if that works for you.</p>
 
       <div class="vtc-grid">
         <a class="vtc-btn vbm"
@@ -794,7 +794,7 @@
   <div id="stickyBar">
     <div class="sticky-text">
       <strong>📩 Already registered to vote?</strong>
-      Request your mail-in ballot — takes 2 minutes.
+      Review your vote-by-mail options.
     </div>
     <a class="sticky-vbm-btn"
        href="https://www.miamidade.gov/global/elections/vote-by-mail.page?utm_source=sticky_bar"
@@ -805,9 +805,9 @@
   <div id="thankYouModal" class="modal-overlay" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-check">✓</div>
-      <h3 class="modal-title">Thank you for signing</h3>
+      <h3 class="modal-title">Thank you for your support</h3>
       <p class="modal-text">
-        Your pledge was submitted successfully. Next, make sure your vote counts and share this page with friends in your city.
+        Your supporter pledge was submitted. You can check your voter registration and share this page with friends in Homestead.
       </p>
       <button id="thankYouContinueBtn" class="modal-btn">Continue</button>
     </div>
@@ -1046,7 +1046,7 @@
       resultEl.classList.remove('outside');
       resultEl.innerHTML = `
         <div><strong>✅ Yes! Your address is in ${cityName}.</strong></div>
-        <div class="small">You can vote in this race — sign below and help Julio reach 3,500 committed voters before qualifying in September 2027.</div>
+        <div class="small">This address appears to be within Homestead. Add your name to the campaign's supporter list.</div>
       `;
     }
 
@@ -1061,7 +1061,7 @@
       resultEl.innerHTML = `
         <div><strong>❌ Your address is not inside ${cityName} city limits.</strong></div>
         ${otherText}
-        <div class="small" style="margin-top:4px;">You won't see this race on your ballot, but you can still help by sharing this page.</div>
+        <div class="small" style="margin-top:4px;">This address appears outside Homestead. You can still help by sharing this page.</div>
       `;
 
       if (otherDetected) {
@@ -1219,11 +1219,11 @@
       }
       if (!signatureInput.value.trim()) {
         signatureInput.classList.add('error');
-        return 'Please type your name as your signature.';
+        return 'Please type your full name to confirm your pledge.';
       }
       if (signatureInput.value.trim().toLowerCase() !== nameInput.value.trim().toLowerCase()) {
         signatureInput.classList.add('error');
-        return 'Your signature must match your full name.';
+        return 'Your confirmation must match your full name.';
       }
       if (!consentInline.checked) return 'Please check the box to agree to receive campaign updates.';
       return '';
@@ -1231,7 +1231,7 @@
 
     function wireShare() {
       const cityName = CITY_CONFIG[citySelect.value].name;
-      const msg = `I just signed the pledge to get Julio Guzman on the mayoral ballot in ${cityName}. Sign here:`;
+      const msg = `I joined Julio Guzman's campaign supporter list in ${cityName}. Learn more here:`;
       const nameSlug = (nameInput.value || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
       const phone4 = normalizePhone(phoneNumberInput.value).slice(-4);
       const myCode = (nameSlug + phone4) || 'friend';
@@ -1248,7 +1248,7 @@
           prompt('Copy this link:', url);
         }
       };
-      shareEmail.href = `mailto:?subject=${encodeURIComponent('Sign for Julio Guzman – Mayor')}&body=${encodeURIComponent(msg + ' ' + url)}`;
+      shareEmail.href = `mailto:?subject=${encodeURIComponent('Support Julio Guzman for Mayor')}&body=${encodeURIComponent(msg + ' ' + url)}`;
     }
 
     function showStatusMsg(msg, type) {
@@ -1314,7 +1314,7 @@
         formError.textContent = 'This looks like a recent duplicate submission. Please wait or contact campaign staff if this is a mistake.';
         formError.style.display = 'block';
         submitBtn.disabled = false;
-        submitBtn.textContent = '✍️ Sign the Pledge & Help Julio Reach 3,500';
+        submitBtn.textContent = 'Join 3,500 Supporters';
         return;
       }
 
@@ -1356,7 +1356,7 @@
       persistLocalData();
 
       submitBtn.disabled = false;
-      submitBtn.textContent = '✍️ Sign the Pledge & Help Julio Reach 3,500';
+      submitBtn.textContent = 'Join 3,500 Supporters';
 
       if (supabaseOk || sheetsOk) {
         showStatusMsg('✓ Saved to campaign systems', 'ok');
