@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Pledge Console | Julio Guzman Campaign</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0/dist/umd/supabase.min.js"></script>
+<style>
+  :root { --navy:#1b3a6e; --gold:#f5a623; --bg:#f4f4f9; --line:#e5e7eb; --muted:#6b7280; --ink:#111827; --green:#15803d; --red:#b91c1c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Helvetica Neue',Arial,sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:var(--navy); color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  header h1 { margin:0; font-size:17px; font-weight:900; letter-spacing:.5px; }
+  header h1 span { color:var(--gold); }
+  header button { background:transparent; color:#cbd5e1; border:1px solid #475569; border-radius:6px; padding:6px 10px; cursor:pointer; }
+  main { max-width:1200px; margin:0 auto; padding:18px 16px 60px; }
+  .card { background:#fff; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,.06); padding:16px; margin-bottom:16px; }
+  .card h2 { margin:0 0 10px; font-size:15px; color:var(--navy); }
+  #login { max-width:380px; margin:60px auto; }
+  #login input { width:100%; padding:10px; border:1.5px solid var(--line); border-radius:8px; margin-bottom:10px; font-size:14px; }
+  .btn { background:var(--gold); color:var(--navy); border:none; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; font-size:13px; }
+  .btn.secondary { background:#e2e8f0; color:var(--ink); }
+  .err { color:var(--red); font-size:13px; min-height:18px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+  .kpi { background:#fff; border-radius:12px; padding:14px; box-shadow:0 1px 6px rgba(0,0,0,.06); }
+  .kpi .v { font-size:28px; font-weight:900; color:var(--navy); }
+  .kpi .l { font-size:12px; color:var(--muted); margin-top:2px; }
+  .bar { height:10px; background:#e2e8f0; border-radius:99px; overflow:hidden; margin-top:8px; }
+  .bar > div { height:100%; background:linear-gradient(90deg,#22c55e,var(--gold)); }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; align-items:center; }
+  .filters select, .filters input { padding:8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px; }
+  .tablewrap { overflow:auto; max-height:560px; border:1px solid var(--line); border-radius:8px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; }
+  th, td { padding:7px 8px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; vertical-align:top; }
+  th { background:#f8fafc; position:sticky; top:0; font-weight:700; color:#334155; }
+  td.num, th.num { text-align:right; }
+  .tag { display:inline-block; font-size:11px; padding:2px 6px; border-radius:99px; background:#eef2ff; color:#3730a3; margin:1px 2px 1px 0; }
+  .tag.warn { background:#fef3c7; color:#92400e; }
+  .tag.ok { background:#dcfce7; color:var(--green); }
+  .muted { color:var(--muted); font-size:12px; }
+  td select, td input { font-size:12px; padding:4px; border:1px solid var(--line); border-radius:6px; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>JULIO <span>GUZMAN</span> &middot; Pledge Console</h1>
+  <button id="logoutBtn" class="hidden">Sign out</button>
+</header>
+
+<div id="login" class="card">
+  <h2>Campaign staff sign-in</h2>
+  <p class="muted">Access is limited to accounts on the campaign's admin list.</p>
+  <input id="email" type="email" placeholder="Email" autocomplete="username" />
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+  <button class="btn" id="loginBtn">Sign in</button>
+  <div class="err" id="loginErr"></div>
+</div>
+
+<main id="app" class="hidden">
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Pace to 3,500 by qualifying (Aug 30, 2027)</h2>
+    <div class="tablewrap" style="max-height:260px"><table id="dailyTbl"></table></div>
+  </div>
+
+  <div class="card">
+    <h2>By channel and Facility Captain</h2>
+    <div class="tablewrap" style="max-height:300px"><table id="channelTbl"></table></div>
+  </div>
+
+  <div class="card">
+    <h2>Supporters &amp; follow-up lists</h2>
+    <div class="filters">
+      <select id="fSegment">
+        <option value="all">All supporters</option>
+        <option value="reg">Needs registration help</option>
+        <option value="vbm">Needs 2027 mail-ballot reminder</option>
+        <option value="vol">Volunteer prospects</option>
+        <option value="captain">Wants to be a Facility Captain</option>
+        <option value="sign">Yard sign requests</option>
+        <option value="new">Not yet contacted</option>
+        <option value="outside">Outside city limits</option>
+      </select>
+      <select id="fIssue"><option value="">Any issue</option></select>
+      <select id="fLang"><option value="">Any language</option><option value="en">English</option><option value="es">Español</option><option value="ht">Kreyòl</option></select>
+      <select id="fCaptain"><option value="">Any captain</option></select>
+      <label class="muted"><input type="checkbox" id="fConsent" checked /> Only contactable (consented)</label>
+      <input id="fSearch" placeholder="Search name, email, phone, street" style="min-width:220px" />
+      <button class="btn secondary" id="exportBtn">Export CSV</button>
+      <span class="muted" id="rowCount"></span>
+    </div>
+    <div class="tablewrap"><table id="supTbl"></table></div>
+    <p class="muted">Follow-up status and notes save immediately. Every status change is also written to the contact log.</p>
+  </div>
+</main>
+
+<script>
+  const SUPABASE_URL = 'https://jngtuihzliqvfmfkjapp.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk';
+  const GOAL = 3500;
+  const QUALIFYING = new Date('2027-08-30T00:00:00-04:00');
+  const PRIMARY = new Date('2027-10-05T00:00:00-04:00');
+  const STATUSES = ['new','contacted','left_message','needs_registration','vbm_requested','volunteer_active','do_not_contact'];
+  const ISSUE_LABELS = { traffic:'Traffic', housing:'Housing', flooding_infrastructure:'Flooding/infra', public_safety:'Public safety', taxes_utilities:'Taxes/utilities', jobs_small_business:'Jobs/small biz', growth_development:'Growth', parks_youth_seniors:'Parks/youth/seniors' };
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let rows = [];
+  let me = null;
+
+  async function boot() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) await enter(session.user); else showLogin();
+  }
+  function showLogin(msg='') { $('login').classList.remove('hidden'); $('app').classList.add('hidden'); $('logoutBtn').classList.add('hidden'); $('loginErr').textContent = msg; }
+
+  $('loginBtn').onclick = async () => {
+    $('loginErr').textContent = '';
+    const { data, error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+    if (error) { $('loginErr').textContent = error.message; return; }
+    await enter(data.user);
+  };
+  $('password').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
+  $('logoutBtn').onclick = async () => { await sb.auth.signOut(); showLogin(); };
+
+  async function enter(user) {
+    const { data: isAdmin } = await sb.rpc('is_admin');
+    if (!isAdmin) { await sb.auth.signOut(); showLogin('This account is not on the campaign admin list. Ask the campaign to add you.'); return; }
+    me = user;
+    $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('logoutBtn').classList.remove('hidden');
+    await loadAll();
+  }
+
+  async function loadAll() {
+    const [sup, daily, chan] = await Promise.all([
+      sb.from('v_supporters').select('*').order('created_at', { ascending: false }),
+      sb.from('v_pledge_daily').select('*').order('day', { ascending: false }),
+      sb.from('v_pledge_by_channel').select('*')
+    ]);
+    if (sup.error) { alert('Could not load supporters: ' + sup.error.message); return; }
+    rows = sup.data || [];
+    renderKpis(); renderDaily(daily.data || []); renderChannels(chan.data || []);
+    fillFilterOptions(); renderSupporters();
+  }
+
+  function daysUntil(d) { return Math.max(1, Math.ceil((d - new Date()) / 86400000)); }
+  function uniqPeople(list) { const s = new Set(list.map(r => (r.phone || '').replace(/\D/g,'').slice(-10) || r.id)); return s.size; }
+
+  function renderKpis() {
+    const inCity = rows.filter(r => r.inside_boundary);
+    const pledged = uniqPeople(inCity);
+    const household = inCity.reduce((a, r) => a + (r.voters_at_address || 1), 0);
+    const last7 = inCity.filter(r => new Date(r.created_at) > new Date(Date.now() - 7*86400000)).length;
+    const dq = daysUntil(QUALIFYING);
+    const needWeek = Math.ceil(Math.max(0, GOAL - pledged) / dq * 7);
+    const k = [
+      { v: pledged.toLocaleString(), l: `Pledged in-city supporters (goal ${GOAL.toLocaleString()})`, bar: pledged / GOAL },
+      { v: household.toLocaleString(), l: 'Registered voters in their households (self-reported)' },
+      { v: last7, l: `New this week · need ~${needWeek}/week to hit goal` },
+      { v: dq, l: 'Days to qualifying (Aug 30, 2027)' },
+      { v: daysUntil(PRIMARY), l: 'Days to the Oct 5, 2027 primary' },
+      { v: inCity.filter(r => r.needs_registration_help).length, l: 'Need registration help' },
+      { v: inCity.filter(r => r.vbm_status === 'want' || r.vbm_status === 'unsure').length, l: 'Want a 2027 mail-ballot reminder' },
+      { v: inCity.filter(r => r.volunteer_prospect).length, l: 'Volunteer prospects' }
+    ];
+    $('kpis').innerHTML = k.map(x => `<div class="kpi"><div class="v">${esc(x.v)}</div><div class="l">${esc(x.l)}</div>${x.bar !== undefined ? `<div class="bar"><div style="width:${Math.min(100, x.bar*100).toFixed(1)}%"></div></div>` : ''}</div>`).join('');
+  }
+
+  function renderDaily(d) {
+    $('dailyTbl').innerHTML = '<tr><th>Day</th><th class="num">New in city</th><th class="num">All new</th><th class="num">Running total</th><th class="num">Remaining</th><th class="num">Needed per day</th></tr>' +
+      d.map(r => `<tr><td>${esc(r.day)}</td><td class="num">${r.new_in_city}</td><td class="num">${r.new_total}</td><td class="num">${r.cumulative_in_city}</td><td class="num">${r.remaining_to_goal}</td><td class="num">${r.needed_per_day}</td></tr>`).join('');
+  }
+
+  function renderChannels(d) {
+    $('channelTbl').innerHTML = '<tr><th>Captain code</th><th>Channel</th><th class="num">Pledges</th><th class="num">In city</th><th class="num">Need registration</th><th class="num">Need VBM</th><th>Last pledge</th></tr>' +
+      d.map(r => `<tr><td>${esc(r.captain_code)}</td><td>${esc(r.channel)}</td><td class="num">${r.pledges}</td><td class="num">${r.in_city}</td><td class="num">${r.need_registration}</td><td class="num">${r.need_vbm}</td><td>${esc((r.last_pledge||'').slice(0,10))}</td></tr>`).join('');
+  }
+
+  function fillFilterOptions() {
+    const issues = [...new Set(rows.flatMap(r => r.top_issues || []))].sort();
+    $('fIssue').innerHTML = '<option value="">Any issue</option>' + issues.map(i => `<option value="${esc(i)}">${esc(ISSUE_LABELS[i] || i)}</option>`).join('');
+    const caps = [...new Set(rows.map(r => r.captain_code).filter(Boolean))].sort();
+    $('fCaptain').innerHTML = '<option value="">Any captain</option>' + caps.map(c => `<option>${esc(c)}</option>`).join('');
+  }
+
+  function filtered() {
+    const seg = $('fSegment').value, issue = $('fIssue').value, lang = $('fLang').value, cap = $('fCaptain').value;
+    const q = $('fSearch').value.trim().toLowerCase(); const onlyConsent = $('fConsent').checked;
+    return rows.filter(r => {
+      if (seg !== 'outside' && !r.inside_boundary) return false;
+      if (seg === 'outside' && r.inside_boundary) return false;
+      if (seg === 'reg' && !r.needs_registration_help) return false;
+      if (seg === 'vbm' && !(r.vbm_status === 'want' || r.vbm_status === 'unsure')) return false;
+      if (seg === 'vol' && !r.volunteer_prospect) return false;
+      if (seg === 'captain' && !(r.help_offers || []).includes('facility_captain')) return false;
+      if (seg === 'sign' && !(r.help_offers || []).includes('yard_sign')) return false;
+      if (seg === 'new' && r.follow_up_status !== 'new') return false;
+      if (issue && !(r.top_issues || []).includes(issue)) return false;
+      if (lang && r.language !== lang) return false;
+      if (cap && r.captain_code !== cap) return false;
+      if (onlyConsent && !r.can_contact) return false;
+      if (q && ![r.full_name, r.email, r.phone, r.address].join(' ').toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+
+  function renderSupporters() {
+    const list = filtered();
+    $('rowCount').textContent = `${list.length} shown`;
+    $('supTbl').innerHTML = '<tr><th>Signed</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Lang / prefers</th><th>Registered?</th><th>Voting plan</th><th>Issues</th><th>Will help</th><th>Captain</th><th>Follow-up</th><th>Notes</th></tr>' +
+      list.map(r => `<tr data-id="${r.id}">
+        <td>${esc((r.created_at||'').slice(0,10))}</td>
+        <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}</td>
+        <td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.address)}</td>
+        <td>${esc(r.language || '')} / ${esc(r.contact_pref || '')}</td>
+        <td>${r.needs_registration_help ? `<span class="tag warn">${esc(r.registered_status)}</span>` : `<span class="tag ok">${esc(r.registered_status || '?')}</span>`}</td>
+        <td>${esc(r.vbm_status || '')}</td>
+        <td>${(r.top_issues||[]).map(i => `<span class="tag">${esc(ISSUE_LABELS[i] || i)}</span>`).join('')}</td>
+        <td>${(r.help_offers||[]).map(i => `<span class="tag">${esc(i)}</span>`).join('')}</td>
+        <td>${esc(r.captain_code)}</td>
+        <td><select class="st">${STATUSES.map(s => `<option ${s === r.follow_up_status ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
+        <td><input class="nt" value="${esc(r.notes || '')}" placeholder="Add note" style="width:180px" /></td>
+      </tr>`).join('');
+  }
+
+  $('supTbl').addEventListener('change', async (e) => {
+    const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+    const id = tr.dataset.id; const row = rows.find(r => r.id === id);
+    if (e.target.classList.contains('st')) {
+      const status = e.target.value;
+      const { error } = await sb.from('pledges').update({ follow_up_status: status, unsubscribed: status === 'do_not_contact' ? true : row.unsubscribed, updated_at: new Date().toISOString() }).eq('id', id);
+      if (error) { alert('Save failed: ' + error.message); return; }
+      await sb.from('contact_log').insert({ pledge_id: id, contact_type: 'status_change', outcome: status, contacted_by: me?.email || null });
+      row.follow_up_status = status; if (status === 'do_not_contact') { row.unsubscribed = true; row.can_contact = false; }
+    }
+    if (e.target.classList.contains('nt')) {
+      const notes = e.target.value;
+      const { error } = await sb.from('pledges').update({ notes, updated_at: new Date().toISOString() }).eq('id', id);
+      if (error) { alert('Save failed: ' + error.message); return; }
+      row.notes = notes;
+    }
+  });
+
+  ['fSegment','fIssue','fLang','fCaptain','fConsent'].forEach(id => $(id).addEventListener('change', renderSupporters));
+  $('fSearch').addEventListener('input', renderSupporters);
+
+  $('exportBtn').onclick = () => {
+    const cols = ['created_at','full_name','first_name','last_name','phone','email','address','zip','language','contact_pref','registered_status','vbm_status','top_issues','help_offers','voters_at_address','captain_code','referrer_code','channel','follow_up_status','notes','consent','unsubscribed'];
+    const csvCell = (v) => { const s = Array.isArray(v) ? v.join('; ') : String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+    const csv = [cols.join(','), ...filtered().map(r => cols.map(c => csvCell(r[c])).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `pledges_${$('fSegment').value}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  };
+
+  boot();
+</script>
+</body>
+</html>

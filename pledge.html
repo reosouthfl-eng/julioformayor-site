@@ -294,6 +294,42 @@
       color: var(--gray-700);
     }
 
+    fieldset.chk-group {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 0 0 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 10px;
+    }
+    fieldset.chk-group legend {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-700);
+      padding: 0 4px;
+    }
+    fieldset.chk-group label {
+      font-size: 13px;
+      font-weight: normal;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.3;
+    }
+    fieldset.chk-group.error { border-color: var(--red); background: #fff5f5; }
+    .row select.error { border-color: var(--red); background: #fff5f5; }
+    .vbm-note {
+      font-size: 12px;
+      line-height: 1.45;
+      background: #fffbeb;
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 0 0 10px;
+      color: var(--gray-700);
+    }
+    @media (max-width: 420px) { fieldset.chk-group { grid-template-columns: 1fr; } }
+
     .consent-wrap {
       display: flex;
       align-items: flex-start;
@@ -735,6 +771,68 @@
       <input type="number" id="voterCountInput" placeholder="e.g. 2" min="1" />
     </div>
 
+    <div class="row">
+      <label for="registeredInput">Are you registered to vote at this address? <span style="color:var(--red)">*</span></label>
+      <select id="registeredInput">
+        <option value="">Choose one</option>
+        <option value="yes">Yes</option>
+        <option value="no">No / I recently moved</option>
+        <option value="unsure">I'm not sure</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="vbmInput">How do you plan to vote in 2027? <span style="color:var(--red)">*</span></label>
+      <select id="vbmInput">
+        <option value="">Choose one</option>
+        <option value="want">By mail &ndash; remind me to request my 2027 ballot</option>
+        <option value="have_2027">By mail &ndash; I already requested for 2027</option>
+        <option value="early">Early voting in person</option>
+        <option value="election_day">On Election Day</option>
+        <option value="unsure">Not sure yet</option>
+      </select>
+    </div>
+
+    <fieldset class="row chk-group">
+      <legend>What matters most to you? (pick up to 3)</legend>
+      <label><input type="checkbox" name="issues" value="traffic"> Traffic &amp; roads</label>
+      <label><input type="checkbox" name="issues" value="housing"> Housing costs</label>
+      <label><input type="checkbox" name="issues" value="flooding_infrastructure"> Flooding, water &amp; sewer</label>
+      <label><input type="checkbox" name="issues" value="public_safety"> Public safety</label>
+      <label><input type="checkbox" name="issues" value="taxes_utilities"> Taxes &amp; utility bills</label>
+      <label><input type="checkbox" name="issues" value="jobs_small_business"> Jobs &amp; small business</label>
+      <label><input type="checkbox" name="issues" value="growth_development"> Growth &amp; development</label>
+      <label><input type="checkbox" name="issues" value="parks_youth_seniors"> Parks, youth &amp; seniors</label>
+    </fieldset>
+
+    <fieldset class="row chk-group">
+      <legend>Want to help? (optional)</legend>
+      <label><input type="checkbox" name="help" value="yard_sign"> Yard sign</label>
+      <label><input type="checkbox" name="help" value="volunteer"> Volunteer</label>
+      <label><input type="checkbox" name="help" value="host_meet_greet"> Host a meet &amp; greet</label>
+      <label><input type="checkbox" name="help" value="facility_captain"> Sign up voters where I work or live</label>
+      <label><input type="checkbox" name="help" value="share_social"> Share on social media</label>
+    </fieldset>
+
+    <div class="row">
+      <label for="langInput">Preferred language</label>
+      <select id="langInput">
+        <option value="en">English</option>
+        <option value="es">Espa&ntilde;ol</option>
+        <option value="ht">Krey&ograve;l</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="contactPrefInput">Best way to reach you</label>
+      <select id="contactPrefInput">
+        <option value="text">Text message</option>
+        <option value="call">Phone call</option>
+        <option value="email">Email</option>
+        <option value="whatsapp">WhatsApp</option>
+      </select>
+    </div>
+
     <div class="consent-wrap">
       <input type="checkbox" id="consentInline" />
       <label for="consentInline">I agree to receive campaign updates and voting reminders from the Julio Guzman for Mayor campaign by phone, text, or email.</label>
@@ -756,28 +854,32 @@
         <h3>Make sure your vote counts</h3>
       </div>
 
-      <p>Already registered? Review your vote-by-mail options and request a ballot if that works for you.</p>
+      <p>Homestead's mayoral primary is <strong>Tuesday, October 5, 2027</strong>. A candidate with more than 50% wins outright, so every vote in October counts.</p>
+
+      <div class="vbm-note">
+        <strong>Voting by mail?</strong> Every Miami-Dade mail-ballot request on file today expires December 31, 2026. Request your 2027 ballot in January 2027 or later &mdash; we'll send you a reminder.
+      </div>
 
       <div class="vtc-grid">
-        <a class="vtc-btn vbm"
-           href="https://www.miamidade.gov/global/elections/vote-by-mail.page?utm_source=post_pledge"
-           target="_blank" rel="noopener">
-          <span class="vtc-emoji">📩</span>
-          <span>Request / Renew Your<br>Vote-by-Mail Ballot</span>
-        </a>
-
         <a class="vtc-btn status"
-           href="https://registertovoteflorida.gov/home?utm_source=post_pledge"
+           href="https://www.voterfocus.com/VoterInformationLookup/vflookup.html?county=DAD"
            target="_blank" rel="noopener">
           <span class="vtc-emoji">✔️</span>
-          <span>Check Voter Status</span>
+          <span>Check My Registration</span>
         </a>
 
         <a class="vtc-btn register"
-           href="https://www.vote.org/register-to-vote/?utm_source=post_pledge"
+           href="https://registertovoteflorida.gov/"
            target="_blank" rel="noopener">
           <span class="vtc-emoji">📝</span>
-          <span>Register to Vote</span>
+          <span>Register or Update Address</span>
+        </a>
+
+        <a class="vtc-btn vbm"
+           href="https://miamidade.electionsfl.org/vrservices/mbrs"
+           target="_blank" rel="noopener">
+          <span class="vtc-emoji">📩</span>
+          <span>Request a Vote-by-Mail Ballot<br><small style="font-weight:normal">(official Miami-Dade Elections form)</small></span>
         </a>
       </div>
 
@@ -793,12 +895,12 @@
 
   <div id="stickyBar">
     <div class="sticky-text">
-      <strong>📩 Already registered to vote?</strong>
-      Review your vote-by-mail options.
+      <strong>🗳️ Homestead votes Oct 5, 2027</strong>
+      Check that you're registered at your current address.
     </div>
     <a class="sticky-vbm-btn"
-       href="https://www.miamidade.gov/global/elections/vote-by-mail.page?utm_source=sticky_bar"
-       target="_blank" rel="noopener">Request Ballot →</a>
+       href="https://www.voterfocus.com/VoterInformationLookup/vflookup.html?county=DAD"
+       target="_blank" rel="noopener">Check Now →</a>
     <button id="stickyClose" aria-label="Dismiss">✕</button>
   </div>
 
@@ -838,8 +940,13 @@
     const GOAL              = 3500;
     // Referral + source tracking from URL (?ref=CODE&src=CHANNEL)
     const URL_PARAMS = new URLSearchParams(location.search);
-    const REF_CODE = URL_PARAMS.get('ref') || null;
-    const SRC_TAG = URL_PARAMS.get('src') || null;
+    const clean = (v) => (v || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40) || null;
+    // ?ref=  supporter-to-supporter share code
+    // ?cap=  Facility Captain code (see the Facility Captain guide)
+    // ?src=  channel tag (facility, doors, event, instagram, ...)
+    const REF_CODE = clean(URL_PARAMS.get('ref'));
+    const CAP_CODE = clean(URL_PARAMS.get('cap'));
+    const SRC_TAG = clean(URL_PARAMS.get('src')) || (CAP_CODE ? 'facility' : null);
 
     // Named sbClient, not "supabase": the supabase-js CDN bundle declares a
     // top-level `var supabase`, and a `let` of the same name is a SyntaxError
@@ -897,6 +1004,18 @@
     const phoneNumberInput  = document.getElementById('phoneNumberInput');
     const consentInline     = document.getElementById('consentInline');
     const signatureInput    = document.getElementById('signatureInputMain');
+    const registeredInput   = document.getElementById('registeredInput');
+    const vbmInput          = document.getElementById('vbmInput');
+    const langInput         = document.getElementById('langInput');
+    const contactPrefInput  = document.getElementById('contactPrefInput');
+    const issuesGroup       = document.querySelector('input[name="issues"]').closest('fieldset');
+    const checkedValues     = (name) => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value);
+    // cap issue picks at 3
+    document.querySelectorAll('input[name="issues"]').forEach(cb => cb.addEventListener('change', () => {
+      if (checkedValues('issues').length > 3) cb.checked = false;
+    }));
+    // Spanish browsers default to Spanish
+    if ((navigator.language || '').toLowerCase().startsWith('es')) langInput.value = 'es';
     const formError         = document.getElementById('formError');
     const supabaseStatus    = document.getElementById('supabaseStatus');
     const postPledgeReveal  = document.getElementById('postPledgeReveal');
@@ -1102,7 +1221,7 @@
     function clearErrors() {
       formError.style.display = 'none';
       formError.textContent = '';
-      [nameInput, emailInput, voterCountInput, phoneNumberInput, addressInput, signatureInput].forEach(el => el?.classList.remove('error'));
+      [nameInput, emailInput, voterCountInput, phoneNumberInput, addressInput, signatureInput, registeredInput, vbmInput, issuesGroup].forEach(el => el?.classList.remove('error'));
       const paInput = addressInput?.previousElementSibling;
       if (paInput) paInput.style.outline = '';
     }
@@ -1123,22 +1242,33 @@
         if (paInput) paInput.style.outline = '2px solid var(--red)';
         return 'Please check your home address on the map first.';
       }
-      if (!nameInput.value.trim()) {
+      if (currentBoundaryStatus !== 'inside') {
+        return 'This pledge is for City of Homestead residents. Your address appears to be outside city limits, but you can still share this page with friends in Homestead.';
+      }
+      if (!/\S+\s+\S+/.test(nameInput.value.trim())) {
         nameInput.classList.add('error');
-        return 'Please enter your full name.';
+        return 'Please enter your first and last name.';
       }
       if (!emailInput.value.trim() || !validateEmail(emailInput.value.trim())) {
         emailInput.classList.add('error');
         return 'Please enter a valid email address.';
       }
-      if (!phoneNumberInput.value.trim()) {
+      if (normalizePhone(phoneNumberInput.value).replace(/^1(?=\d{10}$)/, '').length !== 10) {
         phoneNumberInput.classList.add('error');
-        return 'Please enter your mobile number.';
+        return 'Please enter a 10-digit mobile number.';
       }
       const v = parseInt(voterCountInput.value, 10);
-      if (!v || v < 1) {
+      if (!v || v < 1 || v > 12) {
         voterCountInput.classList.add('error');
-        return 'Please enter the number of registered voters in your household.';
+        return 'Please enter the number of registered voters in your household (1-12).';
+      }
+      if (!registeredInput.value) {
+        registeredInput.classList.add('error');
+        return 'Please tell us whether you are registered at this address.';
+      }
+      if (!vbmInput.value) {
+        vbmInput.classList.add('error');
+        return 'Please tell us how you plan to vote.';
       }
       if (!signatureInput.value.trim()) {
         signatureInput.classList.add('error');
@@ -1157,7 +1287,8 @@
       const nameSlug = (nameInput.value || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
       const phone4 = normalizePhone(phoneNumberInput.value).slice(-4);
       const myCode = (nameSlug + phone4) || 'friend';
-      const url = location.origin + location.pathname + '?ref=' + encodeURIComponent(myCode);
+      const url = location.origin + location.pathname + '?ref=' + encodeURIComponent(myCode)
+                + (CAP_CODE ? '&cap=' + encodeURIComponent(CAP_CODE) : '');
 
       shareWa.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg + ' ' + url)}`;
       shareSms.href = `sms:?&body=${encodeURIComponent(msg + ' ' + url)}`;
@@ -1216,51 +1347,49 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting…';
 
-      const pledge = {
-        timestamp: new Date().toISOString(),
-        campaign_id: 'julio_guzman_mayor_2025',
-        supporter_full_name: nameInput.value.trim(),
+      const fullAddress = addressInput.value.trim();
+      const zipMatch = fullAddress.match(/\b(\d{5})(?:-\d{4})?\b(?!.*\b\d{5}\b)/);
+      // One validated, de-duplicating entry point (Supabase function submit_pledge).
+      // The public key cannot read or write the pledges table directly.
+      const payload = {
+        full_name: nameInput.value.trim(),
         email: emailInput.value.trim(),
-        full_address: addressInput.value.trim(),
-        city_key: citySelect.value,
-        city_display: CITY_CONFIG[citySelect.value].name,
-        voters_at_address: parseInt(voterCountInput.value, 10) || 0,
         phone: phoneNumberInput.value.trim(),
-        consent: !!consentInline.checked,
-        signature: signatureInput.value.trim(),
-        source: 'web:boundary_form_v3' + (SRC_TAG ? ':' + SRC_TAG : ''),
-        inside_boundary: currentBoundaryStatus === 'inside'
-      };
-
-      const dbRecord = {
-        timestamp: pledge.timestamp,
-        campaign_id: pledge.campaign_id,
-        full_name: pledge.supporter_full_name,
-        email: pledge.email,
-        address: pledge.full_address,
-        city_key: pledge.city_key,
-        city_display: pledge.city_display,
-        voters_at_address: pledge.voters_at_address,
-        phone: pledge.phone,
-        consent: pledge.consent,
-        signature: pledge.signature,
-        source: pledge.source,
-        inside_boundary: pledge.inside_boundary,
+        address: fullAddress,
+        zip: zipMatch ? zipMatch[1] : null,
+        inside_boundary: currentBoundaryStatus === 'inside',
         lat: lastLat,
         lng: lastLng,
-        normalized_address: pledge.full_address || null,
-        referrer_code: REF_CODE
+        voters_at_address: parseInt(voterCountInput.value, 10) || 1,
+        consent: !!consentInline.checked,
+        signature: signatureInput.value.trim(),
+        registered_status: registeredInput.value,
+        vbm_status: vbmInput.value,
+        top_issues: checkedValues('issues'),
+        help_offers: checkedValues('help'),
+        language: langInput.value,
+        contact_pref: contactPrefInput.value,
+        source: 'web:' + (SRC_TAG || 'website') + ':pledge_v4',
+        referrer_code: REF_CODE,
+        captain_code: CAP_CODE
       };
 
       let saveError = null;
+      let saveResult = null;
       if (!sbClient) {
         saveError = 'The pledge service is unavailable. Please try again later.';
       } else {
         try {
-          const { error } = await sbClient.from(TABLE_NAME).insert([dbRecord]);
+          const { data, error } = await sbClient.rpc('submit_pledge', { p: payload });
           if (error) {
             console.error('Pledge save failed:', error.code, error.message);
-            saveError = 'We could not save your pledge. Please try again later.';
+            const m = error.message || '';
+            saveError = m.includes('invalid_phone') ? 'Please enter a valid 10-digit mobile number.'
+                      : m.includes('invalid_email') ? 'Please enter a valid email address.'
+                      : m.includes('invalid_name')  ? 'Please enter your first and last name.'
+                      : 'We could not save your pledge. Please try again, or email info@julioformayor.com.';
+          } else {
+            saveResult = data;
           }
         } catch (err) {
           console.error('Pledge save failed:', err);
@@ -1276,7 +1405,10 @@
         return;
       }
 
-      showStatusMsg('Pledge received by the campaign', 'ok');
+      const alreadySigned = saveResult && saveResult.status === 'updated';
+      document.querySelector('#thankYouModal .modal-title').textContent =
+        alreadySigned ? 'Welcome back — your pledge is updated' : 'Thank you for your support';
+      showStatusMsg(alreadySigned ? 'Your existing pledge was updated' : 'Pledge received by the campaign', 'ok');
       await loadProgress();
       wireShare();
       openThankYouModal();
@@ -1372,55 +1504,3 @@
   <script src="site.js" defer></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
