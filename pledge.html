@@ -126,7 +126,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 6px;
       margin-bottom: 12px;
     }
@@ -254,6 +254,8 @@
       padding: 0;
     }
     fieldset.chk-group label { text-align: left; }
+    gmp-place-autocomplete { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+    .row label, fieldset.chk-group label { min-width: 0; }
     fieldset.chk-group.error { border-color: var(--red); background: #fff5f5; }
     .row select.error { border-color: var(--red); background: #fff5f5; }
     .vbm-note {
@@ -1387,7 +1389,7 @@
           includedRegionCodes: ['us'],
         });
         // Match existing input styling
-        paEl.style.cssText = 'width:100%;display:block;';
+        paEl.style.cssText = 'width:100%;max-width:100%;min-width:0;display:block;box-sizing:border-box;';
 
         // Insert above the hidden original input (kept for form value storage)
         addressInput.style.display = 'none';
