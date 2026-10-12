@@ -101,3 +101,27 @@ html.i18n-pending body { opacity: 0; }
   .lang-switch button { min-width: 32px; padding: 8px 7px; font-size: 11px; }
   .nav-logo-box { display: none !important; }
 }
+
+/* Phone readability fixes */
+body { overflow-wrap: break-word; }
+@media (max-width: 980px) {
+  .tl-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .tl-card { padding: 22px 20px !important; }
+  .issue-sec { padding: 44px 22px !important; }
+  .issue-inner { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .issue-label { position: static !important; }
+  .issue-label .number { font-size: 52px !important; }
+  .issue-label h2 { font-size: 24px !important; }
+  .issue-body p { font-size: 16px !important; }
+  .issue-body ul li { font-size: 16px !important; }
+}
+@media (max-width: 640px) {
+  body { -webkit-text-size-adjust: 100%; }
+  p, li { font-size: max(15px, 1em); line-height: 1.6; }
+  .footer-brand p, .footer-col a { font-size: 15px !important; }
+  .footer-bottom { font-size: 13px !important; line-height: 1.7; color: rgba(255,255,255,0.5) !important; }
+  .footer-col a { padding: 6px 0; margin-bottom: 2px !important; }
+  .form-helper, #result .small, .vbm-note, .voter-tools-card p, .consent-wrap label { font-size: 14px !important; }
+  .sticky-text { font-size: 12px !important; }
+  .sticky-text strong { font-size: 13px !important; }
+}
