@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <meta name="description" content="Campaign pledge page for Julio Guzman for Mayor of Homestead." />
   <link rel="canonical" href="https://reosouthfl-eng.github.io/julioformayor-site/pledge.html" />
@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://maps.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
 
+  <link rel="stylesheet" href="shared.css" />
   <style>
     :root {
       --green: #16a34a;
@@ -35,95 +36,23 @@
 
     * { box-sizing: border-box; }
 
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      margin: 0;
-      padding: 64px 0 110px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: var(--gray-100);
-    }
-
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 999;
-      background: #fff;
-      border-bottom: 1px solid #eee;
-      padding: 14px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-logo { display: flex; align-items: center; gap: 10px; }
-    .nav-logo-text { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
-    .julio { color: #1b3a6e; }
-    .guzman { color: #f5a623; }
-
-    .nav-logo-box {
-      border: 2px solid #1b3a6e;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #1b3a6e;
-      text-transform: uppercase;
-    }
-
-    .nav-links { display: flex; gap: 30px; align-items: center; }
-    .nav-links a {
-      color: #1b3a6e;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-    }
-    .nav-links a:hover { color: #f5a623; }
-
+    body { background: #fff; padding-bottom: 76px; }
     .nav-pledge { color: #f5a623 !important; font-weight: 700 !important; }
 
-    .nav-donate {
-      background: #f5a623; color: #1b3a6e !important;
-      padding: 8px 20px;
-      border-radius: 4px;
+    .pledge-hero { padding-top: 56px; padding-bottom: 56px; }
+    .pledge-hero .hero-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,.82);
+      line-height: 1.55;
+      margin: 14px 0 26px;
+      max-width: 640px;
     }
-
-    @media (max-width: 860px) {
-      nav { padding: 12px 16px; }
-      .nav-links { gap: 14px; }
-      .nav-links a:not(.nav-donate):not(.nav-pledge) { display: none; }
-      .nav-logo-box { display: none; }
-    }
-
-    .hero {
-      width: 100%;
-      background: linear-gradient(135deg,#1b3a6e 0%,#0d2147 100%);
-      padding: 20px 16px 18px;
-      text-align: center;
-    }
-
-    .hero-name {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-weight: 900;
-      font-size: 22px;
-      color: #fff;
-      margin: 0 0 4px;
-    }
-
-    .hero-name span { color: var(--gold); }
-
-    .hero-sub {
-      font-size: 13px;
-      color: #94a3b8;
-      margin: 0 0 14px;
-      line-height: 1.5;
-    }
+    .pledge-hero .hero-sub strong { color: var(--gold); }
+    .pledge-section { background: var(--gray-100); padding: 40px 24px 64px; }
 
     .progress-wrap {
-      width: 92%;
-      max-width: 420px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 520px;
     }
 
     .progress-header {
@@ -135,12 +64,13 @@
 
     .progress-label {
       font-size: 12px;
+      letter-spacing: 2px;
       color: #cbd5e1;
       font-weight: 700;
     }
 
     .progress-count {
-      font-size: 18px;
+      font-size: 26px;
       font-weight: 700;
       color: var(--gold);
     }
@@ -162,32 +92,33 @@
     }
 
     .progress-goal {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(255,255,255,.55);
+      margin-top: 6px;
       text-align: right;
     }
 
     .form-card {
-      width: 92%;
-      max-width: 420px;
+      width: 100%;
+      max-width: 620px;
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.08);
-      padding: 18px;
-      margin: 14px auto 0;
+      border-radius: 8px;
+      border-top: 4px solid var(--gold);
+      box-shadow: 0 4px 24px rgba(13,33,71,.08);
+      padding: 32px;
+      margin: 0 auto;
     }
 
     .form-card h2 {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-weight: 900;
-      font-size: 15px;
-      margin: 0 0 4px;
+      font-weight: 800;
+      font-size: 24px;
+      margin: 0 0 8px;
       color: var(--navy);
     }
 
     .form-card > p {
-      font-size: 13px;
+      font-size: 15px;
       color: var(--gray-500);
       margin: 0 0 14px;
       line-height: 1.5;
@@ -201,7 +132,7 @@
     }
 
     .row label {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--gray-700);
     }
@@ -209,8 +140,8 @@
     .row input,
     .row select {
       width: 100%;
-      padding: 10px 12px;
-      font-size: 14px;
+      padding: 12px 14px;
+      font-size: 16px;
       border: 1.5px solid var(--gray-200);
       border-radius: 10px;
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -358,15 +289,16 @@
 
     .btn-submit {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       font-size: 15px;
       font-weight: 700;
       background: #f5a623;
       color: #1b3a6e;
       border: none;
-      border-radius: 12px;
+      border-radius: 4px;
       cursor: pointer;
-      letter-spacing: .02em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
       box-shadow: 0 3px 10px rgba(245,166,35,.4);
       transition: transform .15s, box-shadow .15s;
     }
@@ -693,6 +625,15 @@
 
     .modal-btn:hover { filter: brightness(.98); }
 
+    @media (max-width: 640px) {
+      .pledge-section { padding: 20px 12px 48px !important; }
+      .form-card { padding: 22px 16px !important; }
+      .pledge-hero .hero-sub { font-size: 15px; }
+      .map-container { height: 240px; }
+      #map-container { min-height: 240px; }
+      .sticky-text { font-size: 11px; }
+    }
+
     @media (max-width: 420px) {
       .sharebar a { flex: 1 1 100%; }
       .vtc-grid { grid-template-columns: 1fr; }
@@ -703,33 +644,31 @@
   <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0/dist/umd/supabase.min.js"></script>
   <link rel="stylesheet" href="site-enhancements.css" />
+  <script src="i18n.js"></script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 </head>
 <body>
 
-  <nav>
-    <div class="nav-logo">
-      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
-        <div class="nav-logo-text">
-          <span class="julio">JULIO </span><span class="guzman">GUZMAN</span>
-        </div>
-        <div class="nav-logo-box">For Mayor</div>
-      </a>
-    </div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="plan.html">My Plan</a>
-      <a href="news.html">News</a>
-      <a href="contact.html">Contact</a>
-      <a href="pledge.html" class="nav-pledge">Sign the Pledge</a>
-      <a href="donate.html" class="nav-donate">Donate</a>
-    </div>
-  </nav>
+<nav>
+  <a href="index.html" class="nav-logo" style="text-decoration:none">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="pledge.html" class="nav-pledge">Sign the Pledge</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
 
-  <div class="hero">
-    <h1 class="hero-name">Stand with <span>Julio Guzman</span></h1>
-    <p class="hero-sub">Add your name to the campaign's supporter list.<br>Goal: <strong style="color:var(--gold)">3,500 supporters</strong></p>
+  <div class="page-hero pledge-hero">
+    <div class="eyebrow">Join the Movement</div>
+    <h1>Sign the Pledge</h1>
+    <p class="hero-sub">Stand with Julio Guzman for Mayor of Homestead. Add your name to the campaign's supporter list. Goal: <strong>3,500 supporters</strong></p>
     <div class="progress-wrap">
       <div class="progress-header">
         <span class="progress-label">SUPPORTERS SO FAR</span>
@@ -740,6 +679,7 @@
     </div>
   </div>
 
+  <div class="pledge-section">
   <div class="form-card">
     <h2>Check Your Homestead Address</h2>
     <p>Enter your home address to check whether it is within Homestead, then add your name to the campaign's supporter list. This pledge is not an official candidate petition or a voter registration form.</p>
@@ -899,6 +839,7 @@
       </div>
     </div>
   </div>
+  </div>
 
   <div id="stickyBar">
     <div class="sticky-text">
@@ -1021,8 +962,11 @@
     document.querySelectorAll('input[name="issues"]').forEach(cb => cb.addEventListener('change', () => {
       if (checkedValues('issues').length > 3) cb.checked = false;
     }));
-    // Spanish browsers default to Spanish
-    if ((navigator.language || '').toLowerCase().startsWith('es')) langInput.value = 'es';
+    // default the language question to the site language, else the browser's
+    const siteLang = window.JG_I18N && window.JG_I18N.lang;
+    if (siteLang && siteLang !== 'en') langInput.value = siteLang;
+    else if ((navigator.language || '').toLowerCase().startsWith('es')) langInput.value = 'es';
+    document.addEventListener('jg:langchange', (e) => { langInput.value = e.detail.lang; });
     const formError         = document.getElementById('formError');
     const supabaseStatus    = document.getElementById('supabaseStatus');
     const postPledgeReveal  = document.getElementById('postPledgeReveal');
@@ -1290,7 +1234,8 @@
 
     function wireShare() {
       const cityName = CITY_CONFIG[citySelect.value].name;
-      const msg = `I joined Julio Guzman's campaign supporter list in ${cityName}. Learn more here:`;
+      const T = (x) => (window.JG_I18N ? window.JG_I18N.t(x) : x);
+      const msg = T(`I joined Julio Guzman's campaign supporter list in ${cityName}. Learn more here:`);
       const nameSlug = (nameInput.value || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
       const phone4 = normalizePhone(phoneNumberInput.value).slice(-4);
       const myCode = (nameSlug + phone4) || 'friend';
@@ -1303,12 +1248,12 @@
         e.preventDefault();
         try {
           await navigator.clipboard.writeText(url);
-          alert('Link copied!');
+          alert(T('Link copied!'));
         } catch {
-          prompt('Copy this link:', url);
+          prompt(T('Copy this link:'), url);
         }
       };
-      shareEmail.href = `mailto:?subject=${encodeURIComponent('Support Julio Guzman for Mayor')}&body=${encodeURIComponent(msg + ' ' + url)}`;
+      shareEmail.href = `mailto:?subject=${encodeURIComponent(T('Support Julio Guzman for Mayor'))}&body=${encodeURIComponent(msg + ' ' + url)}`;
     }
 
     function showStatusMsg(msg, type) {
@@ -1499,15 +1444,31 @@
     });
   </script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHKqFA29mhzBtl0MqPh-xHTuYNgEnvu0U&libraries=places&callback=initMap&loading=async" async defer></script>
-  <footer style="width:100%;background:#0d2147;color:rgba(255,255,255,.75);text-align:center;padding:22px 20px 90px;font-size:12px;line-height:1.7;">
-    <div style="font-weight:900;font-size:20px;letter-spacing:1px;margin-bottom:2px;">
-      <span style="color:#fff;">JULIO </span><span style="color:#f5a623;">GUZMAN</span>
+  <script>
+    // Google Maps in the visitor's language (Spanish when chosen; Maps has no Kreyòl, so English otherwise)
+    (function () {
+      var l = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? '&language=es' : '';
+      var sc = document.createElement('script');
+      sc.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAHKqFA29mhzBtl0MqPh-xHTuYNgEnvu0U&libraries=places&callback=initMap&loading=async' + l;
+      sc.async = true; sc.defer = true;
+      document.body.appendChild(sc);
+    })();
+  </script>
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
     </div>
-    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;">For Mayor</div>
-    <div>Paid by Julio Guzman, Non-Partisan, for Homestead Mayor &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030</div>
-    <div style="margin-top:6px;"><a href="privacy.html" style="color:rgba(255,255,255,.45);text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="https://lkt.337.myftpupload.com/login" target="_blank" rel="noopener" style="color:rgba(255,255,255,.35);text-decoration:none;">Staff Login</a></div>
-  </footer>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="https://www.instagram.com/julioguzman_homestead/" target="_blank">Instagram</a><a href="https://www.tiktok.com/@julioguzmanhomestead" target="_blank">TikTok</a></div>
+  </div>
+  <div class="footer-bottom">
+    Paid by Julio Guzman, Non-Partisan, for Homestead Mayor. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="https://lkt.337.myftpupload.com/login" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.3);text-decoration:none;">Staff Login</a>
+  </div>
+</footer>
   <script src="site.js" defer></script>
 </body>
 </html>
