@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /julioformayor-site/admin.html
+Disallow: /admin.html
 Sitemap: https://julioformayor.com/sitemap.xml
