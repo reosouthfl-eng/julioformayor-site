@@ -1,10 +1,12 @@
 # Keeps the free-tier Supabase pledge database from auto-pausing
-# (Supabase pauses free projects after 7 days without activity, which
-# silently breaks the Sign the Pledge form). Runs twice a week.
+# (Supabase pauses free projects without activity, which silently breaks the
+# Sign the Pledge form and the admin page). Runs every day so there is always
+# a recent ping. If it ever fails, GitHub emails the repo owner — restore the
+# project in the Supabase dashboard right away.
 name: Pledge database keep-alive
 on:
   schedule:
-    - cron: "17 13 * * 1,4"   # Mon & Thu, 9:17 a.m. Eastern (EDT)
+    - cron: "17 13 * * *"   # Daily, 9:17 a.m. Eastern (EDT)
   workflow_dispatch:
 jobs:
   ping:
@@ -12,9 +14,14 @@ jobs:
     steps:
       - name: Ping pledge counter
         run: |
-          code=$(curl -s -o /tmp/out -w '%{http_code}' -X POST \
-            "https://jngtuihzliqvfmfkjapp.supabase.co/rest/v1/rpc/get_pledge_count" \
-            -H "apikey: sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk" \
-            -H "Content-Type: application/json" -d '{}')
-          echo "HTTP $code, supporters: $(cat /tmp/out)"
-          test "$code" = "200"
+          for attempt in 1 2 3; do
+            code=$(curl -s -m 30 -o /tmp/out -w '%{http_code}' -X POST \
+              "https://jngtuihzliqvfmfkjapp.supabase.co/rest/v1/rpc/get_pledge_count" \
+              -H "apikey: sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk" \
+              -H "Content-Type: application/json" -d '{}')
+            echo "Attempt $attempt: HTTP $code, supporters: $(cat /tmp/out 2>/dev/null)"
+            [ "$code" = "200" ] && exit 0
+            sleep 60
+          done
+          echo "::error::Pledge database did not respond — it may be paused. Restore it in the Supabase dashboard."
+          exit 1
