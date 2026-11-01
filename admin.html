@@ -292,6 +292,7 @@
     const id = tr.dataset.id; const row = rows.find(r => r.id === id);
     if (e.target.classList.contains('st')) {
       const status = e.target.value;
+      if (status === 'do_not_contact' && !confirm('Opt this person out of ALL contact?\n\nThis removes their address, voting answers, issues and notes. Only their name, email and phone are kept, on the do-not-contact list. This cannot be undone.')) { e.target.value = row.follow_up_status; return; }
       const { error } = await sb.from('pledges').update({ follow_up_status: status, updated_at: new Date().toISOString() }).eq('id', id);
       if (error) { alert('Save failed: ' + error.message); return; }
       if (status === 'do_not_contact') {
@@ -366,12 +367,14 @@
 
   $('e_consent').addEventListener('click', async (e) => {
     const c = e.target.dataset.optout; if (!c || !editing) return;
+    if (c === 'all' && !confirm('Opt this person out of ALL contact?\n\nThis removes their address, voting answers, issues and notes. Only their name, email and phone are kept, on the do-not-contact list. This cannot be undone.')) return;
     const { error } = await sb.rpc('record_opt_out', { p_pledge: editing.id, p_channel: c, p_note: 'Opt-out recorded in admin by ' + (me?.email || 'staff') });
     if (error) { $('editErr').textContent = 'Opt-out was not recorded: ' + error.message; return; }
     if (c === 'all' || c === 'email') editing.ok_email = false;
     if (c === 'all' || c === 'sms') editing.ok_sms = false;
     if (c === 'all' || c === 'phone') editing.ok_phone = false;
     editing.can_contact = editing.ok_email || editing.ok_sms || editing.ok_phone;
+    if (c === 'all') { closeEdit(); await loadAll(); return; }
     renderConsent(); loadHistory(editing.id); renderSupporters();
   });
 
