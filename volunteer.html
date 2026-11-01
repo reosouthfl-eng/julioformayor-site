@@ -32,6 +32,12 @@
     .submit-btn { width: 100%; background: #f5a623; color: #1b3a6e; border: none; padding: 16px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; cursor: pointer; margin-top: 8px; }
     .submit-btn:hover { background: #d48a0f; }
     .success-msg { display: none; background: #e8f5e9; border: 2px solid #4caf50; border-radius: 4px; padding: 16px; font-size: 15px; color: #2e7d32; font-weight: 600; text-align: center; margin-top: 16px; }
+    .vol-consent { border: 1px solid #ddd; border-radius: 6px; padding: 12px 16px 6px; margin: 4px 0 16px; }
+    .vol-consent legend { font-size: 13px; font-weight: 700; color: #333; padding: 0 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .vol-consent label { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: #444; line-height: 1.45; margin-bottom: 10px; text-transform: none; letter-spacing: 0; font-weight: 400; }
+    .vol-consent input[type="checkbox"] { width: auto; margin-top: 3px; flex: 0 0 auto; }
+    .vol-consent-note { font-size: 12px !important; color: #666 !important; line-height: 1.5; margin-bottom: 10px !important; }
+    .vol-consent-note a { color: #1b3a6e; }
     .cta-band { background: #0d2147; text-align: center; padding: 60px 80px; }
     .cta-band p { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 24px; }
   </style>
@@ -130,7 +136,15 @@
             <option>General volunteering</option>
           </select>
         </div>
+        <fieldset class="vol-consent">
+          <legend>Campaign contact permissions (optional)</legend>
+          <p class="vol-consent-note">Each box is separate. You can volunteer without checking any of them; we will still reply about your signup.</p>
+          <label><input type="checkbox" name="consent_email" value="yes" /> <span id="volConsentEmail">Email: I agree to receive campaign updates, event invitations, and voting reminders by email from the Julio Guzman for Mayor campaign. I can unsubscribe at any time.</span></label>
+          <label><input type="checkbox" name="consent_sms" value="yes" /> <span id="volConsentSms">Text messages: I agree to receive campaign text messages, including voting reminders, from the Julio Guzman for Mayor campaign at the mobile number I provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</span></label>
+          <label><input type="checkbox" name="consent_phone" value="yes" /> <span id="volConsentPhone">Phone calls: I agree to receive phone calls from Julio Guzman for Mayor campaign staff and volunteers at the number I provided. I can ask to stop calls at any time.</span></label>
+        </fieldset>
         <button type="submit" class="submit-btn">Sign Up to Volunteer</button>
+        <p class="vol-consent-note" style="margin-top:12px">Submitting opens your email app with your details filled in; nothing is sent until you press Send. See our <a href="privacy.html">Privacy Policy</a>.</p>
         <div class="success-msg" id="vol-success">Thank you! A campaign team member will be in touch within 48 hours.</div>
       </form>
     </div>

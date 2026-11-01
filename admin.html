@@ -212,12 +212,13 @@
   function renderSupporters() {
     const list = filtered();
     $('rowCount').textContent = `${list.length} shown`;
-    $('supTbl').innerHTML = '<tr><th>Signed</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Lang / prefers</th><th>Registered?</th><th>Voting plan</th><th>Issues</th><th>Will help</th><th>Captain</th><th>Follow-up</th><th>Notes</th></tr>' +
+    $('supTbl').innerHTML = '<tr><th>Signed</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Lang / prefers</th><th>OK to contact</th><th>Registered?</th><th>Voting plan</th><th>Issues</th><th>Will help</th><th>Captain</th><th>Follow-up</th><th>Notes</th></tr>' +
       list.map(r => `<tr data-id="${r.id}">
         <td>${esc((r.created_at||'').slice(0,10))}</td>
         <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}</td>
         <td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.address)}</td>
         <td>${esc(r.language || '')} / ${esc(r.contact_pref || '')}</td>
+        <td>${[['ok_email','Email'],['ok_sms','Text'],['ok_phone','Call']].filter(([k]) => r[k]).map(([,l]) => `<span class="tag ok">${l}</span>`).join('') || (r.consent && !r.unsubscribed ? '<span class="tag warn">legacy bundled</span>' : '<span class="tag">none</span>')}</td>
         <td>${r.needs_registration_help ? `<span class="tag warn">${esc(r.registered_status)}</span>` : `<span class="tag ok">${esc(r.registered_status || '?')}</span>`}</td>
         <td>${esc(r.vbm_status || '')}</td>
         <td>${(r.top_issues||[]).map(i => `<span class="tag">${esc(ISSUE_LABELS[i] || i)}</span>`).join('')}</td>
@@ -233,8 +234,14 @@
     const id = tr.dataset.id; const row = rows.find(r => r.id === id);
     if (e.target.classList.contains('st')) {
       const status = e.target.value;
-      const { error } = await sb.from('pledges').update({ follow_up_status: status, unsubscribed: status === 'do_not_contact' ? true : row.unsubscribed, updated_at: new Date().toISOString() }).eq('id', id);
+      const { error } = await sb.from('pledges').update({ follow_up_status: status, updated_at: new Date().toISOString() }).eq('id', id);
       if (error) { alert('Save failed: ' + error.message); return; }
+      if (status === 'do_not_contact') {
+        // Records the opt-out for every channel in the consent audit log.
+        const { error: oErr } = await sb.rpc('record_opt_out', { p_pledge: id, p_channel: 'all', p_note: 'Marked do_not_contact in admin by ' + (me?.email || 'staff') });
+        if (oErr) { alert('Opt-out was not recorded: ' + oErr.message); return; }
+        row.ok_email = row.ok_sms = row.ok_phone = false; row.consent = false;
+      }
       await sb.from('contact_log').insert({ pledge_id: id, contact_type: 'status_change', outcome: status, contacted_by: me?.email || null });
       row.follow_up_status = status; if (status === 'do_not_contact') { row.unsubscribed = true; row.can_contact = false; }
     }
@@ -250,7 +257,7 @@
   $('fSearch').addEventListener('input', renderSupporters);
 
   $('exportBtn').onclick = () => {
-    const cols = ['created_at','full_name','first_name','last_name','phone','email','address','zip','language','contact_pref','registered_status','vbm_status','top_issues','help_offers','voters_at_address','captain_code','referrer_code','channel','follow_up_status','notes','consent','unsubscribed'];
+    const cols = ['created_at','full_name','first_name','last_name','phone','email','address','zip','language','contact_pref','registered_status','vbm_status','top_issues','help_offers','voters_at_address','captain_code','referrer_code','channel','follow_up_status','notes','consent','ok_email','ok_sms','ok_phone','consent_version','consent_updated_at','unsubscribed'];
     const csvCell = (v) => { const s = Array.isArray(v) ? v.join('; ') : String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
     const csv = [cols.join(','), ...filtered().map(r => cols.map(c => csvCell(r[c])).join(','))].join('\n');
     const a = document.createElement('a');

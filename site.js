@@ -64,8 +64,15 @@
       e.preventDefault(); e.stopImmediatePropagation();
       const d=new FormData(form);
       status(form,'Your email application will open with your volunteer information pre-filled. Please send the email to complete your signup.');
+      // Consent record travels in the email: wording version, date, and each channel's answer + exact text.
+      const VOL_CONSENT_VERSION = 'volunteer_v1_2026-11-01';
+      const txt = (id) => (document.getElementById(id)?.textContent || '').replace(/\s+/g,' ').trim();
+      const consentLines = [['Email','consent_email','volConsentEmail'],['Text messages','consent_sms','volConsentSms'],['Phone calls','consent_phone','volConsentPhone']]
+        .map(([label,name,id]) => label + ': ' + (d.get(name) ? 'YES' : 'no') + (d.get(name) ? '  ("' + txt(id) + '")' : '')).join('\n');
       mailto('Volunteer signup: ' + [d.get('first'),d.get('last')].filter(Boolean).join(' '),
-        'Name: '+[d.get('first'),d.get('last')].filter(Boolean).join(' ')+'\nEmail: '+(d.get('email')||'')+'\nPhone: '+(d.get('phone')||'')+'\nZIP: '+(d.get('zip')||'')+'\nInterest: '+(d.get('interest')||'General volunteering'));
+        'Name: '+[d.get('first'),d.get('last')].filter(Boolean).join(' ')+'\nEmail: '+(d.get('email')||'')+'\nPhone: '+(d.get('phone')||'')+'\nZIP: '+(d.get('zip')||'')+'\nInterest: '+(d.get('interest')||'General volunteering')
+        +'\n\n--- Contact permissions (optional) ---\n'+consentLines
+        +'\nConsent wording version: '+VOL_CONSENT_VERSION+'\nSubmitted: '+new Date().toISOString()+'\nPage language: '+(document.documentElement.lang||'en'));
       return;
     }
     if (form.classList.contains('email-form')) {
