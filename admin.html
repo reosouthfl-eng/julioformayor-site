@@ -218,7 +218,7 @@
         <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}</td>
         <td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.address)}</td>
         <td>${esc(r.language || '')} / ${esc(r.contact_pref || '')}</td>
-        <td>${[['ok_email','Email'],['ok_sms','Text'],['ok_phone','Call']].filter(([k]) => r[k]).map(([,l]) => `<span class="tag ok">${l}</span>`).join('') || (r.consent && !r.unsubscribed ? '<span class="tag warn">legacy bundled</span>' : '<span class="tag">none</span>')}</td>
+        <td>${[['ok_email','Email'],['ok_sms','Text'],['ok_phone','Call']].filter(([k]) => r[k]).map(([,l]) => `<span class="tag ok">${l}</span>`).join('') || '<span class="tag">none</span>'}${r.consent_version === 'pledge_v4_bundled' ? ' <span class="tag warn">old form: reconfirm before texting/calling</span>' : ''}</td>
         <td>${r.needs_registration_help ? `<span class="tag warn">${esc(r.registered_status)}</span>` : `<span class="tag ok">${esc(r.registered_status || '?')}</span>`}</td>
         <td>${esc(r.vbm_status || '')}</td>
         <td>${(r.top_issues||[]).map(i => `<span class="tag">${esc(ISSUE_LABELS[i] || i)}</span>`).join('')}</td>

@@ -65,7 +65,7 @@
       const d=new FormData(form);
       status(form,'Your email application will open with your volunteer information pre-filled. Please send the email to complete your signup.');
       // Consent record travels in the email: wording version, date, and each channel's answer + exact text.
-      const VOL_CONSENT_VERSION = 'volunteer_v1_2026-11-01';
+      const VOL_CONSENT_VERSION = 'volunteer_v2_2026-11-01';
       const txt = (id) => (document.getElementById(id)?.textContent || '').replace(/\s+/g,' ').trim();
       const consentLines = [['Email','consent_email','volConsentEmail'],['Text messages','consent_sms','volConsentSms'],['Phone calls','consent_phone','volConsentPhone']]
         .map(([label,name,id]) => label + ': ' + (d.get(name) ? 'YES' : 'no') + (d.get(name) ? '  ("' + txt(id) + '")' : '')).join('\n');

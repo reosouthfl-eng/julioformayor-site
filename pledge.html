@@ -763,7 +763,7 @@
       <label><input type="checkbox" name="help" value="yard_sign"> Yard sign</label>
       <label><input type="checkbox" name="help" value="volunteer"> Volunteer</label>
       <label><input type="checkbox" name="help" value="host_meet_greet"> Host a meet &amp; greet</label>
-      <label><input type="checkbox" name="help" value="facility_captain"> Sign up voters where I work or live</label>
+      <label><input type="checkbox" name="help" value="facility_captain"> Invite people to take the pledge where I work or live</label>
       <label><input type="checkbox" name="help" value="share_social"> Share on social media</label>
     </fieldset>
 
@@ -792,15 +792,15 @@
       <p class="consent-intro">Each box is separate. You can sign the pledge without checking any of them.</p>
       <div class="consent-wrap">
         <input type="checkbox" id="consentEmail" />
-        <label for="consentEmail" id="consentEmailText">Email: I agree to receive campaign updates, event invitations, and voting reminders by email from the Julio Guzman for Mayor campaign. I can unsubscribe at any time.</label>
+        <label for="consentEmail" id="consentEmailText">Email: I agree to receive campaign updates, event invitations, and voting reminders by email from the Julio Guzman for Mayor campaign. Every email includes a way to unsubscribe.</label>
       </div>
       <div class="consent-wrap">
         <input type="checkbox" id="consentSms" />
-        <label for="consentSms" id="consentSmsText">Text messages: I agree to receive campaign text messages, including voting reminders, from the Julio Guzman for Mayor campaign at the mobile number I provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</label>
+        <label for="consentSms" id="consentSmsText">Text messages: By checking this box, I agree to receive recurring text messages from the Julio Guzman for Mayor campaign, including messages sent using automated technology, at the mobile number I provided. Consent is not a condition of signing, volunteering, or supporting the campaign. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. See the Messaging Terms in our Privacy Policy.</label>
       </div>
       <div class="consent-wrap">
         <input type="checkbox" id="consentPhone" />
-        <label for="consentPhone" id="consentPhoneText">Phone calls: I agree to receive phone calls from Julio Guzman for Mayor campaign staff and volunteers at the number I provided. I can ask to stop calls at any time.</label>
+        <label for="consentPhone" id="consentPhoneText">Phone calls: By checking this box, I agree to receive calls from the Julio Guzman for Mayor campaign at the number I provided, including calls made using automated technology or a prerecorded or artificial voice. Consent is not a condition of signing, volunteering, or supporting the campaign. I can ask to stop calls at any time.</label>
       </div>
       <p class="consent-foot">Agreeing is not required to sign the pledge. See our <a href="privacy.html">Privacy Policy</a> for how your information is used and how to opt out.</p>
     </fieldset>
@@ -971,7 +971,7 @@
     const voterCountInput   = document.getElementById('voterCountInput');
     const phoneNumberInput  = document.getElementById('phoneNumberInput');
     // Bump CONSENT_VERSION whenever any consent wording changes (all languages).
-    const CONSENT_VERSION   = 'pledge_v5_2026-11-01';
+    const CONSENT_VERSION   = 'pledge_v6_2026-11-01';
     const consentBoxes      = {
       email: document.getElementById('consentEmail'),
       sms:   document.getElementById('consentSms'),
@@ -1352,7 +1352,7 @@
         help_offers: checkedValues('help'),
         language: langInput.value,
         contact_pref: contactPrefInput.value,
-        source: 'web:' + (SRC_TAG || 'website') + ':pledge_v5',
+        source: 'web:' + (SRC_TAG || 'website') + ':pledge_v6',
         referrer_code: REF_CODE,
         captain_code: CAP_CODE
       };
@@ -1499,7 +1499,7 @@
     <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="https://www.instagram.com/julioguzman_homestead/" target="_blank">Instagram</a><a href="https://www.tiktok.com/@julioguzmanhomestead" target="_blank">TikTok</a></div>
   </div>
   <div class="footer-bottom">
-    Paid by Julio Guzman, Non-Partisan, for Homestead Mayor. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a>
+    Political advertisement paid for and approved by Julio Guzman, Nonpartisan, for Mayor of Homestead. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a>
   </div>
 </footer>
   <script src="site.js" defer></script>
