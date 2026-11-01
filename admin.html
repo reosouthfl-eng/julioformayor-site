@@ -42,6 +42,23 @@
   .muted { color:var(--muted); font-size:12px; }
   td select, td input { font-size:12px; padding:4px; border:1px solid var(--line); border-radius:6px; }
   .hidden { display:none !important; }
+  .editbtn { background:var(--navy); color:#fff; border:none; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:700; cursor:pointer; }
+  #editModal { position:fixed; inset:0; background:rgba(15,23,42,.55); display:flex; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; z-index:50; }
+  #editModal .panel { background:#fff; border-radius:12px; width:100%; max-width:760px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.25); }
+  #editModal h2 { margin:0 0 4px; color:var(--navy); font-size:17px; }
+  .egrid { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; margin-top:12px; }
+  .egrid label { font-size:12px; font-weight:700; color:#334155; display:flex; flex-direction:column; gap:4px; }
+  .egrid input, .egrid select, .egrid textarea { font:inherit; font-size:13px; font-weight:400; padding:8px; border:1.5px solid var(--line); border-radius:8px; }
+  .egrid .full { grid-column:1 / -1; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px 12px; font-weight:400; }
+  .chips label { flex-direction:row; align-items:center; font-weight:400; gap:5px; }
+  .esec { border-top:1px solid var(--line); margin-top:16px; padding-top:12px; }
+  .esec h3 { margin:0 0 6px; font-size:13px; color:var(--navy); }
+  .hist { font-size:12px; color:#334155; max-height:160px; overflow:auto; }
+  .hist div { padding:3px 0; border-bottom:1px dashed var(--line); white-space:normal; }
+  .eactions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap; }
+  .btn.danger { background:#fee2e2; color:var(--red); }
+  @media (max-width:600px) { .egrid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -94,9 +111,49 @@
       <span class="muted" id="rowCount"></span>
     </div>
     <div class="tablewrap"><table id="supTbl"></table></div>
-    <p class="muted">Follow-up status and notes save immediately. Every status change is also written to the contact log.</p>
+    <p class="muted">Follow-up status and notes save immediately. Use <b>Edit</b> to correct a record or record an opt-out. Every change is written to the contact log with who made it.</p>
   </div>
 </main>
+
+<div id="editModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <div class="panel">
+    <h2 id="editTitle">Edit supporter</h2>
+    <div class="muted" id="editMeta"></div>
+    <div class="egrid">
+      <label>Full name<input id="e_full_name" /></label>
+      <label>Email<input id="e_email" type="email" /></label>
+      <label>Phone<input id="e_phone" type="tel" /></label>
+      <label>Registered voters in household<input id="e_voters_at_address" type="number" min="1" max="12" /></label>
+      <label class="full">Address<input id="e_address" /></label>
+      <label>ZIP<input id="e_zip" /></label>
+      <label>Inside Homestead city limits?<select id="e_inside_boundary"><option value="true">Yes</option><option value="false">No</option></select></label>
+      <label>Registered at this address?<select id="e_registered_status"><option value="">—</option><option value="yes">Yes</option><option value="no">No / recently moved</option><option value="unsure">Not sure</option></select></label>
+      <label>Voting plan<select id="e_vbm_status"><option value="">—</option><option value="want">By mail – wants reminder</option><option value="have_2027">By mail – already requested 2027</option><option value="early">Early voting</option><option value="election_day">Election Day</option><option value="unsure">Not sure</option></select></label>
+      <label>Preferred language<select id="e_language"><option value="">—</option><option value="en">English</option><option value="es">Español</option><option value="ht">Kreyòl</option></select></label>
+      <label>Best way to reach<select id="e_contact_pref"><option value="">No preference</option><option value="text">Text</option><option value="call">Call</option><option value="email">Email</option><option value="whatsapp">WhatsApp</option></select></label>
+      <label>Captain code<input id="e_captain_code" /></label>
+      <label class="full">Issues<div class="chips" id="e_top_issues"></div></label>
+      <label class="full">Will help with<div class="chips" id="e_help_offers"></div></label>
+      <label class="full">Notes<textarea id="e_notes" rows="2"></textarea></label>
+    </div>
+
+    <div class="esec">
+      <h3>Contact permission</h3>
+      <div id="e_consent"></div>
+      <p class="muted" style="margin:6px 0 0">Permission can only be given by the supporter on a campaign form. Staff can record opt-outs here.</p>
+    </div>
+    <div class="esec">
+      <h3>History</h3>
+      <div class="hist" id="e_history">Loading…</div>
+    </div>
+
+    <div class="err" id="editErr"></div>
+    <div class="eactions">
+      <button class="btn secondary" id="editCancel">Cancel</button>
+      <button class="btn" id="editSave">Save changes</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const SUPABASE_URL = 'https://jngtuihzliqvfmfkjapp.supabase.co';
@@ -212,8 +269,9 @@
   function renderSupporters() {
     const list = filtered();
     $('rowCount').textContent = `${list.length} shown`;
-    $('supTbl').innerHTML = '<tr><th>Signed</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Lang / prefers</th><th>OK to contact</th><th>Registered?</th><th>Voting plan</th><th>Issues</th><th>Will help</th><th>Captain</th><th>Follow-up</th><th>Notes</th></tr>' +
+    $('supTbl').innerHTML = '<tr><th></th><th>Signed</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Lang / prefers</th><th>OK to contact</th><th>Registered?</th><th>Voting plan</th><th>Issues</th><th>Will help</th><th>Captain</th><th>Follow-up</th><th>Notes</th></tr>' +
       list.map(r => `<tr data-id="${r.id}">
+        <td><button class="editbtn" data-edit="${r.id}">Edit</button></td>
         <td>${esc((r.created_at||'').slice(0,10))}</td>
         <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}</td>
         <td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.address)}</td>
@@ -252,6 +310,94 @@
       row.notes = notes;
     }
   });
+
+  // ── Edit supporter ───────────────────────────────────────────
+  const HELP_LABELS = { yard_sign:'Yard sign', volunteer:'Volunteer', host_meet_greet:'Host meet & greet', facility_captain:'Pledge captain', share_social:'Share on social' };
+  const EDIT_FIELDS = ['full_name','email','phone','address','zip','inside_boundary','voters_at_address','language','contact_pref','registered_status','vbm_status','captain_code','notes'];
+  const ERR_TEXT = { invalid_name:'Enter a first and last name.', invalid_email:'That email address is not valid.', invalid_phone:'Enter a 10-digit phone number.',
+    duplicate_email:'Another supporter already has that email.', duplicate_phone:'Another supporter already has that phone number.', not_authorized:'Your account is not on the admin list.' };
+  let editing = null;
+  const norm = (v) => (v === null || v === undefined) ? '' : String(v);
+
+  function chips(boxId, all, labels, selected) {
+    $(boxId).innerHTML = Object.keys(all).map(k => `<label><input type="checkbox" value="${esc(k)}" ${selected.includes(k) ? 'checked' : ''}/> ${esc(labels[k] || k)}</label>`).join('');
+  }
+  function chipValues(boxId) { return [...$(boxId).querySelectorAll('input:checked')].map(i => i.value); }
+
+  async function openEdit(id) {
+    editing = rows.find(r => r.id === id); if (!editing) return;
+    $('editErr').textContent = '';
+    $('editMeta').textContent = `Signed ${String(editing.created_at||'').slice(0,10)} · source ${editing.channel || editing.source || '—'}`;
+    for (const f of EDIT_FIELDS) { const el = $('e_' + f); if (el) el.value = f === 'inside_boundary' ? String(!!editing[f]) : norm(editing[f]); }
+    const issues = { ...ISSUE_LABELS }; (editing.top_issues || []).forEach(i => { if (!(i in issues)) issues[i] = i; });
+    const helps = { ...HELP_LABELS }; (editing.help_offers || []).forEach(i => { if (!(i in helps)) helps[i] = i; });
+    chips('e_top_issues', issues, issues, editing.top_issues || []);
+    chips('e_help_offers', helps, helps, editing.help_offers || []);
+    renderConsent();
+    $('editModal').classList.remove('hidden');
+    loadHistory(id);
+  }
+
+  function renderConsent() {
+    const r = editing;
+    const ch = [['email','ok_email','Email'],['sms','ok_sms','Text'],['phone','ok_phone','Call']];
+    $('e_consent').innerHTML = ch.map(([c,k,l]) => r[k]
+      ? `<span class="tag ok">${l}: allowed</span> <button class="btn danger" style="padding:4px 8px;font-size:11px" data-optout="${c}">Record opt-out</button>`
+      : `<span class="tag">${l}: not allowed</span>`).join(' &nbsp; ')
+      + (r.ok_email || r.ok_sms || r.ok_phone ? ` &nbsp; <button class="btn danger" style="padding:4px 8px;font-size:11px" data-optout="all">Opt out of everything</button>` : '');
+  }
+
+  async function loadHistory(id) {
+    const [ce, cl] = await Promise.all([
+      sb.from('consent_events').select('channel,granted,consent_version,recorded_by,created_at').eq('pledge_id', id).order('created_at', { ascending: false }),
+      sb.from('contact_log').select('contact_type,outcome,contacted_by,contacted_at').eq('pledge_id', id).order('contacted_at', { ascending: false }).limit(50)
+    ]);
+    const items = [
+      ...(ce.data || []).map(e => ({ t: e.created_at, s: `${e.granted ? 'Permission given' : 'Opt-out'}: ${e.channel} (${e.consent_version}) — ${e.recorded_by}` })),
+      ...(cl.data || []).map(e => ({ t: e.contacted_at, s: `${e.contact_type === 'record_edit' ? 'Edited' : e.contact_type.replace('_',' ')}: ${e.outcome || ''} — ${e.contacted_by || 'staff'}` }))
+    ].sort((a,b) => String(b.t).localeCompare(String(a.t)));
+    $('e_history').innerHTML = items.length ? items.map(i => `<div><b>${esc(String(i.t).slice(0,16).replace('T',' '))}</b> · ${esc(i.s)}</div>`).join('') : '<div>No history yet.</div>';
+  }
+
+  function closeEdit() { $('editModal').classList.add('hidden'); editing = null; }
+  $('editCancel').onclick = closeEdit;
+  $('editModal').addEventListener('click', (e) => { if (e.target.id === 'editModal') closeEdit(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && editing) closeEdit(); });
+
+  $('e_consent').addEventListener('click', async (e) => {
+    const c = e.target.dataset.optout; if (!c || !editing) return;
+    const { error } = await sb.rpc('record_opt_out', { p_pledge: editing.id, p_channel: c, p_note: 'Opt-out recorded in admin by ' + (me?.email || 'staff') });
+    if (error) { $('editErr').textContent = 'Opt-out was not recorded: ' + error.message; return; }
+    if (c === 'all' || c === 'email') editing.ok_email = false;
+    if (c === 'all' || c === 'sms') editing.ok_sms = false;
+    if (c === 'all' || c === 'phone') editing.ok_phone = false;
+    editing.can_contact = editing.ok_email || editing.ok_sms || editing.ok_phone;
+    renderConsent(); loadHistory(editing.id); renderSupporters();
+  });
+
+  $('editSave').onclick = async () => {
+    if (!editing) return;
+    $('editErr').textContent = '';
+    const p = {};
+    for (const f of EDIT_FIELDS) {
+      const el = $('e_' + f); if (!el) continue;
+      let v = el.value.trim();
+      const before = f === 'inside_boundary' ? String(!!editing[f]) : norm(editing[f]);
+      if (v === before) continue;
+      p[f] = f === 'inside_boundary' ? (v === 'true') : f === 'voters_at_address' ? parseInt(v || '1', 10) : v;
+    }
+    const ti = chipValues('e_top_issues'), ho = chipValues('e_help_offers');
+    if (JSON.stringify([...ti].sort()) !== JSON.stringify([...(editing.top_issues||[])].sort())) p.top_issues = ti;
+    if (JSON.stringify([...ho].sort()) !== JSON.stringify([...(editing.help_offers||[])].sort())) p.help_offers = ho;
+    if (!Object.keys(p).length) { closeEdit(); return; }
+    $('editSave').disabled = true; $('editSave').textContent = 'Saving…';
+    const { error } = await sb.rpc('admin_update_pledge', { p_id: editing.id, p });
+    $('editSave').disabled = false; $('editSave').textContent = 'Save changes';
+    if (error) { const key = Object.keys(ERR_TEXT).find(k => (error.message||'').includes(k)); $('editErr').textContent = key ? ERR_TEXT[key] : 'Save failed: ' + error.message; return; }
+    closeEdit(); await loadAll();
+  };
+
+  $('supTbl').addEventListener('click', (e) => { const id = e.target.dataset?.edit; if (id) openEdit(id); });
 
   ['fSegment','fIssue','fLang','fCaptain','fConsent'].forEach(id => $(id).addEventListener('change', renderSupporters));
   $('fSearch').addEventListener('input', renderSupporters);
