@@ -101,12 +101,15 @@
         <option value="sign">Yard sign requests</option>
         <option value="new">Not yet contacted</option>
         <option value="outside">Outside city limits</option>
+        <option value="staff">Contacts added by staff (not pledges)</option>
+        <option value="paper">Paper pledges</option>
       </select>
       <select id="fIssue"><option value="">Any issue</option></select>
       <select id="fLang"><option value="">Any language</option><option value="en">English</option><option value="es">Español</option><option value="ht">Kreyòl</option></select>
       <select id="fCaptain"><option value="">Any captain</option></select>
       <label class="muted"><input type="checkbox" id="fConsent" checked /> Only contactable (consented)</label>
       <input id="fSearch" placeholder="Search name, email, phone, street" style="min-width:220px" />
+      <button class="btn" id="addBtn">+ Add supporter</button>
       <button class="btn secondary" id="exportBtn">Export CSV</button>
       <span class="muted" id="rowCount"></span>
     </div>
@@ -151,6 +154,44 @@
     <div class="eactions">
       <button class="btn secondary" id="editCancel">Cancel</button>
       <button class="btn" id="editSave">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="addModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="addTitle" style="position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;z-index:50">
+  <div class="panel" style="background:#fff;border-radius:12px;width:100%;max-width:760px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.25)">
+    <h2 id="addTitle" style="margin:0 0 8px;color:var(--navy);font-size:17px">Add supporter</h2>
+    <div class="egrid" style="margin-top:4px">
+      <label class="full">What are you adding?
+        <select id="a_entry_type">
+          <option value="staff_added">Contact I know: not a pledge, no text/call permission</option>
+          <option value="paper">Paper pledge: they signed a printed pledge form</option>
+        </select>
+      </label>
+      <div class="full muted" id="a_typehelp"></div>
+      <label>Full name<input id="a_full_name" placeholder="First and last name" /></label>
+      <label>Phone<input id="a_phone" type="tel" /></label>
+      <label>Email<input id="a_email" type="email" /></label>
+      <label>Registered voters in household<input id="a_voters_at_address" type="number" min="1" max="12" value="1" /></label>
+      <label class="full">Address<input id="a_address" placeholder="Street, Homestead, FL ZIP" /></label>
+      <label>ZIP<input id="a_zip" /></label>
+      <label>Inside Homestead city limits?<select id="a_inside_boundary"><option value="true">Yes</option><option value="false">No</option></select></label>
+      <label>Registered at this address?<select id="a_registered_status"><option value="">—</option><option value="yes">Yes</option><option value="no">No / recently moved</option><option value="unsure">Not sure</option></select></label>
+      <label>Voting plan<select id="a_vbm_status"><option value="">—</option><option value="want">By mail – wants reminder</option><option value="have_2027">By mail – already requested 2027</option><option value="early">Early voting</option><option value="election_day">Election Day</option><option value="unsure">Not sure</option></select></label>
+      <label>Preferred language<select id="a_language"><option value="">—</option><option value="en">English</option><option value="es">Español</option><option value="ht">Kreyòl</option></select></label>
+      <label>Captain code<input id="a_captain_code" /></label>
+      <label class="full">Issues<div class="chips" id="a_top_issues"></div></label>
+      <label class="full">Will help with<div class="chips" id="a_help_offers"></div></label>
+      <label class="full">Notes<textarea id="a_notes" rows="2" placeholder="How you know them, where you met"></textarea></label>
+      <div class="full" id="a_paperbox" style="display:none;background:#fffbeb;border-radius:8px;padding:10px">
+        <label style="flex-direction:row;align-items:flex-start;gap:8px;font-weight:400"><input type="checkbox" id="a_paper_form_on_file" style="margin-top:3px" /> I have the signed paper pledge form, and it includes the campaign's contact notice. I'll keep it on file.</label>
+        <label style="margin-top:8px">Form reference (optional)<input id="a_paper_reference" placeholder="e.g. Door-knock 11/01, sheet 3" /></label>
+      </div>
+    </div>
+    <div class="err" id="addErr"></div>
+    <div class="eactions">
+      <button class="btn secondary" id="addCancel">Cancel</button>
+      <button class="btn" id="addSave">Add</button>
     </div>
   </div>
 </div>
@@ -209,7 +250,7 @@
   function uniqPeople(list) { const s = new Set(list.map(r => (r.phone || '').replace(/\D/g,'').slice(-10) || r.id)); return s.size; }
 
   function renderKpis() {
-    const inCity = rows.filter(r => r.inside_boundary);
+    const inCity = rows.filter(r => r.inside_boundary && r.entry_type !== 'staff_added');
     const pledged = uniqPeople(inCity);
     const household = inCity.reduce((a, r) => a + (r.voters_at_address || 1), 0);
     const last7 = inCity.filter(r => new Date(r.created_at) > new Date(Date.now() - 7*86400000)).length;
@@ -249,6 +290,8 @@
     const seg = $('fSegment').value, issue = $('fIssue').value, lang = $('fLang').value, cap = $('fCaptain').value;
     const q = $('fSearch').value.trim().toLowerCase(); const onlyConsent = $('fConsent').checked;
     return rows.filter(r => {
+      if (seg === 'staff') return r.entry_type === 'staff_added' && matchesRest(r);
+      if (seg === 'paper' && r.entry_type !== 'paper') return false;
       if (seg !== 'outside' && !r.inside_boundary) return false;
       if (seg === 'outside' && r.inside_boundary) return false;
       if (seg === 'reg' && !r.needs_registration_help) return false;
@@ -264,6 +307,14 @@
       if (q && ![r.full_name, r.email, r.phone, r.address].join(' ').toLowerCase().includes(q)) return false;
       return true;
     });
+    // staff-added contacts have no contact permission, so the consent filter doesn't apply to them
+    function matchesRest(r) {
+      if (issue && !(r.top_issues || []).includes(issue)) return false;
+      if (lang && r.language !== lang) return false;
+      if (cap && r.captain_code !== cap) return false;
+      if (q && ![r.full_name, r.email, r.phone, r.address].join(' ').toLowerCase().includes(q)) return false;
+      return true;
+    }
   }
 
   function renderSupporters() {
@@ -273,7 +324,7 @@
       list.map(r => `<tr data-id="${r.id}">
         <td><button class="editbtn" data-edit="${r.id}">Edit</button></td>
         <td>${esc((r.created_at||'').slice(0,10))}</td>
-        <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}</td>
+        <td>${esc(r.full_name)}${r.submit_count > 1 ? ` <span class="tag">signed ${r.submit_count}x</span>` : ''}${r.entry_type === 'staff_added' ? ' <span class="tag warn">added by staff · not a pledge</span>' : r.entry_type === 'paper' ? ' <span class="tag">paper pledge</span>' : ''}</td>
         <td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.address)}</td>
         <td>${esc(r.language || '')} / ${esc(r.contact_pref || '')}</td>
         <td>${[['ok_email','Email'],['ok_sms','Text'],['ok_phone','Call']].filter(([k]) => r[k]).map(([,l]) => `<span class="tag ok">${l}</span>`).join('') || '<span class="tag">none</span>'}${r.consent_version === 'pledge_v4_bundled' ? ' <span class="tag warn">old form: reconfirm before texting/calling</span>' : ''}</td>
@@ -363,7 +414,7 @@
   function closeEdit() { $('editModal').classList.add('hidden'); editing = null; }
   $('editCancel').onclick = closeEdit;
   $('editModal').addEventListener('click', (e) => { if (e.target.id === 'editModal') closeEdit(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && editing) closeEdit(); });
+  document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if (editing) closeEdit(); else closeAdd(); });
 
   $('e_consent').addEventListener('click', async (e) => {
     const c = e.target.dataset.optout; if (!c || !editing) return;
@@ -402,11 +453,50 @@
 
   $('supTbl').addEventListener('click', (e) => { const id = e.target.dataset?.edit; if (id) openEdit(id); });
 
+  // ── Add supporter ────────────────────────────────────────────
+  const ADD_ERR = { ...ERR_TEXT, duplicate_contact:'Someone with that phone or email is already on the list. Search for them and use Edit instead.',
+    need_contact:'Add at least a phone, email, or address.', paper_needs_contact:'A paper pledge needs a phone or email from the form.',
+    paper_form_required:'Confirm that you have the signed paper pledge form on file.' };
+  function addTypeChanged() {
+    const paper = $('a_entry_type').value === 'paper';
+    $('a_paperbox').style.display = paper ? 'block' : 'none';
+    $('a_typehelp').textContent = paper
+      ? 'Counts toward the 3,500 goal. Their permission to be contacted is recorded as coming from the paper form, under your name.'
+      : 'Added to your list for follow-up and door-knocking. Does not count toward the 3,500 goal and cannot receive campaign texts or calls until they sign the pledge.';
+  }
+  $('a_entry_type').onchange = addTypeChanged;
+  $('addBtn').onclick = () => {
+    ['a_full_name','a_phone','a_email','a_address','a_zip','a_captain_code','a_notes','a_paper_reference'].forEach(i => $(i).value = '');
+    $('a_voters_at_address').value = '1'; $('a_inside_boundary').value = 'true';
+    ['a_registered_status','a_vbm_status','a_language'].forEach(i => $(i).value = '');
+    $('a_paper_form_on_file').checked = false; $('a_entry_type').value = 'staff_added';
+    chips('a_top_issues', ISSUE_LABELS, ISSUE_LABELS, []); chips('a_help_offers', HELP_LABELS, HELP_LABELS, []);
+    $('addErr').textContent = ''; addTypeChanged();
+    $('addModal').classList.remove('hidden'); $('a_full_name').focus();
+  };
+  const closeAdd = () => $('addModal').classList.add('hidden');
+  $('addCancel').onclick = closeAdd;
+  $('addModal').addEventListener('click', (e) => { if (e.target.id === 'addModal') closeAdd(); });
+  $('addSave').onclick = async () => {
+    $('addErr').textContent = '';
+    const p = { entry_type: $('a_entry_type').value };
+    ['full_name','phone','email','address','zip','registered_status','vbm_status','language','captain_code','notes','paper_reference'].forEach(f => { const v = $('a_' + f).value.trim(); if (v) p[f] = v; });
+    p.voters_at_address = parseInt($('a_voters_at_address').value || '1', 10);
+    p.inside_boundary = $('a_inside_boundary').value === 'true';
+    p.top_issues = chipValues('a_top_issues'); p.help_offers = chipValues('a_help_offers');
+    if (p.entry_type === 'paper') p.paper_form_on_file = $('a_paper_form_on_file').checked;
+    $('addSave').disabled = true; $('addSave').textContent = 'Adding…';
+    const { error } = await sb.rpc('admin_add_supporter', { p });
+    $('addSave').disabled = false; $('addSave').textContent = 'Add';
+    if (error) { const key = Object.keys(ADD_ERR).find(k => (error.message||'').includes(k)); $('addErr').textContent = key ? ADD_ERR[key] : 'Could not add: ' + error.message; return; }
+    closeAdd(); await loadAll();
+  };
+
   ['fSegment','fIssue','fLang','fCaptain','fConsent'].forEach(id => $(id).addEventListener('change', renderSupporters));
   $('fSearch').addEventListener('input', renderSupporters);
 
   $('exportBtn').onclick = () => {
-    const cols = ['created_at','full_name','first_name','last_name','phone','email','address','zip','language','contact_pref','registered_status','vbm_status','top_issues','help_offers','voters_at_address','captain_code','referrer_code','channel','follow_up_status','notes','consent','ok_email','ok_sms','ok_phone','consent_version','consent_updated_at','unsubscribed'];
+    const cols = ['created_at','full_name','first_name','last_name','phone','email','address','zip','language','contact_pref','registered_status','vbm_status','top_issues','help_offers','voters_at_address','captain_code','referrer_code','channel','follow_up_status','notes','consent','ok_email','ok_sms','ok_phone','consent_version','consent_updated_at','unsubscribed','entry_type'];
     const csvCell = (v) => { const s = Array.isArray(v) ? v.join('; ') : String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
     const csv = [cols.join(','), ...filtered().map(r => cols.map(c => csvCell(r[c])).join(','))].join('\n');
     const a = document.createElement('a');
