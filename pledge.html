@@ -288,6 +288,10 @@
       line-height: 1.4;
       color: var(--gray-700);
     }
+    fieldset.consent-group { border: 1px solid var(--gray-200, #e5e7eb); border-radius: 8px; padding: 12px 14px 4px; margin: 0 0 14px; }
+    fieldset.consent-group legend { font-size: 13px; font-weight: 700; padding: 0 4px; }
+    .consent-intro, .consent-foot { font-size: 12px; line-height: 1.45; color: var(--gray-500, #6b7280); margin: 0 0 10px; }
+    .consent-foot a { color: inherit; text-decoration: underline; }
 
     .btn-submit {
       width: 100%;
@@ -759,7 +763,7 @@
       <label><input type="checkbox" name="help" value="yard_sign"> Yard sign</label>
       <label><input type="checkbox" name="help" value="volunteer"> Volunteer</label>
       <label><input type="checkbox" name="help" value="host_meet_greet"> Host a meet &amp; greet</label>
-      <label><input type="checkbox" name="help" value="facility_captain"> Sign up voters where I work or live</label>
+      <label><input type="checkbox" name="help" value="facility_captain"> Invite people to take the pledge where I work or live</label>
       <label><input type="checkbox" name="help" value="share_social"> Share on social media</label>
     </fieldset>
 
@@ -775,6 +779,7 @@
     <div class="row">
       <label for="contactPrefInput">Best way to reach you</label>
       <select id="contactPrefInput">
+        <option value="">No preference</option>
         <option value="text">Text message</option>
         <option value="call">Phone call</option>
         <option value="email">Email</option>
@@ -782,10 +787,23 @@
       </select>
     </div>
 
-    <div class="consent-wrap">
-      <input type="checkbox" id="consentInline" />
-      <label for="consentInline">I agree to receive campaign updates and voting reminders from the Julio Guzman for Mayor campaign by phone, text, or email.</label>
-    </div>
+    <fieldset class="consent-group" id="consentGroup">
+      <legend>Campaign contact permissions (optional)</legend>
+      <p class="consent-intro">Each box is separate. You can sign the pledge without checking any of them.</p>
+      <div class="consent-wrap">
+        <input type="checkbox" id="consentEmail" />
+        <label for="consentEmail" id="consentEmailText">Email: I agree to receive campaign updates, event invitations, and voting reminders by email from the Julio Guzman for Mayor campaign. Every email includes a way to unsubscribe.</label>
+      </div>
+      <div class="consent-wrap">
+        <input type="checkbox" id="consentSms" />
+        <label for="consentSms" id="consentSmsText">Text messages: By checking this box, I agree to receive recurring text messages from the Julio Guzman for Mayor campaign, including messages sent using automated technology, at the mobile number I provided. Consent is not a condition of signing, volunteering, or supporting the campaign. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. See the Messaging Terms in our Privacy Policy.</label>
+      </div>
+      <div class="consent-wrap">
+        <input type="checkbox" id="consentPhone" />
+        <label for="consentPhone" id="consentPhoneText">Phone calls: By checking this box, I agree to receive calls from the Julio Guzman for Mayor campaign at the number I provided, including calls made using automated technology or a prerecorded or artificial voice. Consent is not a condition of signing, volunteering, or supporting the campaign. I can ask to stop calls at any time.</label>
+      </div>
+      <p class="consent-foot">Agreeing is not required to sign the pledge. See our <a href="privacy.html">Privacy Policy</a> for how your information is used and how to opt out.</p>
+    </fieldset>
 
     <div class="row">
       <label for="signatureInputMain">Confirm your pledge (type your full name): <span style="color:var(--red)">*</span></label>
@@ -952,7 +970,14 @@
     const emailInput        = document.getElementById('emailInput');
     const voterCountInput   = document.getElementById('voterCountInput');
     const phoneNumberInput  = document.getElementById('phoneNumberInput');
-    const consentInline     = document.getElementById('consentInline');
+    // Bump CONSENT_VERSION whenever any consent wording changes (all languages).
+    const CONSENT_VERSION   = 'pledge_v6_2026-11-01';
+    const consentBoxes      = {
+      email: document.getElementById('consentEmail'),
+      sms:   document.getElementById('consentSms'),
+      phone: document.getElementById('consentPhone')
+    };
+    const consentLabel = (ch) => (document.getElementById('consent' + ch.charAt(0).toUpperCase() + ch.slice(1) + 'Text').textContent || '').replace(/\s+/g, ' ').trim();
     const signatureInput    = document.getElementById('signatureInputMain');
     const registeredInput   = document.getElementById('registeredInput');
     const vbmInput          = document.getElementById('vbmInput');
@@ -1234,13 +1259,13 @@
       return '';
     }
 
+    let myShareCode = null;
     function wireShare() {
       const cityName = CITY_CONFIG[citySelect.value].name;
       const T = (x) => (window.JG_I18N ? window.JG_I18N.t(x) : x);
       const msg = T(`I joined Julio Guzman's campaign supporter list in ${cityName}. Learn more here:`);
-      const nameSlug = (nameInput.value || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
-      const phone4 = normalizePhone(phoneNumberInput.value).slice(-4);
-      const myCode = (nameSlug + phone4) || 'friend';
+      // Random code issued by the server; never derived from name or phone digits.
+      const myCode = myShareCode || 'friend';
       const url = location.origin + location.pathname + '?ref=' + encodeURIComponent(myCode)
                 + (CAP_CODE ? '&cap=' + encodeURIComponent(CAP_CODE) : '');
 
@@ -1315,7 +1340,11 @@
         lat: lastLat,
         lng: lastLng,
         voters_at_address: parseInt(voterCountInput.value, 10) || 1,
-        consent: !!consentInline.checked,
+        consents: { email: consentBoxes.email.checked, sms: consentBoxes.sms.checked, phone: consentBoxes.phone.checked },
+        consent_version: CONSENT_VERSION,
+        // exact wording shown (in the language on screen) for each channel agreed to
+        consent_texts: Object.fromEntries(Object.keys(consentBoxes).filter(k => consentBoxes[k].checked).map(k => [k, consentLabel(k)])),
+        page: location.pathname,
         signature: signatureInput.value.trim(),
         registered_status: registeredInput.value,
         vbm_status: vbmInput.value,
@@ -1323,7 +1352,7 @@
         help_offers: checkedValues('help'),
         language: langInput.value,
         contact_pref: contactPrefInput.value,
-        source: 'web:' + (SRC_TAG || 'website') + ':pledge_v4',
+        source: 'web:' + (SRC_TAG || 'website') + ':pledge_v6',
         referrer_code: REF_CODE,
         captain_code: CAP_CODE
       };
@@ -1359,10 +1388,12 @@
         return;
       }
 
+      myShareCode = (saveResult && saveResult.share_code) || null;
       const alreadySigned = saveResult && saveResult.status === 'updated';
-      document.querySelector('#thankYouModal .modal-title').textContent =
-        alreadySigned ? 'Welcome back — your pledge is updated' : 'Thank you for your support';
-      showStatusMsg(alreadySigned ? 'Your existing pledge was updated' : 'Pledge received by the campaign', 'ok');
+      // Same message either way, so the form never reveals whether an email or phone is already on file.
+      void alreadySigned;
+      document.querySelector('#thankYouModal .modal-title').textContent = 'Thank you for your support';
+      showStatusMsg('Pledge received by the campaign', 'ok');
       await loadProgress();
       wireShare();
       openThankYouModal();
@@ -1468,7 +1499,7 @@
     <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="https://www.instagram.com/julioguzman_homestead/" target="_blank">Instagram</a><a href="https://www.tiktok.com/@julioguzmanhomestead" target="_blank">TikTok</a></div>
   </div>
   <div class="footer-bottom">
-    Paid by Julio Guzman, Non-Partisan, for Homestead Mayor. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="https://lkt.337.myftpupload.com/login" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.3);text-decoration:none;">Staff Login</a>
+    Political advertisement paid for and approved by Julio Guzman, Nonpartisan, for Mayor of Homestead. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a>
   </div>
 </footer>
   <script src="site.js" defer></script>
