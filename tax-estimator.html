@@ -279,6 +279,7 @@
         locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 15000 }
       });
       el.id = 'addrAuto';
+      el.setAttribute('placeholder', 'Start typing your address, e.g. 973 NW 10th St');
       const old = $('addr');
       old.hidden = true;
       $('addrWrap').insertBefore(el, old);
