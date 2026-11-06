@@ -23,7 +23,12 @@
     .est-card p{font-size:15px;color:#444;line-height:1.7;margin-bottom:10px}
     .est-card label{display:block;font-size:14px;font-weight:600;color:#1b3a6e;margin:16px 0 6px}
     .est-card input,.est-card select{width:100%;padding:12px 14px;font-size:16px;border:1px solid #c9d1de;border-radius:6px;box-sizing:border-box;background:#fff}
-    .est-addr gmp-place-autocomplete{width:100%;display:block;color-scheme:light}
+    .est-addr{position:relative}
+    .est-sugg{position:absolute;left:0;right:0;top:100%;z-index:50;list-style:none;margin:4px 0 0;padding:4px 0;background:#fff;border:1px solid #c9d1de;border-radius:6px;box-shadow:0 8px 24px rgba(13,33,71,.12)}
+    .est-sugg li[data-i]{padding:10px 14px;cursor:pointer;font-size:15px;color:#1f2937;line-height:1.35}
+    .est-sugg li[data-i] span{display:block;font-size:13px;color:#6b7280}
+    .est-sugg li[data-i].on,.est-sugg li[data-i]:hover{background:#f2f6fc}
+    .est-sugg-brand{padding:4px 14px 2px;font-size:11px;color:#9ca3af;text-align:right}
     .est-match{margin-top:12px;padding:12px 14px;border-radius:6px;background:#f2f6fc;border:1px solid #d5e0f0;font-size:14.5px;color:#1b3a6e;line-height:1.6}
     .est-match.warn{background:#fff7e8;border-color:#f5d48f;color:#7a4b00}
     .est-match select{margin-top:8px}
@@ -81,7 +86,8 @@
       <h3>1. Find your home</h3>
       <p>Start typing your address and pick it from the list. We'll look up your home's assessed value in Miami-Dade County's public property records.</p>
       <div id="addrWrap" class="est-addr">
-        <input id="addr" type="text" placeholder="Start typing your address, e.g. 100 Civic Ct" autocomplete="off" aria-label="Property address">
+        <input id="addr" type="text" placeholder="Start typing your address, e.g. 123 Main St" autocomplete="off" aria-label="Property address" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addrSugg">
+        <ul id="addrSugg" class="est-sugg" role="listbox" hidden data-no-i18n></ul>
       </div>
       <div id="match" class="est-match" hidden aria-live="polite"></div>
       <p class="est-fine">Your address is not saved or sent to the campaign. Suggestions come from Google Maps, and the value comes from Miami-Dade County's public property data.</p>
@@ -286,30 +292,70 @@
   $('addr').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lookupTyped(e.target.value); } });
   $('addr').addEventListener('change', e => lookupTyped(e.target.value));
 
-  window.initPlaces = function () {
+  // ---- Address suggestions (Google Places) in our own list, so we control how addresses read ----
+  let places = null, sessionToken = null, suggItems = [], suggIdx = -1, suggTimer = null, suggSeq = 0;
+  const sugg = $('addrSugg');
+  const COUNTRY = /,\s*(USA|United States|EE\.\s*UU\.|Estados Unidos|Etazini|Ozetazini)\s*$/i;
+  function closeSugg() { sugg.hidden = true; sugg.innerHTML = ''; suggItems = []; suggIdx = -1; $('addr').setAttribute('aria-expanded', 'false'); }
+  function highlight(i) {
+    suggIdx = i;
+    [...sugg.querySelectorAll('li[data-i]')].forEach(li => li.classList.toggle('on', Number(li.dataset.i) === i));
+  }
+  async function showSuggestions(q) {
+    const seq = ++suggSeq;
+    if (!places || q.trim().length < 3) { closeSugg(); return; }
     try {
-      const el = new google.maps.places.PlaceAutocompleteElement({
-        includedRegionCodes: ['us'],
-        locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 15000 }
+      if (!sessionToken) sessionToken = new places.AutocompleteSessionToken();
+      const lang = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? 'es' : 'en';
+      const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input: q, sessionToken, language: lang, includedRegionCodes: ['us'],
+        locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 20000 }
       });
-      el.id = 'addrAuto';
-      el.setAttribute('placeholder', 'Start typing your address, e.g. 973 NW 10th St');
-      const old = $('addr');
-      old.hidden = true;
-      $('addrWrap').insertBefore(el, old);
-      el.addEventListener('gmp-select', async (event) => {
-        try {
-          const place = event.placePrediction.toPlace();
-          await place.fetchFields({ fields: ['addressComponents', 'formattedAddress'] });
-          const comp = t => (place.addressComponents || []).find(c => (c.types || []).includes(t)) || {};
-          const num = comp('street_number').longText || '';
-          const route = comp('route').shortText || comp('route').longText || '';
-          const zip = comp('postal_code').longText || '';
-          if (!num || !route) { render(() => showMatch(T('Please choose a street address with a house number.'), true)); return; }
-          findParcel(num, norm(route), zip);
-        } catch (err) { lookupTyped(''); }
-      });
-    } catch (e) { /* keep the plain text box */ }
+      if (seq !== suggSeq) return; // a newer keystroke already asked again
+      suggItems = (suggestions || []).map(x => x.placePrediction).filter(Boolean).slice(0, 5);
+      if (!suggItems.length) { closeSugg(); return; }
+      sugg.innerHTML = suggItems.map((p, i) => {
+        const main = p.mainText ? p.mainText.text : p.text.text;
+        const sec = (p.secondaryText ? p.secondaryText.text : '').replace(COUNTRY, '');
+        return '<li role="option" data-i="' + i + '"><strong>' + esc(main) + '</strong>' + (sec ? '<span>' + esc(sec) + '</span>' : '') + '</li>';
+      }).join('') + '<li class="est-sugg-brand" aria-hidden="true">powered by Google</li>';
+      sugg.hidden = false; $('addr').setAttribute('aria-expanded', 'true'); suggIdx = -1;
+    } catch (e) { closeSugg(); }
+  }
+  async function pickSuggestion(i) {
+    const pred = suggItems[i];
+    closeSugg();
+    if (!pred) return;
+    try {
+      const place = pred.toPlace();
+      await place.fetchFields({ fields: ['addressComponents'] });
+      sessionToken = null; // a selection ends the billing session
+      const comp = t => (place.addressComponents || []).find(c => (c.types || []).includes(t)) || {};
+      const num = comp('street_number').longText || '';
+      const route = comp('route').shortText || comp('route').longText || '';
+      const city = comp('locality').longText || comp('postal_town').longText || comp('sublocality').longText || '';
+      const st = comp('administrative_area_level_1').shortText || 'FL';
+      const zip = comp('postal_code').longText || '';
+      // Show the chosen address as "123 Main St, Homestead, FL 33030" (ZIP instead of country)
+      const shown = [[num, route].filter(Boolean).join(' '), city, [st, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+      $('addr').value = shown; lastTyped = shown;
+      if (!num || !route) { render(() => showMatch(T('Please choose a street address with a house number.'), true)); return; }
+      findParcel(num, norm(route), zip);
+    } catch (err) { lookupTyped($('addr').value); }
+  }
+  $('addr').addEventListener('input', e => { clearTimeout(suggTimer); const v = e.target.value; suggTimer = setTimeout(() => showSuggestions(v), 220); });
+  $('addr').addEventListener('keydown', e => {
+    if (sugg.hidden || !suggItems.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); highlight((suggIdx + 1) % suggItems.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); highlight((suggIdx - 1 + suggItems.length) % suggItems.length); }
+    else if (e.key === 'Escape') closeSugg();
+    else if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); pickSuggestion(suggIdx < 0 ? 0 : suggIdx); }
+  }, true);
+  sugg.addEventListener('mousedown', e => e.preventDefault()); // keep focus in the box while clicking a suggestion
+  sugg.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) pickSuggestion(Number(li.dataset.i)); });
+  $('addr').addEventListener('blur', () => setTimeout(closeSugg, 150));
+  window.initPlaces = async function () {
+    try { places = await google.maps.importLibrary('places'); } catch (e) { places = null; }
   };
   (function () {
     const l = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? '&language=es' : '';
