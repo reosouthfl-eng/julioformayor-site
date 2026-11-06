@@ -108,13 +108,13 @@
           <label><input type="checkbox" id="xVet"> Veteran with a service-connected disability of 10% or more <span>$5,000 off all taxes</span></label>
           <label><input type="checkbox" id="xCountySr"> Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;) <span>up to $50,000 off county taxes</span></label>
           <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"> Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;) <span>up to $50,000 off City of Homestead taxes</span></label>
-          <label><input type="checkbox" id="xFull"> Fully exempt (for example, 100% permanently disabled veteran) <span>no property tax; fees still apply</span></label>
+          <label><input type="checkbox" id="xFull"> Fully exempt (for example, 100% permanently disabled veteran) <span>no property tax; non-ad valorem assessments still apply</span></label>
         </div>
       </div>
 
-      <label for="fees">Fees on your bill (garbage, recycling, stormwater, etc.)</label>
+      <label for="fees">Non-Ad Valorem Assessments (garbage, recycling, stormwater, etc.)</label>
       <input id="fees" type="text" inputmode="decimal" value="736.56">
-      <p class="est-fine">These flat fees are listed under &ldquo;Non-Ad Valorem Assessments&rdquo; on your bill. We filled in the typical 2026 amount for your area. Amendment 3 does not change them.</p>
+      <p class="est-fine">These flat charges are listed under &ldquo;Non-Ad Valorem Assessments&rdquo; on your bill. We filled in the typical 2026 amount for your area. Amendment 3 does not change them.</p>
 
 
       <button type="button" id="calcBtn" class="btn-primary est-calc">Estimate my taxes</button>
@@ -131,7 +131,7 @@
           <tr><td>Miami-Dade County taxes <span class="est-opt" id="countyLbl"></span></td><td id="c26"></td><td id="c27"></td><td id="c28"></td></tr>
           <tr id="cityRow"><td>City of Homestead taxes</td><td id="m26"></td><td id="m27"></td><td id="m28"></td></tr>
           <tr><td>State &amp; regional taxes <span class="est-opt">(water management, Children&rsquo;s Trust, etc.)</span></td><td id="r26"></td><td id="r27"></td><td id="r28"></td></tr>
-          <tr><td>Fees (garbage, stormwater, etc.)</td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
+          <tr><td>Non-Ad Valorem Assessments <span class="est-opt">(garbage, stormwater, etc.)</span></td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
           <tr class="est-total"><td>Estimated total bill</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
         </tbody>
       </table>
@@ -349,7 +349,7 @@
     });
     const diff = t['26'] - t['27'];
     let msg;
-    if (full) msg = 'With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the flat fees remain.';
+    if (full) msg = 'With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the non-ad valorem assessments (garbage, stormwater, etc.) remain.';
     else if (!hx) msg = 'Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
     else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)';
     else msg = diff >= 1
