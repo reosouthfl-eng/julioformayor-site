@@ -140,6 +140,8 @@
           <label><input type="checkbox" id="xVet"><span class="lbl">Veteran with a service-connected disability of 10% or more<small>$5,000 off all taxes</small></span></label>
           <label id="xCountySrWrap"><input type="checkbox" id="xCountySr"><span class="lbl">Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;)<small>up to $50,000 off county taxes</small></span></label>
           <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"><span class="lbl">Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;)<small>up to $50,000 off City of Homestead taxes</small></span></label>
+          <label id="xJaxSrWrap" hidden><input type="checkbox" id="xJaxSr"><span class="lbl">Low-income senior, 65+ (Jacksonville)<small>up to $50,000 off City of Jacksonville taxes</small></span></label>
+          <label id="xJaxLtrWrap" hidden><input type="checkbox" id="xJaxLtr"><span class="lbl">Long-term resident senior, 65+ (25+ years in the home, value under $250,000)<small>no City of Jacksonville taxes</small></span></label>
           <label><input type="checkbox" id="xFull"><span class="lbl">Fully exempt (for example, 100% permanently disabled veteran)<small>no property tax; non-ad valorem assessments still apply</small></span></label>
         </div>
       </div>
@@ -181,7 +183,7 @@
         <li><strong>Save Our Homes</strong> still limits how much a homestead's assessed value can rise each year (3% or inflation, whichever is lower). For non-homestead property, the yearly cap on non-school taxes drops from 10% to 5% starting in 2027.</li>
         <li><strong>Other exemptions</strong> (widow/widower, blind or disabled, disabled veteran, low-income senior) still apply on top of the homestead exemption. Senior exemptions only reduce the taxes of the government that grants them, which is why the county senior exemption does not lower school or water-district taxes. The City of Homestead senior amount is assumed to be $50,000; check your bill. Long-term-resident senior exemptions and other special cases are not included.</li>
         <li><strong>Tax rates used</strong> (per $1,000 of taxable value) are the final 2026 rates printed on Miami-Dade tax bills: School Board <span id="rSchool"></span>; Miami-Dade County <span id="rCounty"></span> in the city (County-wide, debt and Fire Rescue) or <span id="rCountyU"></span> outside city limits (adds the Unincorporated Area and Library District levies); City of Homestead <span id="rCity"></span>; State &amp; regional <span id="rState"></span>. Special district assessments some neighborhoods pay (street lights, security guard districts) are not included.</li>
-        <li><strong>Jacksonville (Duval County)</strong> rates from 2026 Duval tax bills: City of Jacksonville <span id="rJax"></span>; School Board <span id="rJaxSchool"></span>; St. Johns River Water Management District and Florida Inland Navigation <span id="rJaxState"></span>. Jacksonville Beach, Atlantic Beach, Neptune Beach and Baldwin have different city rates and are not included. Senior exemptions are not included for Jacksonville.</li>
+        <li><strong>Jacksonville (Duval County)</strong> rates from 2026 Duval tax bills: City of Jacksonville <span id="rJax"></span>; School Board <span id="rJaxSchool"></span>; St. Johns River Water Management District and Florida Inland Navigation <span id="rJaxState"></span>. Jacksonville Beach, Atlantic Beach, Neptune Beach and Baldwin have different city rates and are not included. Jacksonville&rsquo;s senior exemptions reduce only City of Jacksonville taxes.</li>
       </ul>
       <p class="est-fine">This is an estimate for general information, not tax advice. For your official values and exemptions, contact the <a href="https://www.miamidadepa.gov/" target="_blank">Miami-Dade Property Appraiser</a>. Questions about this tool: <a href="mailto:info@julioformayor.com">info@julioformayor.com</a>.</p>
     </div>
@@ -235,8 +237,12 @@
   function setArea(v) {
     $('area').value = v;
     $('xMunicWrap').hidden = v !== 'homestead';
+    // Show only the exemptions offered where the property is
     $('xCountySrWrap').hidden = v === 'jacksonville';
+    $('xJaxSrWrap').hidden = $('xJaxLtrWrap').hidden = v !== 'jacksonville';
     if (v === 'jacksonville') { $('xCountySr').checked = false; $('xMunicSr').checked = false; }
+    else { $('xJaxSr').checked = false; $('xJaxLtr').checked = false; }
+    if (v === 'unincorporated') $('xMunicSr').checked = false;
     if (!feesTouched) $('fees').value = FEES[v].toFixed(2);
   }
   $('area').addEventListener('change', e => setArea(e.target.value));
@@ -448,7 +454,7 @@
     sc.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAHKqFA29mhzBtl0MqPh-xHTuYNgEnvu0U&libraries=places&callback=initPlaces&loading=async' + l;
     sc.async = true; document.body.appendChild(sc);
   })();
-  $('hx').addEventListener('change', () => { const h = $('hx').value === 'yes'; $('resWrap').hidden = !h; $('xCountySr').disabled = $('xMunicSr').disabled = !h; });
+  $('hx').addEventListener('change', () => { const h = $('hx').value === 'yes'; $('resWrap').hidden = !h; $('xCountySr').disabled = $('xMunicSr').disabled = $('xJaxSr').disabled = $('xJaxLtr').disabled = !h; });
 
   function currentNonSchoolEx(av) { return Math.min(av, 25000) + Math.min(Math.max(av - 50000, 0), CUR_SECOND_TIER); }
   function amend3Ex(av, year, newcomer) {
@@ -490,7 +496,8 @@
       const state = tax(c.hxNS + fiveK, stateMills);
       const county = jax ? 0 : tax(c.hxNS + fiveK + countySr, countyMills);
       const city = inCity ? tax(c.hxNS + fiveK + municSr, RATES.city) : 0;
-      const jaxTax = jax ? tax(c.hxNS + fiveK, JAX.city) : 0;
+      // Jacksonville senior exemptions reduce only the City of Jacksonville levy
+      const jaxTax = !jax || (hx && $('xJaxLtr').checked) ? 0 : tax(c.hxNS + fiveK + (hx && $('xJaxSr').checked ? 50000 : 0), JAX.city);
       $('j' + c.k).textContent = money(jaxTax);
       t[c.k] = school + state + county + city + jaxTax + fees;
       $('e' + c.k).textContent = money(c.hxNS); $('s' + c.k).textContent = money(school);
