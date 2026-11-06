@@ -107,13 +107,13 @@
 
     <div class="est-card">
       <h3>1. Find your home</h3>
-      <p>Start typing your address and pick it from the list. We'll look up your home's assessed value in Miami-Dade County's public property records.</p>
+      <p>Start typing your address and pick it from the list. We'll look up your home's assessed value in public property records.</p>
       <div id="addrWrap" class="est-addr">
         <input id="addr" type="text" placeholder="Start typing your address, e.g. 123 Main St" autocomplete="off" aria-label="Property address" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addrSugg">
         <ul id="addrSugg" class="est-sugg" role="listbox" hidden data-no-i18n></ul>
       </div>
       <div id="match" class="est-match" hidden aria-live="polite"></div>
-      <p class="est-fine">Your address is not saved or sent to the campaign. Suggestions come from Google Maps, and the value comes from Miami-Dade County's public property data.</p>
+      <p class="est-fine">Your address is not saved or sent to the campaign. Suggestions come from Google Maps, and the value comes from public property data published by Miami-Dade County and the State of Florida.</p>
 
       <label for="av">Assessed Value ($)</label>
       <input id="av" type="text" inputmode="numeric" placeholder="Filled in automatically, or type it in">
@@ -129,7 +129,7 @@
       </div>
 
       <label for="area">Where is the property?</label>
-      <select id="area"><option value="homestead">Inside the City of Homestead</option><option value="unincorporated">Unincorporated Miami-Dade (outside city limits)</option></select>
+      <select id="area"><option value="homestead">Inside the City of Homestead</option><option value="unincorporated">Unincorporated Miami-Dade (outside city limits)</option><option value="jacksonville">Jacksonville (Duval County)</option></select>
 
       <div id="xWrap">
         <label>Other exemptions <span class="est-opt">(optional, check any listed under &ldquo;EXEMPTIONS&rdquo; on your tax bill)</span></label>
@@ -137,7 +137,7 @@
           <label><input type="checkbox" id="xWidow"><span class="lbl">Widow / widower<small>$5,000 off all taxes</small></span></label>
           <label><input type="checkbox" id="xDisab"><span class="lbl">Blind or totally &amp; permanently disabled<small>$5,000 off all taxes</small></span></label>
           <label><input type="checkbox" id="xVet"><span class="lbl">Veteran with a service-connected disability of 10% or more<small>$5,000 off all taxes</small></span></label>
-          <label><input type="checkbox" id="xCountySr"><span class="lbl">Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;)<small>up to $50,000 off county taxes</small></span></label>
+          <label id="xCountySrWrap"><input type="checkbox" id="xCountySr"><span class="lbl">Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;)<small>up to $50,000 off county taxes</small></span></label>
           <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"><span class="lbl">Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;)<small>up to $50,000 off City of Homestead taxes</small></span></label>
           <label><input type="checkbox" id="xFull"><span class="lbl">Fully exempt (for example, 100% permanently disabled veteran)<small>no property tax; non-ad valorem assessments still apply</small></span></label>
         </div>
@@ -159,7 +159,8 @@
         <tbody>
           <tr><td>Homestead exemption (non-school)</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
           <tr><td>School Board taxes</td><td id="s26"></td><td id="s27"></td><td id="s28"></td></tr>
-          <tr><td>Miami-Dade County taxes <span class="est-opt" id="countyLbl"></span></td><td id="c26"></td><td id="c27"></td><td id="c28"></td></tr>
+          <tr id="countyRow"><td>Miami-Dade County taxes <span class="est-opt" id="countyLbl"></span></td><td id="c26"></td><td id="c27"></td><td id="c28"></td></tr>
+          <tr id="countyRowJ" hidden><td>City of Jacksonville taxes <span class="est-opt">(city and county combined)</span></td><td id="j26"></td><td id="j27"></td><td id="j28"></td></tr>
           <tr id="cityRow"><td>City of Homestead taxes</td><td id="m26"></td><td id="m27"></td><td id="m28"></td></tr>
           <tr><td>State &amp; regional taxes <span class="est-opt">(water management, Children&rsquo;s Trust, etc.)</span></td><td id="r26"></td><td id="r27"></td><td id="r28"></td></tr>
           <tr><td>Non-Ad Valorem Assessments <span class="est-opt">(garbage, stormwater, etc.)</span></td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
@@ -179,6 +180,7 @@
         <li><strong>Save Our Homes</strong> still limits how much a homestead's assessed value can rise each year (3% or inflation, whichever is lower). For non-homestead property, the yearly cap on non-school taxes drops from 10% to 5% starting in 2027.</li>
         <li><strong>Other exemptions</strong> (widow/widower, blind or disabled, disabled veteran, low-income senior) still apply on top of the homestead exemption. Senior exemptions only reduce the taxes of the government that grants them, which is why the county senior exemption does not lower school or water-district taxes. The City of Homestead senior amount is assumed to be $50,000; check your bill. Long-term-resident senior exemptions and other special cases are not included.</li>
         <li><strong>Tax rates used</strong> (per $1,000 of taxable value) are the final 2026 rates printed on Miami-Dade tax bills: School Board <span id="rSchool"></span>; Miami-Dade County <span id="rCounty"></span> in the city (County-wide, debt and Fire Rescue) or <span id="rCountyU"></span> outside city limits (adds the Unincorporated Area and Library District levies); City of Homestead <span id="rCity"></span>; State &amp; regional <span id="rState"></span>. Special district assessments some neighborhoods pay (street lights, security guard districts) are not included.</li>
+        <li><strong>Jacksonville (Duval County)</strong> rates from 2026 Duval tax bills: City of Jacksonville <span id="rJax"></span>; School Board <span id="rJaxSchool"></span>; St. Johns River Water Management District and Florida Inland Navigation <span id="rJaxState"></span>. Jacksonville Beach, Atlantic Beach, Neptune Beach and Baldwin have different city rates and are not included. Senior exemptions are not included for Jacksonville.</li>
       </ul>
       <p class="est-fine">This is an estimate for general information, not tax advice. For your official values and exemptions, contact the <a href="https://www.miamidadepa.gov/" target="_blank">Miami-Dade Property Appraiser</a>. Questions about this tool: <a href="mailto:info@julioformayor.com">info@julioformayor.com</a>.</p>
     </div>
@@ -213,18 +215,27 @@
     countyUninc: 4.5740 + 0.3937 + 2.3965 + 1.9090 + 0.2812,  // + Unincorporated Area operating + Library District
     city: 5.9604 + 0.2316                                     // Homestead operating + debt service
   };
-  const FEES = { homestead: 736.56, unincorporated: 702.00 };   // typical 2026 residential non-ad valorem charges
+  // Jacksonville (Duval County): final 2026 millage from Duval tax bills
+  const JAX = {
+    city: 11.1919,                          // City of Jacksonville (consolidated city-county)
+    school: 0.7480 + 1.5000 + 3.0070 + 1.0000, // discretionary, capital outlay, required local effort, voter-approved
+    state: 0.1793 + 0.0270                   // St. Johns River WMD, Florida Inland Navigation District
+  };
+  const FEES = { homestead: 736.56, unincorporated: 702.00, jacksonville: 444.00 }; // stormwater $90 + solid waste $354 in Jacksonville   // typical 2026 residential non-ad valorem charges
   const CUR_SECOND_TIER = 26411; // 2026 indexed second $25k homestead exemption (non-school)
   const $ = id => document.getElementById(id);
   const money = n => '$' + Math.round(n).toLocaleString('en-US');
   const f4 = n => n.toFixed(4);
   $('rSchool').textContent = f4(RATES.school); $('rCounty').textContent = f4(RATES.county);
+  $('rJax').textContent = f4(JAX.city); $('rJaxSchool').textContent = f4(JAX.school); $('rJaxState').textContent = f4(JAX.state);
   $('rCountyU').textContent = f4(RATES.countyUninc); $('rCity').textContent = f4(RATES.city); $('rState').textContent = f4(RATES.state);
   let feesTouched = false;
   $('fees').addEventListener('input', () => { feesTouched = true; });
   function setArea(v) {
     $('area').value = v;
     $('xMunicWrap').hidden = v !== 'homestead';
+    $('xCountySrWrap').hidden = v === 'jacksonville';
+    if (v === 'jacksonville') { $('xCountySr').checked = false; $('xMunicSr').checked = false; }
     if (!feesTouched) $('fees').value = FEES[v].toFixed(2);
   }
   $('area').addEventListener('change', e => setArea(e.target.value));
@@ -301,6 +312,52 @@
     }
   }
 
+  // Jacksonville / Duval: State of Florida statewide parcel data (Dept. of Revenue tax roll, Florida GIO).
+  // Searched by location near the address Google returns; only address and value fields are requested, never owner names.
+  const FL_PARCELS = 'https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Parcel_Centroid_Version/FeatureServer/0/query';
+  async function findDuval(number, streetTokens, lat, lng) {
+    render(() => showMatch(T('Looking up your property\u2026')));
+    $('av').value = '';
+    setArea('jacksonville');
+    try {
+      let feats = [];
+      for (const d of [0.0003, 0.0008, 0.002]) {
+        const env = { xmin: lng - d, ymin: lat - d, xmax: lng + d, ymax: lat + d, spatialReference: { wkid: 4326 } };
+        const url = FL_PARCELS + '?where=1%3D1&geometry=' + encodeURIComponent(JSON.stringify(env)) +
+          '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects' +
+          '&outFields=PARCEL_ID,PHY_ADDR1,PHY_CITY,PHY_ZIPCD,AV_NSD,AV_HMSTD,ASMNT_YR&returnGeometry=false&resultRecordCount=500&f=json';
+        const r = await fetch(url).then(x => x.json());
+        feats = (r.features || []).map(f => f.attributes).filter(a => a.AV_NSD && String(a.PHY_ADDR1 || '').startsWith(number + ' '));
+        if (feats.length) break;
+      }
+      const want = streetTokens.join(' ');
+      const scored = feats.map(a => {
+        const t = norm(a.PHY_ADDR1).slice(1);
+        const exact = t.join(' ') === want;
+        const overlap = t.filter(w => streetTokens.includes(w)).length / Math.max(t.length, streetTokens.length, 1);
+        return { a, score: exact ? 2 : overlap };
+      }).filter(x => x.score >= 0.5).sort((x, y) => y.score - x.score);
+      const p = scored.length ? scored[0].a : null;
+      if (!p) {
+        render(() => showMatch(T('We couldn\u2019t find that address in the state\u2019s property data. You can type your assessed value below, or look it up on the {link}.', { link: '<a href="https://paopropertysearch.coj.net/Basic/Search.aspx" target="_blank" rel="noopener">' + T('Duval County Property Appraiser site') + '</a>' }), true));
+        return;
+      }
+      $('av').value = Math.round(p.AV_NSD).toLocaleString('en-US');
+      $('paLink').href = 'https://paopropertysearch.coj.net/Basic/Search.aspx';
+      if (p.AV_HMSTD > 0) { $('hx').value = 'yes'; $('hx').dispatchEvent(new Event('change')); }
+      const city = String(p.PHY_CITY || '');
+      const beach = /BEACH|BALDWIN/i.test(city);
+      render(() => showMatch('<strong>' + T('Found:') + '</strong> ' + esc(p.PHY_ADDR1) + ', ' + esc(city) + ' ' + esc(p.PHY_ZIPCD || '') +
+        '<br>' + T('Assessed value') + ' <strong>' + money(p.AV_NSD) + '</strong>' +
+        ' &middot; ' + T('Homestead exemption on file:') + ' ' + (p.AV_HMSTD > 0 ? T('Yes') : T('No')) +
+        '<br><span class="est-note">' + T('This is the {year} assessed value from the State of Florida\u2019s tax roll data, the same year as your current tax bill.', { year: esc(p.ASMNT_YR || 2026) }) + '</span>' +
+        (beach ? '<br><strong>' + T('Note:') + '</strong> ' + T('This property is listed in {place}. This tool only has tax rates for the City of Jacksonville, so the estimate may be off.', { place: esc(city) }) : ''),
+        beach));
+    } catch (e) {
+      render(() => showMatch(T('The county\u2019s property data didn\u2019t respond. Please type your assessed value below, or find it on the {link}.', { link: '<a href="https://paopropertysearch.coj.net/Basic/Search.aspx" target="_blank" rel="noopener">' + T('Duval County Property Appraiser site') + '</a>' }), true));
+    }
+  }
+
   // Typed address without picking a suggestion (or if Google Maps is unavailable): "1585 NW 14th Ter, Homestead"
   let lastTyped = '';
   function lookupTyped(text) {
@@ -309,6 +366,7 @@
     lastTyped = text;
     const m = text.match(/^(\d+)\s+([^,]+)/);
     if (!m) return;
+    if (/jacksonville|\b322\d\d\b/i.test(text)) { render(() => showMatch(T('Please pick your address from the suggestion list so we can find it.'), true)); return; }
     const zip = (String(text).match(/\b(3303\d|3317\d|3319\d)\b/) || [])[1] || '';
     findParcel(m[1], norm(m[2]), zip);
   }
@@ -331,11 +389,12 @@
       if (!sessionToken) sessionToken = new places.AutocompleteSessionToken();
       const lang = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? 'es' : 'en';
       const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
-        input: q, sessionToken, language: lang, includedRegionCodes: ['us'],
-        locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 20000 }
+        input: /florida|\bfl\b/i.test(q) ? q : q + ', FL', sessionToken, language: lang, includedRegionCodes: ['us'],
+        locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 50000 }
       });
       if (seq !== suggSeq) return; // a newer keystroke already asked again
-      suggItems = (suggestions || []).map(x => x.placePrediction).filter(Boolean).slice(0, 5);
+      // Florida addresses only
+      suggItems = (suggestions || []).map(x => x.placePrediction).filter(p => p && /(,\s*FL\b|Florida|Floride)/i.test(p.text ? p.text.text : '')).slice(0, 5);
       if (!suggItems.length) { closeSugg(); return; }
       sugg.innerHTML = suggItems.map((p, i) => {
         const main = p.mainText ? p.mainText.text : p.text.text;
@@ -351,7 +410,7 @@
     if (!pred) return;
     try {
       const place = pred.toPlace();
-      await place.fetchFields({ fields: ['addressComponents'] });
+      await place.fetchFields({ fields: ['addressComponents', 'location'] });
       sessionToken = null; // a selection ends the billing session
       const comp = t => (place.addressComponents || []).find(c => (c.types || []).includes(t)) || {};
       const num = comp('street_number').longText || '';
@@ -363,6 +422,8 @@
       const shown = [[num, route].filter(Boolean).join(' '), city, [st, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
       $('addr').value = shown; lastTyped = shown;
       if (!num || !route) { render(() => showMatch(T('Please choose a street address with a house number.'), true)); return; }
+      const county = comp('administrative_area_level_2').longText || '';
+      if (/duval/i.test(county) && place.location) { findDuval(num, norm(route), place.location.lat(), place.location.lng()); return; }
       findParcel(num, norm(route), zip);
     } catch (err) { lookupTyped($('addr').value); }
   }
@@ -408,9 +469,12 @@
     // Senior exemptions apply only to the government that grants them (homestead only)
     const countySr = hx && $('xCountySr').checked ? 50000 : 0;
     const municSr = hx && inCity && $('xMunicSr').checked ? 50000 : 0;
+    const jax = area === 'jacksonville';
     const countyMills = inCity ? RATES.county : RATES.countyUninc;
+    const schoolMills = jax ? JAX.school : RATES.school, stateMills = jax ? JAX.state : RATES.state;
     $('countyLbl').textContent = inCity ? '' : T('(includes unincorporated area & library)');
     $('cityRow').hidden = !inCity;
+    $('countyRow').hidden = jax; $('countyRowJ').hidden = !jax;
 
     const cols = [
       { k: '26', hxNS: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, hxS: hx && !newcomer ? Math.min(av, 25000) : 0 },
@@ -420,11 +484,13 @@
     const tax = (exempt, mills) => full ? 0 : Math.max(av - exempt, 0) * mills / 1000;
     const t = {};
     cols.forEach(c => {
-      const school = tax(c.hxS + fiveK, RATES.school);
-      const state = tax(c.hxNS + fiveK, RATES.state);
-      const county = tax(c.hxNS + fiveK + countySr, countyMills);
+      const school = tax(c.hxS + fiveK, schoolMills);
+      const state = tax(c.hxNS + fiveK, stateMills);
+      const county = jax ? 0 : tax(c.hxNS + fiveK + countySr, countyMills);
       const city = inCity ? tax(c.hxNS + fiveK + municSr, RATES.city) : 0;
-      t[c.k] = school + state + county + city + fees;
+      const jaxTax = jax ? tax(c.hxNS + fiveK, JAX.city) : 0;
+      $('j' + c.k).textContent = money(jaxTax);
+      t[c.k] = school + state + county + city + jaxTax + fees;
       $('e' + c.k).textContent = money(c.hxNS); $('s' + c.k).textContent = money(school);
       $('c' + c.k).textContent = money(county); $('m' + c.k).textContent = money(city);
       $('r' + c.k).textContent = money(state); $('f' + c.k).textContent = money(fees);
@@ -435,6 +501,7 @@
     if (full) msg = T('With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the non-ad valorem assessments (garbage, stormwater, etc.) remain.');
     else if (!hx) msg = T('Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.');
     else if (newcomer) msg = T('As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)');
+    else if (diff >= 1 && Math.round(diff) === Math.round(t['26'] - t['28'])) msg = T('At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about {a} a year starting in 2027.', { a: money(diff) });
     else msg = diff >= 1
       ? T('At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about {a} a year in 2027, and by about {b} a year starting in 2028.', { a: money(diff), b: money(t['26'] - t['28']) })
       : T('At today\u2019s tax rates, your estimated bill would stay about the same.');
