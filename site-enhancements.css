@@ -125,3 +125,37 @@ body { overflow-wrap: break-word; }
   .sticky-text { font-size: 12px !important; }
   .sticky-text strong { font-size: 13px !important; }
 }
+
+/* Keep the top menu on one line in every language */
+.nav-logo-text, .nav-logo-box, .nav-links a { white-space: nowrap; }
+.nav-logo { flex: 0 0 auto; }
+@media (max-width: 1340px) and (min-width: 981px) {
+  nav { padding-left: 24px !important; padding-right: 24px !important; }
+  .nav-links { gap: 14px !important; }
+  .nav-links a { font-size: 12.5px !important; letter-spacing: .3px !important; }
+  .nav-donate { padding: 8px 14px !important; }
+  .nav-logo-text { font-size: 20px; }
+  .lang-switch { margin-right: 12px; }
+}
+/* Spanish and Kreyol menu labels are longer: switch to the menu button a little sooner */
+@media (min-width: 981px) and (max-width: 1090px) {
+  html[lang="es"] .mobile-nav-toggle, html[lang="ht"] .mobile-nav-toggle { display: block; }
+  html[lang="es"] .nav-links, html[lang="ht"] .nav-links {
+    display: none !important; position: absolute; top: 100%; left: 0; right: 0;
+    background: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #ddd;
+    padding: 14px 24px 18px; flex-direction: column !important; align-items: stretch !important;
+    gap: 4px !important; box-shadow: 0 12px 24px rgba(0,0,0,.08);
+  }
+  html[lang="es"] .nav-links.is-open, html[lang="ht"] .nav-links.is-open { display: flex !important; }
+  html[lang="es"] .nav-links a, html[lang="ht"] .nav-links a { padding: 11px 8px; width: 100%; font-size: 14px !important; }
+  html[lang="es"] .nav-donate, html[lang="ht"] .nav-donate { text-align: center; margin-top: 6px; }
+  html[lang="es"] .lang-switch, html[lang="ht"] .lang-switch { margin-right: 6px; }
+}
+@media (max-width: 440px) {
+  nav { padding-left: 12px !important; padding-right: 10px !important; }
+  .nav-logo { gap: 6px; }
+  .nav-logo-text { font-size: 16px !important; }
+  .nav-logo-box { font-size: 8px !important; letter-spacing: 1px !important; padding: 2px 5px !important; }
+  .lang-switch button { min-width: 30px; padding: 8px 6px; font-size: 11px; }
+  .mobile-nav-toggle { padding: 6px 4px; }
+}
