@@ -501,6 +501,7 @@
     if (full) msg = T('With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the non-ad valorem assessments (garbage, stormwater, etc.) remain.');
     else if (!hx) msg = T('Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.');
     else if (newcomer) msg = T('As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)');
+    else if (diff >= 1 && Math.round(diff) === Math.round(t['26'] - t['28'])) msg = T('At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about {a} a year starting in 2027.', { a: money(diff) });
     else msg = diff >= 1
       ? T('At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about {a} a year in 2027, and by about {b} a year starting in 2028.', { a: money(diff), b: money(t['26'] - t['28']) })
       : T('At today\u2019s tax rates, your estimated bill would stay about the same.');
