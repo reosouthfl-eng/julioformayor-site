@@ -28,6 +28,7 @@
     .est-match.warn{background:#fff7e8;border-color:#f5d48f;color:#7a4b00}
     .est-match select{margin-top:8px}
     .est-opt{font-weight:400;color:#6b7280}
+    .est-note{display:inline-block;margin-top:6px;font-size:13px;color:#4b5563}
     .est-checks{display:grid;gap:8px;margin-top:4px}
     .est-checks label{display:flex!important;align-items:flex-start;gap:10px;margin:0!important;font-weight:500!important;color:#333!important;font-size:14.5px!important;line-height:1.45}
     .est-checks input{width:18px!important;height:18px;margin-top:2px;flex:0 0 auto}
@@ -209,8 +210,17 @@
     .split(/\s+/).filter(Boolean).map(w => ABBR[w] || w);
   const fmtFolio = f => String(f || '').replace(/^(\d{2})(\d{4})(\d{3})(\d{4})$/, '$1-$2-$3-$4');
   const match = $('match');
+  // Translation helper: looks up the English template in the site dictionary (i18n/es.json, ht.json), then fills {placeholders}.
+  function T(str, vars) {
+    let r = (window.JG_I18N && window.JG_I18N.t) ? window.JG_I18N.t(str) : str;
+    if (vars) Object.keys(vars).forEach(k => { r = r.split('{' + k + '}').join(vars[k]); });
+    return r;
+  }
+  let redrawMatch = null; // re-draws the last lookup message when the visitor changes language
   function showMatch(html, warn) { match.innerHTML = html; match.className = 'est-match' + (warn ? ' warn' : ''); match.hidden = false; }
+  function render(fn) { redrawMatch = fn; fn(); }
   function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  const paSite = () => '<a href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank" rel="noopener">' + T('Property Appraiser site') + '</a>';
 
   function useParcel(p) {
     $('av').value = Math.round(p.ASSESSED_VAL_CUR).toLocaleString('en-US');
@@ -219,15 +229,16 @@
     const inCity = /^homestead$/i.test(city.trim());
     const uninc = /unincorporated/i.test(city);
     if (inCity) setArea('homestead'); else if (uninc) setArea('unincorporated');
-    showMatch('<strong>Found:</strong> ' + esc(p.TRUE_SITE_ADDR) + (p.TRUE_SITE_UNIT ? ' Unit ' + esc(p.TRUE_SITE_UNIT) : '') + ', ' + esc(city) +
-      '<br>Folio ' + esc(fmtFolio(p.FOLIO)) + ' &middot; Assessed value <strong>' + money(p.ASSESSED_VAL_CUR) + '</strong>' +
-      ' <span style="color:#555">(County’s latest figure' + (p.ASSESSMENT_YEAR_CUR ? ', preliminary for ' + esc(p.ASSESSMENT_YEAR_CUR) : '') + ')</span>' +
-      (inCity || uninc ? '' : '<br><strong>Note:</strong> this property is listed in ' + esc(city || 'another area') + '. This tool only has tax rates for the City of Homestead and unincorporated Miami-Dade, so the estimate may be off.'),
-      !(inCity || uninc));
+    const yr = p.ASSESSMENT_YEAR_CUR ? esc(p.ASSESSMENT_YEAR_CUR) : '2027';
+    render(() => showMatch('<strong>' + T('Found:') + '</strong> ' + esc(p.TRUE_SITE_ADDR) + (p.TRUE_SITE_UNIT ? ' ' + T('Unit') + ' ' + esc(p.TRUE_SITE_UNIT) : '') + ', ' + esc(city) +
+      '<br>' + T('Folio') + ' ' + esc(fmtFolio(p.FOLIO)) + ' &middot; ' + T('Assessed value') + ' <strong>' + money(p.ASSESSED_VAL_CUR) + '</strong>' +
+      '<br><span class="est-note">' + T('This is the county’s preliminary {year} value, which is usually a little higher than the value on your 2026 tax bill. To compare with your current bill, type the Assessed Value printed on it.', { year: yr }) + '</span>' +
+      (inCity || uninc ? '' : '<br><strong>' + T('Note:') + '</strong> ' + T('This property is listed in {place}. This tool only has tax rates for the City of Homestead and unincorporated Miami-Dade, so the estimate may be off.', { place: esc(city || '?') })),
+      !(inCity || uninc)));
   }
 
   async function findParcel(number, streetTokens, zip) {
-    showMatch('Looking up your property…');
+    render(() => showMatch(T('Looking up your property…')));
     $('av').value = '';
     let where = "TRUE_SITE_ADDR LIKE '" + number.replace(/\D/g, '') + " %'";
     if (zip) where += " AND TRUE_SITE_ZIP_CODE LIKE '" + zip.replace(/\D/g, '').slice(0, 5) + "%'";
@@ -245,17 +256,19 @@
       }).filter(x => x.score >= 0.67).sort((x, y) => y.score - x.score);
       const best = scored.filter(x => x.score === (scored[0] || {}).score).map(x => x.a);
       if (!best.length) {
-        showMatch('We couldn’t find that address in the county’s property data. You can type your assessed value below, or look it up on the <a href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank" rel="noopener">Property Appraiser site</a>.', true);
+        render(() => showMatch(T('We couldn’t find that address in the county’s property data. You can type your assessed value below, or look it up on the {link}.', { link: paSite() }), true));
         return;
       }
       if (best.length === 1) return useParcel(best[0]);
       // Condos/townhomes share a street address: let the visitor choose the unit.
       best.sort((x, y) => String(x.TRUE_SITE_UNIT).localeCompare(String(y.TRUE_SITE_UNIT), undefined, { numeric: true }));
-      showMatch('This address has ' + best.length + ' units. Pick yours:<select id="unitPick"><option value="">Choose a unit…</option>' +
-        best.map((a, i) => '<option value="' + i + '">Unit ' + esc(a.TRUE_SITE_UNIT || '(none)') + '</option>').join('') + '</select>');
-      $('unitPick').addEventListener('change', e => { if (e.target.value !== '') useParcel(best[Number(e.target.value)]); });
+      render(() => {
+        showMatch(T('This address has {n} units. Pick yours:', { n: best.length }) + '<select id="unitPick"><option value="">' + T('Choose a unit…') + '</option>' +
+          best.map((a, i) => '<option value="' + i + '">' + T('Unit') + ' ' + esc(a.TRUE_SITE_UNIT || '—') + '</option>').join('') + '</select>');
+        $('unitPick').addEventListener('change', e => { if (e.target.value !== '') useParcel(best[Number(e.target.value)]); });
+      });
     } catch (e) {
-      showMatch('The county’s property data didn’t respond. Please type your assessed value below, or find it on the <a href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank" rel="noopener">Property Appraiser site</a>.', true);
+      render(() => showMatch(T('The county’s property data didn’t respond. Please type your assessed value below, or find it on the {link}.', { link: paSite() }), true));
     }
   }
 
@@ -292,7 +305,7 @@
           const num = comp('street_number').longText || '';
           const route = comp('route').shortText || comp('route').longText || '';
           const zip = comp('postal_code').longText || '';
-          if (!num || !route) { showMatch('Please choose a street address with a house number.', true); return; }
+          if (!num || !route) { render(() => showMatch(T('Please choose a street address with a house number.'), true)); return; }
           findParcel(num, norm(route), zip);
         } catch (err) { lookupTyped(''); }
       });
@@ -314,7 +327,7 @@
   function calc() {
     $('err').textContent = '';
     const av = Number(($('av').value || '').replace(/[^0-9.]/g, ''));
-    if (!av || av < 1000 || av > 50000000) { $('err').textContent = 'Please enter your assessed value (a number like 285000), or pick your address above.'; $('out').hidden = true; return; }
+    if (!av || av < 1000 || av > 50000000) { $('err').textContent = T('Please enter your assessed value (a number like 285000), or pick your address above.'); $('out').hidden = true; return; }
     const hx = $('hx').value === 'yes';
     const newcomer = hx && $('res').value === 'no';
     const area = $('area').value;
@@ -327,7 +340,7 @@
     const countySr = hx && $('xCountySr').checked ? 50000 : 0;
     const municSr = hx && inCity && $('xMunicSr').checked ? 50000 : 0;
     const countyMills = inCity ? RATES.county : RATES.countyUninc;
-    $('countyLbl').textContent = inCity ? '' : '(includes unincorporated area & library)';
+    $('countyLbl').textContent = inCity ? '' : T('(includes unincorporated area & library)');
     $('cityRow').hidden = !inCity;
 
     const cols = [
@@ -350,17 +363,22 @@
     });
     const diff = t['26'] - t['27'];
     let msg;
-    if (full) msg = 'With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the non-ad valorem assessments (garbage, stormwater, etc.) remain.';
-    else if (!hx) msg = 'Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
-    else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)';
+    if (full) msg = T('With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the non-ad valorem assessments (garbage, stormwater, etc.) remain.');
+    else if (!hx) msg = T('Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.');
+    else if (newcomer) msg = T('As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)');
     else msg = diff >= 1
-      ? 'At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about ' + money(diff) + ' a year in 2027, and by about ' + money(t['26'] - t['28']) + ' a year starting in 2028.'
-      : 'At today\u2019s tax rates, your estimated bill would stay about the same.';
+      ? T('At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about {a} a year in 2027, and by about {b} a year starting in 2028.', { a: money(diff), b: money(t['26'] - t['28']) })
+      : T('At today\u2019s tax rates, your estimated bill would stay about the same.');
     $('summary').textContent = msg;
     $('out').hidden = false;
     $('out').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   $('calcBtn').addEventListener('click', calc);
+  // When the visitor switches language, wait for the dictionary to load, then redraw the dynamic text.
+  document.addEventListener('jg:langchange', () => setTimeout(() => {
+    if (redrawMatch) redrawMatch();
+    if (!$('out').hidden) { const y = window.scrollY; calc(); window.scrollTo(0, y); }
+  }, 400));
   $('av').addEventListener('keydown', e => { if (e.key === 'Enter') calc(); });
 })();
 </script>
