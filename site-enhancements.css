@@ -159,3 +159,9 @@ body { overflow-wrap: break-word; }
   .lang-switch button { min-width: 30px; padding: 8px 6px; font-size: 11px; }
   .mobile-nav-toggle { padding: 6px 4px; }
 }
+/* Home hero: keep the photo inside the screen on tablets */
+.hero { overflow: hidden; }
+@media (min-width: 641px) and (max-width: 980px) {
+  .hero { padding: 64px 40px 48px !important; gap: 32px !important; }
+  .hero-photo { margin: -64px -40px -48px -10px !important; }
+}
