@@ -26,6 +26,11 @@
     .est-match{margin-top:12px;padding:12px 14px;border-radius:6px;background:#f2f6fc;border:1px solid #d5e0f0;font-size:14.5px;color:#1b3a6e;line-height:1.6}
     .est-match.warn{background:#fff7e8;border-color:#f5d48f;color:#7a4b00}
     .est-match select{margin-top:8px}
+    .est-opt{font-weight:400;color:#6b7280}
+    .est-checks{display:grid;gap:8px;margin-top:4px}
+    .est-checks label{display:flex!important;align-items:flex-start;gap:10px;margin:0!important;font-weight:500!important;color:#333!important;font-size:14.5px!important;line-height:1.45}
+    .est-checks input{width:18px!important;height:18px;margin-top:2px;flex:0 0 auto}
+    .est-checks span{color:#6b7280;font-weight:400;margin-left:4px}
     .est-calc{margin-top:22px;width:100%}
     .est-fine{font-size:12.5px!important;color:#6b7280!important;line-height:1.6!important}
     .est-err{color:#b42318!important;font-weight:600;margin-top:10px}
@@ -92,6 +97,25 @@
         <select id="res"><option value="yes">Yes</option><option value="no">No, I moved to Florida in 2027 or later</option></select>
       </div>
 
+      <label for="area">Where is the property?</label>
+      <select id="area"><option value="homestead">Inside the City of Homestead</option><option value="unincorporated">Unincorporated Miami-Dade (outside city limits)</option></select>
+
+      <div id="xWrap">
+        <label>Other exemptions <span class="est-opt">(optional, check any listed under &ldquo;EXEMPTIONS&rdquo; on your tax bill)</span></label>
+        <div class="est-checks">
+          <label><input type="checkbox" id="xWidow"> Widow / widower <span>$5,000 off all taxes</span></label>
+          <label><input type="checkbox" id="xDisab"> Blind or totally &amp; permanently disabled <span>$5,000 off all taxes</span></label>
+          <label><input type="checkbox" id="xVet"> Veteran with a service-connected disability of 10% or more <span>$5,000 off all taxes</span></label>
+          <label><input type="checkbox" id="xCountySr"> Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;) <span>up to $50,000 off county taxes</span></label>
+          <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"> Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;) <span>up to $50,000 off City of Homestead taxes</span></label>
+          <label><input type="checkbox" id="xFull"> Fully exempt (for example, 100% permanently disabled veteran) <span>no property tax; fees still apply</span></label>
+        </div>
+      </div>
+
+      <label for="fees">Fees on your bill (garbage, recycling, stormwater, etc.)</label>
+      <input id="fees" type="text" inputmode="decimal" value="736.56">
+      <p class="est-fine">These flat fees are listed under &ldquo;Non-Ad Valorem Assessments&rdquo; on your bill. We filled in the typical 2026 amount for your area. Amendment 3 does not change them.</p>
+
 
       <button type="button" id="calcBtn" class="btn-primary est-calc">Estimate my taxes</button>
       <p id="err" class="est-err" role="alert"></p>
@@ -100,16 +124,19 @@
     <div id="out" class="est-card est-out" hidden aria-live="polite">
       <h3>Your estimate</h3>
       <table class="est-table">
-        <thead><tr><th></th><th>Before Amendment 3</th><th>2027</th><th>2028</th></tr></thead>
+        <thead><tr><th></th><th>Old rules</th><th>2027</th><th>2028</th></tr></thead>
         <tbody>
-          <tr><td>Non-school exemption</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
-          <tr><td>Non-school taxes</td><td id="n26"></td><td id="n27"></td><td id="n28"></td></tr>
-          <tr><td>School taxes</td><td id="s26"></td><td id="s27"></td><td id="s28"></td></tr>
-          <tr class="est-total"><td>Estimated property tax</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
+          <tr><td>Homestead exemption (non-school)</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
+          <tr><td>School Board taxes</td><td id="s26"></td><td id="s27"></td><td id="s28"></td></tr>
+          <tr><td>Miami-Dade County taxes <span class="est-opt" id="countyLbl"></span></td><td id="c26"></td><td id="c27"></td><td id="c28"></td></tr>
+          <tr id="cityRow"><td>City of Homestead taxes</td><td id="m26"></td><td id="m27"></td><td id="m28"></td></tr>
+          <tr><td>State &amp; regional taxes <span class="est-opt">(water management, Children&rsquo;s Trust, etc.)</span></td><td id="r26"></td><td id="r27"></td><td id="r28"></td></tr>
+          <tr><td>Fees (garbage, stormwater, etc.)</td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
+          <tr class="est-total"><td>Estimated total bill</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
         </tbody>
       </table>
       <p id="summary" class="est-summary"></p>
-      <p class="est-fine">All three columns use the same home value and today's 2026 tax rates, so the difference comes from Amendment 3 alone. Your assessed value can still rise each year (up to 3% for a homestead). The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Garbage, stormwater and other flat fees on your bill are not included.</p>
+      <p class="est-fine">All three columns use the same home value and today's 2026 tax rates, so the difference comes from Amendment 3 alone. Your assessed value can still rise each year (up to 3% for a homestead). The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Paying in November usually earns a 4% discount, which is not shown.</p>
     </div>
 
     <div class="est-card est-notes">
@@ -119,8 +146,8 @@
         <li><strong>School taxes do not change.</strong> School taxes keep the existing $25,000 exemption.</li>
         <li><strong>New Floridians.</strong> If Florida was not your permanent home by December 31, 2026, the non-school exemption is $50,000 for your first four years, then the full amount.</li>
         <li><strong>Save Our Homes</strong> still limits how much a homestead's assessed value can rise each year (3% or inflation, whichever is lower). For non-homestead property, the yearly cap on non-school taxes drops from 10% to 5% starting in 2027.</li>
-        <li><strong>Other exemptions</strong> (senior, veteran, disability, widow/widower) are not included. If you have one, your bill may be lower.</li>
-        <li><strong>Tax rates used</strong> (per $1,000 of taxable value): City of Homestead <span id="rCity"></span> (adopted September 2026), Miami-Dade County, Fire-Rescue, Library and other non-school levies <span id="rOther"></span>, and School Board <span id="rSchool"></span>. County and school figures are the proposed 2026 rates published by the Property Appraiser in August 2026. Your TRIM notice or tax bill shows the exact rates for your parcel.</li>
+        <li><strong>Other exemptions</strong> (widow/widower, blind or disabled, disabled veteran, low-income senior) still apply on top of the homestead exemption. Senior exemptions only reduce the taxes of the government that grants them, which is why the county senior exemption does not lower school or water-district taxes. The City of Homestead senior amount is assumed to be $50,000; check your bill. Long-term-resident senior exemptions and other special cases are not included.</li>
+        <li><strong>Tax rates used</strong> (per $1,000 of taxable value) are the final 2026 rates printed on Miami-Dade tax bills: School Board <span id="rSchool"></span>; Miami-Dade County <span id="rCounty"></span> in the city (County-wide, debt and Fire Rescue) or <span id="rCountyU"></span> outside city limits (adds the Unincorporated Area and Library District levies); City of Homestead <span id="rCity"></span>; State &amp; regional <span id="rState"></span>. Special district assessments some neighborhoods pay (street lights, security guard districts) are not included.</li>
       </ul>
       <p class="est-fine">This is an estimate for general information, not tax advice. For your official values and exemptions, contact the <a href="https://www.miamidadepa.gov/" target="_blank">Miami-Dade Property Appraiser</a>. Questions about this tool: <a href="mailto:info@julioformayor.com">info@julioformayor.com</a>.</p>
     </div>
@@ -147,19 +174,29 @@
 (() => {
   // Mills per $1,000 of taxable value. City = FY2027 adopted operating 6.0567 + voted debt 0.2316 (Sep 23, 2026).
   // County/special districts/school = Miami-Dade Property Appraiser 2026 proposed millage (Aug 2026).
+  // Final 2026 millage as printed on Miami-Dade tax bills (mills = dollars per $1,000 of taxable value).
   const RATES = {
-    city: 6.0567 + 0.2316,
-    countyEtc: 4.5740 + 2.3965 + 0.2812 + 0.3937 + 0.0948 + 0.0327 + 0.1026 + 0.0270 + 0.4638,
-    school: 3.2510 + 2.2480 + 1.0000 + 0.1240
+    school: 5.4990 + 0.1240 + 1.0000,                         // School Board operating, debt service, voted operating
+    state: 0.0270 + 0.0948 + 0.1026 + 0.0327 + 0.4638,        // FIND, SFWMD, Okeechobee Basin, Everglades, Children's Trust
+    county: 4.5740 + 0.3937 + 2.3965,                         // County-wide operating, county debt, Fire Rescue
+    countyUninc: 4.5740 + 0.3937 + 2.3965 + 1.9090 + 0.2812,  // + Unincorporated Area operating + Library District
+    city: 5.9604 + 0.2316                                     // Homestead operating + debt service
   };
-  const NON_SCHOOL = RATES.city + RATES.countyEtc;
+  const FEES = { homestead: 736.56, unincorporated: 702.00 };   // typical 2026 residential non-ad valorem charges
   const CUR_SECOND_TIER = 26411; // 2026 indexed second $25k homestead exemption (non-school)
   const $ = id => document.getElementById(id);
   const money = n => '$' + Math.round(n).toLocaleString('en-US');
   const f4 = n => n.toFixed(4);
-  $('rCity').textContent = f4(RATES.city);
-  $('rOther').textContent = f4(RATES.countyEtc);
-  $('rSchool').textContent = f4(RATES.school);
+  $('rSchool').textContent = f4(RATES.school); $('rCounty').textContent = f4(RATES.county);
+  $('rCountyU').textContent = f4(RATES.countyUninc); $('rCity').textContent = f4(RATES.city); $('rState').textContent = f4(RATES.state);
+  let feesTouched = false;
+  $('fees').addEventListener('input', () => { feesTouched = true; });
+  function setArea(v) {
+    $('area').value = v;
+    $('xMunicWrap').hidden = v !== 'homestead';
+    if (!feesTouched) $('fees').value = FEES[v].toFixed(2);
+  }
+  $('area').addEventListener('change', e => setArea(e.target.value));
 
   // ---- Address lookup: Google Places suggestions + Miami-Dade County public property data ----
   // County "Property Point View" open-data layer (public). Only address, folio and value fields are requested; never owner names.
@@ -179,11 +216,13 @@
     $('paLink').href = 'https://apps.miamidadepa.gov/PropertySearch/#/?folio=' + p.FOLIO;
     const city = p.TRUE_SITE_CITY || '';
     const inCity = /^homestead$/i.test(city.trim());
+    const uninc = /unincorporated/i.test(city);
+    if (inCity) setArea('homestead'); else if (uninc) setArea('unincorporated');
     showMatch('<strong>Found:</strong> ' + esc(p.TRUE_SITE_ADDR) + (p.TRUE_SITE_UNIT ? ' Unit ' + esc(p.TRUE_SITE_UNIT) : '') + ', ' + esc(city) +
       '<br>Folio ' + esc(fmtFolio(p.FOLIO)) + ' &middot; Assessed value <strong>' + money(p.ASSESSED_VAL_CUR) + '</strong>' +
       ' <span style="color:#555">(County’s latest figure' + (p.ASSESSMENT_YEAR_CUR ? ', preliminary for ' + esc(p.ASSESSMENT_YEAR_CUR) : '') + ')</span>' +
-      (inCity ? '' : '<br><strong>Note:</strong> this property is listed in ' + esc(city || 'another area') + ', not the City of Homestead. This estimate uses City of Homestead tax rates, so it may be off.'),
-      !inCity);
+      (inCity || uninc ? '' : '<br><strong>Note:</strong> this property is listed in ' + esc(city || 'another area') + '. This tool only has tax rates for the City of Homestead and unincorporated Miami-Dade, so the estimate may be off.'),
+      !(inCity || uninc));
   }
 
   async function findParcel(number, streetTokens, zip) {
@@ -263,7 +302,7 @@
     sc.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAHKqFA29mhzBtl0MqPh-xHTuYNgEnvu0U&libraries=places&callback=initPlaces&loading=async' + l;
     sc.async = true; document.body.appendChild(sc);
   })();
-  $('hx').addEventListener('change', () => { $('resWrap').hidden = $('hx').value !== 'yes'; });
+  $('hx').addEventListener('change', () => { const h = $('hx').value === 'yes'; $('resWrap').hidden = !h; $('xCountySr').disabled = $('xMunicSr').disabled = !h; });
 
   function currentNonSchoolEx(av) { return Math.min(av, 25000) + Math.min(Math.max(av - 50000, 0), CUR_SECOND_TIER); }
   function amend3Ex(av, year, newcomer) {
@@ -276,29 +315,45 @@
     if (!av || av < 1000 || av > 50000000) { $('err').textContent = 'Please enter your assessed value (a number like 285000), or pick your address above.'; $('out').hidden = true; return; }
     const hx = $('hx').value === 'yes';
     const newcomer = hx && $('res').value === 'no';
-    const av27 = av, av28 = av; // same home value in every column: isolates the effect of Amendment 3
-    const rows = [
-      { y: 2026, av: av, ex: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, sx: hx && !newcomer ? Math.min(av, 25000) : 0 },
-      { y: 2027, av: av27, ex: hx ? amend3Ex(av27, 2027, newcomer) : 0, sx: hx ? Math.min(av27, 25000) : 0 },
-      { y: 2028, av: av28, ex: hx ? amend3Ex(av28, 2028, newcomer) : 0, sx: hx ? Math.min(av28, 25000) : 0 }
+    const area = $('area').value;
+    const inCity = area === 'homestead';
+    const fees = Math.max(Number(String($('fees').value).replace(/[^0-9.]/g, '')) || 0, 0);
+    const full = $('xFull').checked;
+    // $5,000 exemptions apply to every levy, school included
+    const fiveK = 5000 * [$('xWidow').checked, $('xDisab').checked, $('xVet').checked].filter(Boolean).length;
+    // Senior exemptions apply only to the government that grants them (homestead only)
+    const countySr = hx && $('xCountySr').checked ? 50000 : 0;
+    const municSr = hx && inCity && $('xMunicSr').checked ? 50000 : 0;
+    const countyMills = inCity ? RATES.county : RATES.countyUninc;
+    $('countyLbl').textContent = inCity ? '' : '(includes unincorporated area & library)';
+    $('cityRow').hidden = !inCity;
+
+    const cols = [
+      { k: '26', hxNS: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, hxS: hx && !newcomer ? Math.min(av, 25000) : 0 },
+      { k: '27', hxNS: hx ? amend3Ex(av, 2027, newcomer) : 0, hxS: hx ? Math.min(av, 25000) : 0 },
+      { k: '28', hxNS: hx ? amend3Ex(av, 2028, newcomer) : 0, hxS: hx ? Math.min(av, 25000) : 0 }
     ];
-    const ids = { 2026: '26', 2027: '27', 2028: '28' };
-    let t = {};
-    rows.forEach(r => {
-      const n = Math.max(r.av - r.ex, 0) * NON_SCHOOL / 1000;
-      const s = Math.max(r.av - r.sx, 0) * RATES.school / 1000;
-      t[r.y] = n + s;
-      const k = ids[r.y];
-      $('e' + k).textContent = money(r.ex); $('n' + k).textContent = money(n);
-      $('s' + k).textContent = money(s); $('t' + k).textContent = money(n + s);
+    const tax = (exempt, mills) => full ? 0 : Math.max(av - exempt, 0) * mills / 1000;
+    const t = {};
+    cols.forEach(c => {
+      const school = tax(c.hxS + fiveK, RATES.school);
+      const state = tax(c.hxNS + fiveK, RATES.state);
+      const county = tax(c.hxNS + fiveK + countySr, countyMills);
+      const city = inCity ? tax(c.hxNS + fiveK + municSr, RATES.city) : 0;
+      t[c.k] = school + state + county + city + fees;
+      $('e' + c.k).textContent = money(c.hxNS); $('s' + c.k).textContent = money(school);
+      $('c' + c.k).textContent = money(county); $('m' + c.k).textContent = money(city);
+      $('r' + c.k).textContent = money(state); $('f' + c.k).textContent = money(fees);
+      $('t' + c.k).textContent = money(t[c.k]);
     });
-    const diff = t[2026] - t[2027];
+    const diff = t['26'] - t['27'];
     let msg;
-    if (!hx) msg = 'Amendment 3’s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
+    if (full) msg = 'With a full exemption you pay no property tax, so Amendment 3 does not change your bill. Only the flat fees remain.';
+    else if (!hx) msg = 'Amendment 3\u2019s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
     else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)';
-    else msg = diff > 0
-      ? 'At today’s tax rates, Amendment 3 would lower your estimated bill by about ' + money(diff) + ' a year in 2027, and by about ' + money(t[2026] - t[2028]) + ' a year starting in 2028.'
-      : 'At today’s tax rates, your estimated bill would stay about the same.';
+    else msg = diff >= 1
+      ? 'At today\u2019s tax rates, Amendment 3 would lower your estimated bill by about ' + money(diff) + ' a year in 2027, and by about ' + money(t['26'] - t['28']) + ' a year starting in 2028.'
+      : 'At today\u2019s tax rates, your estimated bill would stay about the same.';
     $('summary').textContent = msg;
     $('out').hidden = false;
     $('out').scrollIntoView({ behavior: 'smooth', block: 'start' });
