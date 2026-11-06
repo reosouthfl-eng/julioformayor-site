@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <meta name="description" content="Estimate how Amendment 3's larger homestead exemption could change your 2027 property tax bill in Homestead, FL." />
+  <link rel="canonical" href="https://julioformayor.com/tax-estimator.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="2027 Property Tax Estimator | Julio Guzman for Mayor of Homestead" />
+  <meta property="og:description" content="Estimate how Amendment 3's larger homestead exemption could change your 2027 property tax bill in Homestead, FL." />
+  <meta property="og:url" content="https://julioformayor.com/tax-estimator.html" />
+  <meta property="og:image" content="https://julioformayor.com/images/julio-couple.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+<title>2027 Property Tax Estimator | Julio Guzman for Mayor of Homestead</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .est-wrap{max-width:820px;margin:0 auto}
+    .est-lede{font-size:17px;color:#333;line-height:1.7;margin-bottom:24px}
+    .est-card{border:1px solid #e3e7ee;border-radius:10px;padding:26px 28px;margin-bottom:22px;background:#fff}
+    .est-card h3{font-size:20px;font-weight:800;color:#1b3a6e;margin:6px 0 10px}
+    .est-card p{font-size:15px;color:#444;line-height:1.7;margin-bottom:10px}
+    .est-card label{display:block;font-size:14px;font-weight:600;color:#1b3a6e;margin:16px 0 6px}
+    .est-card input,.est-card select{width:100%;padding:12px 14px;font-size:16px;border:1px solid #c9d1de;border-radius:6px;box-sizing:border-box;background:#fff}
+    .est-row{display:flex;gap:10px;flex-wrap:wrap}
+    .est-row input{flex:1 1 260px}
+    .est-btn{margin-left:0!important;padding:12px 18px!important;font-size:13px!important;letter-spacing:1px!important;white-space:nowrap}
+    .est-calc{margin-top:22px;width:100%}
+    .est-fine{font-size:12.5px!important;color:#6b7280!important;line-height:1.6!important}
+    .est-err{color:#b42318!important;font-weight:600;margin-top:10px}
+    .est-table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0 14px}
+    .est-table th,.est-table td{padding:10px 8px;border-bottom:1px solid #edf0f4;text-align:right}
+    .est-table th:first-child,.est-table td:first-child{text-align:left;color:#444}
+    .est-table th{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#1b3a6e}
+    .est-total td{font-weight:800;color:#1b3a6e;font-size:17px;border-bottom:none}
+    .est-summary{font-size:16px!important;color:#1b3a6e!important;font-weight:600;background:#fff7e8;border-left:4px solid #f5a623;padding:12px 14px;border-radius:4px}
+    .est-notes ul{padding-left:20px}.est-notes li{font-size:14.5px;color:#444;line-height:1.7;margin-bottom:8px}
+    .est-notes li::marker{color:#f5a623}
+    .est-card a{color:#1b3a6e}
+    @media(max-width:600px){.est-card{padding:20px 16px}.est-table{font-size:13px}.est-table th,.est-table td{padding:8px 4px}}
+  </style>
+  <link rel="stylesheet" href="site-enhancements.css" />
+  <script src="i18n.js"></script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Amendment 3 &middot; Homeowner Tool</div>
+  <h1>2027 Property Tax Estimator</h1>
+</div>
+
+<section style="background:#fff;">
+  <div class="est-wrap">
+    <p class="est-lede">Florida voters approved Amendment 3 on November 3, 2026. Starting with the 2027 tax bill, it raises the homestead exemption on <strong>non-school</strong> property taxes. Use this tool to get a rough idea of what it could mean for your home in Homestead.</p>
+
+    <div class="est-card">
+      <h3>1. Find your assessed value</h3>
+      <p>Search your address on the Miami-Dade Property Appraiser site. Look for <strong>2026 Assessed Value</strong> (not Market Value).</p>
+      <div class="est-row">
+        <input id="addr" type="text" placeholder="e.g. 100 Civic Ct, Homestead" autocomplete="street-address" aria-label="Property address">
+        <button type="button" id="lookupBtn" class="btn-outline est-btn">Look up on Property Appraiser &#8599;</button>
+      </div>
+      <p class="est-fine">Your address is not saved or sent to the campaign. It only opens the Property Appraiser search in a new tab.</p>
+
+      <label for="av">2026 Assessed Value ($)</label>
+      <input id="av" type="text" inputmode="numeric" placeholder="e.g. 285,000">
+
+      <h3>2. About you</h3>
+      <label for="hx">Do you have a homestead exemption on this home (or will you by 2027)?</label>
+      <select id="hx"><option value="yes">Yes</option><option value="no">No (rental, second home, or business property)</option></select>
+
+      <div id="resWrap">
+        <label for="res">Was Florida your permanent home on or before December 31, 2026?</label>
+        <select id="res"><option value="yes">Yes</option><option value="no">No, I moved to Florida in 2027 or later</option></select>
+      </div>
+
+      <label for="growth">Assume your assessed value grows in 2027 by</label>
+      <select id="growth"><option value="0">0% (keep it the same)</option><option value="3" selected>Up to 3% (the most allowed for a homestead)</option></select>
+
+      <button type="button" id="calcBtn" class="btn-primary est-calc">Estimate my taxes</button>
+      <p id="err" class="est-err" role="alert"></p>
+    </div>
+
+    <div id="out" class="est-card est-out" hidden aria-live="polite">
+      <h3>Your estimate</h3>
+      <table class="est-table">
+        <thead><tr><th></th><th>2026 (today)</th><th>2027</th><th>2028</th></tr></thead>
+        <tbody>
+          <tr><td>Non-school exemption</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
+          <tr><td>Non-school taxes</td><td id="n26"></td><td id="n27"></td><td id="n28"></td></tr>
+          <tr><td>School taxes</td><td id="s26"></td><td id="s27"></td><td id="s28"></td></tr>
+          <tr class="est-total"><td>Estimated property tax</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
+        </tbody>
+      </table>
+      <p id="summary" class="est-summary"></p>
+      <p class="est-fine">2027 and 2028 rows use today's 2026 tax rates. The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Garbage, stormwater and other flat fees on your bill are not included.</p>
+    </div>
+
+    <div class="est-card est-notes">
+      <h3>How this estimate works</h3>
+      <ul>
+        <li><strong>Non-school exemption.</strong> Today a homestead gets up to $51,411 off its value for non-school taxes. Under Amendment 3 that becomes $150,000 in 2027 and $250,000 in 2028, then rises with inflation starting in 2029. The new amount replaces the old one; it is not added on top.</li>
+        <li><strong>School taxes do not change.</strong> School taxes keep the existing $25,000 exemption.</li>
+        <li><strong>New Floridians.</strong> If Florida was not your permanent home by December 31, 2026, the non-school exemption is $50,000 for your first four years, then the full amount.</li>
+        <li><strong>Save Our Homes</strong> still limits how much a homestead's assessed value can rise each year (3% or inflation, whichever is lower). For non-homestead property, the yearly cap on non-school taxes drops from 10% to 5% starting in 2027.</li>
+        <li><strong>Other exemptions</strong> (senior, veteran, disability, widow/widower) are not included. If you have one, your bill may be lower.</li>
+        <li><strong>Tax rates used</strong> (per $1,000 of taxable value): City of Homestead <span id="rCity"></span> (adopted September 2026), Miami-Dade County, Fire-Rescue, Library and other non-school levies <span id="rOther"></span>, and School Board <span id="rSchool"></span>. County and school figures are the proposed 2026 rates published by the Property Appraiser in August 2026. Your TRIM notice or tax bill shows the exact rates for your parcel.</li>
+      </ul>
+      <p class="est-fine">This is an estimate for general information, not tax advice. For your official values and exemptions, contact the <a href="https://www.miamidadepa.gov/" target="_blank">Miami-Dade Property Appraiser</a>. Questions about this tool: <a href="mailto:info@julioformayor.com">info@julioformayor.com</a>.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="https://www.instagram.com/julioguzman_homestead/" target="_blank">Instagram</a><a href="https://www.tiktok.com/@julioguzmanhomestead" target="_blank">TikTok</a></div>
+  </div>
+  <div class="footer-bottom">
+    Political advertisement paid for and approved by Julio Guzman, Nonpartisan, for Mayor of Homestead. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Mills per $1,000 of taxable value. City = FY2027 adopted operating 6.0567 + voted debt 0.2316 (Sep 23, 2026).
+  // County/special districts/school = Miami-Dade Property Appraiser 2026 proposed millage (Aug 2026).
+  const RATES = {
+    city: 6.0567 + 0.2316,
+    countyEtc: 4.5740 + 2.3965 + 0.2812 + 0.3937 + 0.0948 + 0.0327 + 0.1026 + 0.0270 + 0.4638,
+    school: 3.2510 + 2.2480 + 1.0000 + 0.1240
+  };
+  const NON_SCHOOL = RATES.city + RATES.countyEtc;
+  const CUR_SECOND_TIER = 26411; // 2026 indexed second $25k homestead exemption (non-school)
+  const $ = id => document.getElementById(id);
+  const money = n => '$' + Math.round(n).toLocaleString('en-US');
+  const f4 = n => n.toFixed(4);
+  $('rCity').textContent = f4(RATES.city);
+  $('rOther').textContent = f4(RATES.countyEtc);
+  $('rSchool').textContent = f4(RATES.school);
+
+  $('lookupBtn').addEventListener('click', () => {
+    const a = $('addr').value.trim();
+    const url = 'https://apps.miamidadepa.gov/PropertySearch/#/' + (a ? '?address=' + encodeURIComponent(a) : '');
+    window.open(url, '_blank', 'noopener');
+  });
+  $('hx').addEventListener('change', () => { $('resWrap').hidden = $('hx').value !== 'yes'; });
+
+  function currentNonSchoolEx(av) { return Math.min(av, 25000) + Math.min(Math.max(av - 50000, 0), CUR_SECOND_TIER); }
+  function amend3Ex(av, year, newcomer) {
+    const amt = newcomer ? 50000 : (year === 2027 ? 150000 : 250000);
+    return Math.min(av, amt);
+  }
+  function calc() {
+    $('err').textContent = '';
+    const av = Number(($('av').value || '').replace(/[^0-9.]/g, ''));
+    if (!av || av < 1000 || av > 50000000) { $('err').textContent = 'Please enter your 2026 assessed value (a number like 285000).'; $('out').hidden = true; return; }
+    const hx = $('hx').value === 'yes';
+    const newcomer = hx && $('res').value === 'no';
+    const g = Number($('growth').value) / 100;
+    const cap = hx ? g : Math.min(g, 0.05);
+    const av27 = av * (1 + cap), av28 = av27 * (1 + cap);
+    const rows = [
+      { y: 2026, av: av, ex: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, sx: hx && !newcomer ? Math.min(av, 25000) : 0 },
+      { y: 2027, av: av27, ex: hx ? amend3Ex(av27, 2027, newcomer) : 0, sx: hx ? Math.min(av27, 25000) : 0 },
+      { y: 2028, av: av28, ex: hx ? amend3Ex(av28, 2028, newcomer) : 0, sx: hx ? Math.min(av28, 25000) : 0 }
+    ];
+    const ids = { 2026: '26', 2027: '27', 2028: '28' };
+    let t = {};
+    rows.forEach(r => {
+      const n = Math.max(r.av - r.ex, 0) * NON_SCHOOL / 1000;
+      const s = Math.max(r.av - r.sx, 0) * RATES.school / 1000;
+      t[r.y] = n + s;
+      const k = ids[r.y];
+      $('e' + k).textContent = money(r.ex); $('n' + k).textContent = money(n);
+      $('s' + k).textContent = money(s); $('t' + k).textContent = money(n + s);
+    });
+    // 2026 column for a newcomer is not meaningful (no homestead yet); say so.
+    const diff = t[2026] - t[2027];
+    let msg;
+    if (!hx) msg = 'Amendment 3’s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
+    else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The 2026 column shows the property with no homestead exemption.)';
+    else msg = diff > 0
+      ? 'At today’s tax rates, your estimated bill would go down by about ' + money(diff) + ' in 2027 compared with 2026, and by about ' + money(t[2026] - t[2028]) + ' in 2028.'
+      : 'At today’s tax rates, your estimated bill would stay about the same.';
+    $('summary').textContent = msg;
+    $('out').hidden = false;
+    $('out').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  $('calcBtn').addEventListener('click', calc);
+  $('av').addEventListener('keydown', e => { if (e.key === 'Enter') calc(); });
+})();
+</script>
+
+  <script src="site.js" defer></script>
+</body>
+</html>
