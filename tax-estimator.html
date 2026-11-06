@@ -37,6 +37,7 @@
     .est-checks{display:grid;gap:8px;margin-top:4px}
     .est-checks label{display:flex!important;align-items:flex-start;gap:10px;margin:0!important;font-weight:500!important;color:#333!important;font-size:14.5px!important;line-height:1.45}
     .est-checks input{width:18px!important;height:18px;margin-top:2px;flex:0 0 auto}
+    .est-checks label[hidden]{display:none!important}
     .est-checks small{display:block;color:#6b7280;font-weight:400;font-size:13px;margin-top:1px}
     .est-calc{margin-top:22px;width:100%}
     .est-fine{font-size:12.5px!important;color:#6b7280!important;line-height:1.6!important}
@@ -162,7 +163,7 @@
           <tr id="countyRow"><td>Miami-Dade County taxes <span class="est-opt" id="countyLbl"></span></td><td id="c26"></td><td id="c27"></td><td id="c28"></td></tr>
           <tr id="countyRowJ" hidden><td>City of Jacksonville taxes <span class="est-opt">(city and county combined)</span></td><td id="j26"></td><td id="j27"></td><td id="j28"></td></tr>
           <tr id="cityRow"><td>City of Homestead taxes</td><td id="m26"></td><td id="m27"></td><td id="m28"></td></tr>
-          <tr><td>State &amp; regional taxes <span class="est-opt">(water management, Children&rsquo;s Trust, etc.)</span></td><td id="r26"></td><td id="r27"></td><td id="r28"></td></tr>
+          <tr><td>State &amp; regional taxes <span class="est-opt" id="stateLbl">(water management, Children&rsquo;s Trust, etc.)</span></td><td id="r26"></td><td id="r27"></td><td id="r28"></td></tr>
           <tr><td>Non-Ad Valorem Assessments <span class="est-opt">(garbage, stormwater, etc.)</span></td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
           <tr class="est-total"><td>Estimated total bill</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
         </tbody>
@@ -475,6 +476,7 @@
     $('countyLbl').textContent = inCity ? '' : T('(includes unincorporated area & library)');
     $('cityRow').hidden = !inCity;
     $('countyRow').hidden = jax; $('countyRowJ').hidden = !jax;
+    $('stateLbl').textContent = jax ? T('(water management and inland navigation)') : T('(water management, Children\u2019s Trust, etc.)');
 
     const cols = [
       { k: '26', hxNS: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, hxS: hx && !newcomer ? Math.min(av, 25000) : 0 },
