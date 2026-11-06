@@ -321,9 +321,9 @@
     setArea('jacksonville');
     try {
       let feats = [];
-      for (const d of [0.0006, 0.002]) {
+      for (const d of [0.0003, 0.0008, 0.002]) {
         const env = { xmin: lng - d, ymin: lat - d, xmax: lng + d, ymax: lat + d, spatialReference: { wkid: 4326 } };
-        const url = FL_PARCELS + '?where=' + encodeURIComponent('CO_NO=26') + '&geometry=' + encodeURIComponent(JSON.stringify(env)) +
+        const url = FL_PARCELS + '?where=1%3D1&geometry=' + encodeURIComponent(JSON.stringify(env)) +
           '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects' +
           '&outFields=PARCEL_ID,PHY_ADDR1,PHY_CITY,PHY_ZIPCD,AV_NSD,AV_HMSTD,ASMNT_YR&returnGeometry=false&resultRecordCount=500&f=json';
         const r = await fetch(url).then(x => x.json());
@@ -389,11 +389,12 @@
       if (!sessionToken) sessionToken = new places.AutocompleteSessionToken();
       const lang = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? 'es' : 'en';
       const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
-        input: q, sessionToken, language: lang, includedRegionCodes: ['us'],
+        input: /florida|\bfl\b/i.test(q) ? q : q + ', FL', sessionToken, language: lang, includedRegionCodes: ['us'],
         locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 50000 }
       });
       if (seq !== suggSeq) return; // a newer keystroke already asked again
-      suggItems = (suggestions || []).map(x => x.placePrediction).filter(Boolean).slice(0, 5);
+      // Florida addresses only
+      suggItems = (suggestions || []).map(x => x.placePrediction).filter(p => p && /(,\s*FL\b|Florida|Floride)/i.test(p.text ? p.text.text : '')).slice(0, 5);
       if (!suggItems.length) { closeSugg(); return; }
       sugg.innerHTML = suggItems.map((p, i) => {
         const main = p.mainText ? p.mainText.text : p.text.text;
