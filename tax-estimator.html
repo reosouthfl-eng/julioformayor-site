@@ -22,9 +22,10 @@
     .est-card p{font-size:15px;color:#444;line-height:1.7;margin-bottom:10px}
     .est-card label{display:block;font-size:14px;font-weight:600;color:#1b3a6e;margin:16px 0 6px}
     .est-card input,.est-card select{width:100%;padding:12px 14px;font-size:16px;border:1px solid #c9d1de;border-radius:6px;box-sizing:border-box;background:#fff}
-    .est-row{display:flex;gap:10px;flex-wrap:wrap}
-    .est-row input{flex:1 1 260px}
-    .est-btn{margin-left:0!important;padding:12px 18px!important;font-size:13px!important;letter-spacing:1px!important;white-space:nowrap}
+    .est-addr gmp-place-autocomplete{width:100%;display:block;color-scheme:light}
+    .est-match{margin-top:12px;padding:12px 14px;border-radius:6px;background:#f2f6fc;border:1px solid #d5e0f0;font-size:14.5px;color:#1b3a6e;line-height:1.6}
+    .est-match.warn{background:#fff7e8;border-color:#f5d48f;color:#7a4b00}
+    .est-match select{margin-top:8px}
     .est-calc{margin-top:22px;width:100%}
     .est-fine{font-size:12.5px!important;color:#6b7280!important;line-height:1.6!important}
     .est-err{color:#b42318!important;font-weight:600;margin-top:10px}
@@ -70,16 +71,17 @@
     <p class="est-lede">Florida voters approved Amendment 3 on November 3, 2026. Starting with the 2027 tax bill, it raises the homestead exemption on <strong>non-school</strong> property taxes. Use this tool to get a rough idea of what it could mean for your home in Homestead.</p>
 
     <div class="est-card">
-      <h3>1. Find your assessed value</h3>
-      <p>Search your address on the Miami-Dade Property Appraiser site. Look for <strong>2026 Assessed Value</strong> (not Market Value).</p>
-      <div class="est-row">
-        <input id="addr" type="text" placeholder="e.g. 100 Civic Ct, Homestead" autocomplete="street-address" aria-label="Property address">
-        <button type="button" id="lookupBtn" class="btn-outline est-btn">Look up on Property Appraiser &#8599;</button>
+      <h3>1. Find your home</h3>
+      <p>Start typing your address and pick it from the list. We'll look up your home's assessed value in Miami-Dade County's public property records.</p>
+      <div id="addrWrap" class="est-addr">
+        <input id="addr" type="text" placeholder="Start typing your address, e.g. 100 Civic Ct" autocomplete="off" aria-label="Property address">
       </div>
-      <p class="est-fine">Your address is not saved or sent to the campaign. It only opens the Property Appraiser search in a new tab.</p>
+      <div id="match" class="est-match" hidden aria-live="polite"></div>
+      <p class="est-fine">Your address is not saved or sent to the campaign. Suggestions come from Google Maps, and the value comes from Miami-Dade County's public property data.</p>
 
-      <label for="av">2026 Assessed Value ($)</label>
-      <input id="av" type="text" inputmode="numeric" placeholder="e.g. 285,000">
+      <label for="av">Assessed Value ($)</label>
+      <input id="av" type="text" inputmode="numeric" placeholder="Filled in automatically, or type it in">
+      <p class="est-fine">Use the <strong>Assessed Value</strong>, not Market Value. You can check or change it on the <a id="paLink" href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank">Property Appraiser site</a>.</p>
 
       <h3>2. About you</h3>
       <label for="hx">Do you have a homestead exemption on this home (or will you by 2027)?</label>
@@ -90,8 +92,6 @@
         <select id="res"><option value="yes">Yes</option><option value="no">No, I moved to Florida in 2027 or later</option></select>
       </div>
 
-      <label for="growth">Assume your assessed value grows in 2027 by</label>
-      <select id="growth"><option value="0">0% (keep it the same)</option><option value="3" selected>Up to 3% (the most allowed for a homestead)</option></select>
 
       <button type="button" id="calcBtn" class="btn-primary est-calc">Estimate my taxes</button>
       <p id="err" class="est-err" role="alert"></p>
@@ -100,7 +100,7 @@
     <div id="out" class="est-card est-out" hidden aria-live="polite">
       <h3>Your estimate</h3>
       <table class="est-table">
-        <thead><tr><th></th><th>2026 (today)</th><th>2027</th><th>2028</th></tr></thead>
+        <thead><tr><th></th><th>Before Amendment 3</th><th>2027</th><th>2028</th></tr></thead>
         <tbody>
           <tr><td>Non-school exemption</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
           <tr><td>Non-school taxes</td><td id="n26"></td><td id="n27"></td><td id="n28"></td></tr>
@@ -109,7 +109,7 @@
         </tbody>
       </table>
       <p id="summary" class="est-summary"></p>
-      <p class="est-fine">2027 and 2028 rows use today's 2026 tax rates. The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Garbage, stormwater and other flat fees on your bill are not included.</p>
+      <p class="est-fine">All three columns use the same home value and today's 2026 tax rates, so the difference comes from Amendment 3 alone. Your assessed value can still rise each year (up to 3% for a homestead). The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Garbage, stormwater and other flat fees on your bill are not included.</p>
     </div>
 
     <div class="est-card est-notes">
@@ -161,11 +161,108 @@
   $('rOther').textContent = f4(RATES.countyEtc);
   $('rSchool').textContent = f4(RATES.school);
 
-  $('lookupBtn').addEventListener('click', () => {
-    const a = $('addr').value.trim();
-    const url = 'https://apps.miamidadepa.gov/PropertySearch/#/' + (a ? '?address=' + encodeURIComponent(a) : '');
-    window.open(url, '_blank', 'noopener');
-  });
+  // ---- Address lookup: Google Places suggestions + Miami-Dade County public property data ----
+  // County "Property Point View" open-data layer (public). Only address, folio and value fields are requested; never owner names.
+  const PA_LAYER = 'https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services/PaGISView_gdb/FeatureServer/0/query';
+  const ABBR = { NORTH:'N', SOUTH:'S', EAST:'E', WEST:'W', NORTHEAST:'NE', NORTHWEST:'NW', SOUTHEAST:'SE', SOUTHWEST:'SW',
+    STREET:'ST', AVENUE:'AVE', AV:'AVE', TERRACE:'TER', COURT:'CT', PLACE:'PL', ROAD:'RD', DRIVE:'DR', BOULEVARD:'BLVD',
+    LANE:'LN', CIRCLE:'CIR', HIGHWAY:'HWY', PARKWAY:'PKWY', TRAIL:'TRL', PLAZA:'PLZ' };
+  const norm = s => String(s || '').toUpperCase().replace(/[.,#]/g, ' ').replace(/\b(\d+)(ST|ND|RD|TH)\b/g, '$1')
+    .split(/\s+/).filter(Boolean).map(w => ABBR[w] || w);
+  const fmtFolio = f => String(f || '').replace(/^(\d{2})(\d{4})(\d{3})(\d{4})$/, '$1-$2-$3-$4');
+  const match = $('match');
+  function showMatch(html, warn) { match.innerHTML = html; match.className = 'est-match' + (warn ? ' warn' : ''); match.hidden = false; }
+  function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+  function useParcel(p) {
+    $('av').value = Math.round(p.ASSESSED_VAL_CUR).toLocaleString('en-US');
+    $('paLink').href = 'https://apps.miamidadepa.gov/PropertySearch/#/?folio=' + p.FOLIO;
+    const city = p.TRUE_SITE_CITY || '';
+    const inCity = /^homestead$/i.test(city.trim());
+    showMatch('<strong>Found:</strong> ' + esc(p.TRUE_SITE_ADDR) + (p.TRUE_SITE_UNIT ? ' Unit ' + esc(p.TRUE_SITE_UNIT) : '') + ', ' + esc(city) +
+      '<br>Folio ' + esc(fmtFolio(p.FOLIO)) + ' &middot; Assessed value <strong>' + money(p.ASSESSED_VAL_CUR) + '</strong>' +
+      ' <span style="color:#555">(County’s latest figure' + (p.ASSESSMENT_YEAR_CUR ? ', preliminary for ' + esc(p.ASSESSMENT_YEAR_CUR) : '') + ')</span>' +
+      (inCity ? '' : '<br><strong>Note:</strong> this property is listed in ' + esc(city || 'another area') + ', not the City of Homestead. This estimate uses City of Homestead tax rates, so it may be off.'),
+      !inCity);
+  }
+
+  async function findParcel(number, streetTokens, zip) {
+    showMatch('Looking up your property…');
+    $('av').value = '';
+    let where = "TRUE_SITE_ADDR LIKE '" + number.replace(/\D/g, '') + " %'";
+    if (zip) where += " AND TRUE_SITE_ZIP_CODE LIKE '" + zip.replace(/\D/g, '').slice(0, 5) + "%'";
+    const url = PA_LAYER + '?where=' + encodeURIComponent(where) +
+      '&outFields=FOLIO,TRUE_SITE_ADDR,TRUE_SITE_UNIT,TRUE_SITE_CITY,ASSESSED_VAL_CUR,ASSESSMENT_YEAR_CUR&resultRecordCount=200&f=json';
+    try {
+      const r = await fetch(url).then(x => x.json());
+      const feats = (r.features || []).map(f => f.attributes).filter(a => a.ASSESSED_VAL_CUR);
+      const want = streetTokens.join(' ');
+      const scored = feats.map(a => {
+        const t = norm(a.TRUE_SITE_ADDR).slice(1);
+        const exact = t.join(' ') === want;
+        const overlap = t.filter(w => streetTokens.includes(w)).length / Math.max(t.length, streetTokens.length, 1);
+        return { a, score: exact ? 2 : overlap };
+      }).filter(x => x.score >= 0.67).sort((x, y) => y.score - x.score);
+      const best = scored.filter(x => x.score === (scored[0] || {}).score).map(x => x.a);
+      if (!best.length) {
+        showMatch('We couldn’t find that address in the county’s property data. You can type your assessed value below, or look it up on the <a href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank" rel="noopener">Property Appraiser site</a>.', true);
+        return;
+      }
+      if (best.length === 1) return useParcel(best[0]);
+      // Condos/townhomes share a street address: let the visitor choose the unit.
+      best.sort((x, y) => String(x.TRUE_SITE_UNIT).localeCompare(String(y.TRUE_SITE_UNIT), undefined, { numeric: true }));
+      showMatch('This address has ' + best.length + ' units. Pick yours:<select id="unitPick"><option value="">Choose a unit…</option>' +
+        best.map((a, i) => '<option value="' + i + '">Unit ' + esc(a.TRUE_SITE_UNIT || '(none)') + '</option>').join('') + '</select>');
+      $('unitPick').addEventListener('change', e => { if (e.target.value !== '') useParcel(best[Number(e.target.value)]); });
+    } catch (e) {
+      showMatch('The county’s property data didn’t respond. Please type your assessed value below, or find it on the <a href="https://apps.miamidadepa.gov/PropertySearch/" target="_blank" rel="noopener">Property Appraiser site</a>.', true);
+    }
+  }
+
+  // Typed address without picking a suggestion (or if Google Maps is unavailable): "1585 NW 14th Ter, Homestead"
+  let lastTyped = '';
+  function lookupTyped(text) {
+    text = String(text).trim();
+    if (text === lastTyped) return; // already looked up (Enter, then leaving the box)
+    lastTyped = text;
+    const m = text.match(/^(\d+)\s+([^,]+)/);
+    if (!m) return;
+    const zip = (String(text).match(/\b(3303\d|3317\d|3319\d)\b/) || [])[1] || '';
+    findParcel(m[1], norm(m[2]), zip);
+  }
+  $('addr').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lookupTyped(e.target.value); } });
+  $('addr').addEventListener('change', e => lookupTyped(e.target.value));
+
+  window.initPlaces = function () {
+    try {
+      const el = new google.maps.places.PlaceAutocompleteElement({
+        includedRegionCodes: ['us'],
+        locationBias: { center: { lat: 25.4687, lng: -80.4776 }, radius: 15000 }
+      });
+      el.id = 'addrAuto';
+      const old = $('addr');
+      old.hidden = true;
+      $('addrWrap').insertBefore(el, old);
+      el.addEventListener('gmp-select', async (event) => {
+        try {
+          const place = event.placePrediction.toPlace();
+          await place.fetchFields({ fields: ['addressComponents', 'formattedAddress'] });
+          const comp = t => (place.addressComponents || []).find(c => (c.types || []).includes(t)) || {};
+          const num = comp('street_number').longText || '';
+          const route = comp('route').shortText || comp('route').longText || '';
+          const zip = comp('postal_code').longText || '';
+          if (!num || !route) { showMatch('Please choose a street address with a house number.', true); return; }
+          findParcel(num, norm(route), zip);
+        } catch (err) { lookupTyped(''); }
+      });
+    } catch (e) { /* keep the plain text box */ }
+  };
+  (function () {
+    const l = (window.JG_I18N && window.JG_I18N.lang) === 'es' ? '&language=es' : '';
+    const sc = document.createElement('script');
+    sc.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAHKqFA29mhzBtl0MqPh-xHTuYNgEnvu0U&libraries=places&callback=initPlaces&loading=async' + l;
+    sc.async = true; document.body.appendChild(sc);
+  })();
   $('hx').addEventListener('change', () => { $('resWrap').hidden = $('hx').value !== 'yes'; });
 
   function currentNonSchoolEx(av) { return Math.min(av, 25000) + Math.min(Math.max(av - 50000, 0), CUR_SECOND_TIER); }
@@ -176,12 +273,10 @@
   function calc() {
     $('err').textContent = '';
     const av = Number(($('av').value || '').replace(/[^0-9.]/g, ''));
-    if (!av || av < 1000 || av > 50000000) { $('err').textContent = 'Please enter your 2026 assessed value (a number like 285000).'; $('out').hidden = true; return; }
+    if (!av || av < 1000 || av > 50000000) { $('err').textContent = 'Please enter your assessed value (a number like 285000), or pick your address above.'; $('out').hidden = true; return; }
     const hx = $('hx').value === 'yes';
     const newcomer = hx && $('res').value === 'no';
-    const g = Number($('growth').value) / 100;
-    const cap = hx ? g : Math.min(g, 0.05);
-    const av27 = av * (1 + cap), av28 = av27 * (1 + cap);
+    const av27 = av, av28 = av; // same home value in every column: isolates the effect of Amendment 3
     const rows = [
       { y: 2026, av: av, ex: hx ? (newcomer ? 0 : currentNonSchoolEx(av)) : 0, sx: hx && !newcomer ? Math.min(av, 25000) : 0 },
       { y: 2027, av: av27, ex: hx ? amend3Ex(av27, 2027, newcomer) : 0, sx: hx ? Math.min(av27, 25000) : 0 },
@@ -197,13 +292,12 @@
       $('e' + k).textContent = money(r.ex); $('n' + k).textContent = money(n);
       $('s' + k).textContent = money(s); $('t' + k).textContent = money(n + s);
     });
-    // 2026 column for a newcomer is not meaningful (no homestead yet); say so.
     const diff = t[2026] - t[2027];
     let msg;
     if (!hx) msg = 'Amendment 3’s larger exemption applies only to homesteads, so this estimate shows no exemption. Starting in 2027, the yearly cap on increases in your non-school assessed value drops from 10% to 5%.';
-    else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The 2026 column shows the property with no homestead exemption.)';
+    else if (newcomer) msg = 'As a new Florida resident, your non-school exemption would be $50,000 for your first four years under Amendment 3, then the full amount. (The first column shows the property with no homestead exemption.)';
     else msg = diff > 0
-      ? 'At today’s tax rates, your estimated bill would go down by about ' + money(diff) + ' in 2027 compared with 2026, and by about ' + money(t[2026] - t[2028]) + ' in 2028.'
+      ? 'At today’s tax rates, Amendment 3 would lower your estimated bill by about ' + money(diff) + ' a year in 2027, and by about ' + money(t[2026] - t[2028]) + ' a year starting in 2028.'
       : 'At today’s tax rates, your estimated bill would stay about the same.';
     $('summary').textContent = msg;
     $('out').hidden = false;
