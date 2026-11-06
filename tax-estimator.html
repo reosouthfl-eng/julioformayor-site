@@ -37,7 +37,7 @@
     .est-checks{display:grid;gap:8px;margin-top:4px}
     .est-checks label{display:flex!important;align-items:flex-start;gap:10px;margin:0!important;font-weight:500!important;color:#333!important;font-size:14.5px!important;line-height:1.45}
     .est-checks input{width:18px!important;height:18px;margin-top:2px;flex:0 0 auto}
-    .est-checks span{color:#6b7280;font-weight:400;margin-left:4px}
+    .est-checks small{display:block;color:#6b7280;font-weight:400;font-size:13px;margin-top:1px}
     .est-calc{margin-top:22px;width:100%}
     .est-fine{font-size:12.5px!important;color:#6b7280!important;line-height:1.6!important}
     .est-err{color:#b42318!important;font-weight:600;margin-top:10px}
@@ -51,6 +51,29 @@
     .est-notes li::marker{color:#f5a623}
     .est-card a{color:#1b3a6e}
     @media(max-width:600px){.est-card{padding:20px 16px}.est-table{font-size:13px}.est-table th,.est-table td{padding:8px 4px}}
+    .est-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+    .est-table td:not(:first-child){white-space:nowrap}
+    @media(max-width:480px){
+      .est-card{padding:18px 12px}
+      .est-table{font-size:12.5px}
+      .est-table th,.est-table td{padding:7px 2px}
+      .est-table th{font-size:10px;letter-spacing:.2px}
+      .est-table td:first-child{padding-right:6px}
+      .est-table td .est-opt{display:none}
+      .est-total td{font-size:14px}
+    }
+    @media(max-width:360px){
+      section{padding-left:14px!important;padding-right:14px!important}
+      .est-out{padding:16px 8px}
+      .est-table{font-size:11.5px}
+      .est-table th{font-size:9px;letter-spacing:0}
+      .est-table td:not(:first-child){font-size:11px}
+      .est-table th,.est-table td{padding:6px 1px}
+      .est-table td:first-child{padding-right:4px}
+      .est-total td{font-size:12.5px}
+      .est-table td:first-child{hyphens:auto;-webkit-hyphens:auto}
+    }
   </style>
   <link rel="stylesheet" href="site-enhancements.css" />
   <script src="i18n.js"></script>
@@ -111,12 +134,12 @@
       <div id="xWrap">
         <label>Other exemptions <span class="est-opt">(optional, check any listed under &ldquo;EXEMPTIONS&rdquo; on your tax bill)</span></label>
         <div class="est-checks">
-          <label><input type="checkbox" id="xWidow"> Widow / widower <span>$5,000 off all taxes</span></label>
-          <label><input type="checkbox" id="xDisab"> Blind or totally &amp; permanently disabled <span>$5,000 off all taxes</span></label>
-          <label><input type="checkbox" id="xVet"> Veteran with a service-connected disability of 10% or more <span>$5,000 off all taxes</span></label>
-          <label><input type="checkbox" id="xCountySr"> Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;) <span>up to $50,000 off county taxes</span></label>
-          <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"> Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;) <span>up to $50,000 off City of Homestead taxes</span></label>
-          <label><input type="checkbox" id="xFull"> Fully exempt (for example, 100% permanently disabled veteran) <span>no property tax; non-ad valorem assessments still apply</span></label>
+          <label><input type="checkbox" id="xWidow"><span class="lbl">Widow / widower<small>$5,000 off all taxes</small></span></label>
+          <label><input type="checkbox" id="xDisab"><span class="lbl">Blind or totally &amp; permanently disabled<small>$5,000 off all taxes</small></span></label>
+          <label><input type="checkbox" id="xVet"><span class="lbl">Veteran with a service-connected disability of 10% or more<small>$5,000 off all taxes</small></span></label>
+          <label><input type="checkbox" id="xCountySr"><span class="lbl">Low-income senior, 65+ (&ldquo;COUNTY SR&rdquo;)<small>up to $50,000 off county taxes</small></span></label>
+          <label id="xMunicWrap"><input type="checkbox" id="xMunicSr"><span class="lbl">Low-income senior, 65+, city (&ldquo;MUNIC SR&rdquo;)<small>up to $50,000 off City of Homestead taxes</small></span></label>
+          <label><input type="checkbox" id="xFull"><span class="lbl">Fully exempt (for example, 100% permanently disabled veteran)<small>no property tax; non-ad valorem assessments still apply</small></span></label>
         </div>
       </div>
 
@@ -131,7 +154,7 @@
 
     <div id="out" class="est-card est-out" hidden aria-live="polite">
       <h3>Your estimate</h3>
-      <table class="est-table">
+      <div class="est-table-wrap"><table class="est-table">
         <thead><tr><th></th><th>Before Amendment&nbsp;3</th><th>2027</th><th>2028</th></tr></thead>
         <tbody>
           <tr><td>Homestead exemption (non-school)</td><td id="e26"></td><td id="e27"></td><td id="e28"></td></tr>
@@ -142,7 +165,7 @@
           <tr><td>Non-Ad Valorem Assessments <span class="est-opt">(garbage, stormwater, etc.)</span></td><td id="f26"></td><td id="f27"></td><td id="f28"></td></tr>
           <tr class="est-total"><td>Estimated total bill</td><td id="t26"></td><td id="t27"></td><td id="t28"></td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p id="summary" class="est-summary"></p>
       <p class="est-fine">All three columns use the same home value and today's 2026 tax rates, so the difference comes from Amendment 3 alone. Your assessed value can still rise each year (up to 3% for a homestead). The real rates for 2027 will be set by the City, County, School Board and other taxing bodies in September 2027 and may go up or down. Paying in November usually earns a 4% discount, which is not shown.</p>
     </div>
