@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <meta name="description" content="Add your name: sign the official endorsement card for Julio Guzman for Mayor of Homestead." />
+  <link rel="canonical" href="https://julioformayor.com/endorse.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Endorse Julio Guzman for Mayor of Homestead" />
+  <meta property="og:description" content="Add your name: sign the official endorsement card for Julio Guzman for Mayor of Homestead." />
+  <meta property="og:url" content="https://julioformayor.com/endorse.html" />
+  <meta property="og:image" content="https://julioformayor.com/images/endorse-share.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Endorse Julio Guzman for Mayor" />
+  <meta name="twitter:image" content="https://julioformayor.com/images/endorse-share.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+<title>Endorse Julio Guzman for Mayor | Official Endorsement Card</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .en-wrap{max-width:760px;margin:0 auto}
+    .en-card{border:2px solid #1b3a6e;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(13,33,71,.08)}
+    .en-band{background:linear-gradient(135deg,#1b3a6e,#0d2147);padding:22px 24px;text-align:center}
+    .en-logo{font-size:30px;font-weight:900;letter-spacing:-.5px}
+    .en-logo .j{color:#fff}.en-logo .g{color:#f5a623}
+    .en-logo .b{display:inline-block;vertical-align:middle;margin-left:8px;border:2px solid #fff;color:#fff;font-size:12px;letter-spacing:2px;padding:3px 9px;font-weight:800}
+    .en-band-sub{margin-top:8px;color:#f5a623;font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase}
+    .en-body{padding:26px 28px}
+    .en-lede{font-size:16px;color:#374151;line-height:1.7;margin-bottom:18px}
+    .en-statement{background:#f2f6fc;border-left:5px solid #f5a623;padding:16px 18px;font-size:18px;line-height:1.6;color:#0d2147;margin-bottom:22px;border-radius:4px}
+    .en-statement strong{color:#1b3a6e}
+    .en-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}
+    .en-span2{grid-column:1 / -1}
+    .en-field label,.en-sign-head label,.en-choices legend{display:block;font-size:14px;font-weight:700;color:#1b3a6e;margin:14px 0 6px}
+    .en-field input,.en-field textarea{width:100%;padding:12px 14px;font-size:16px;border:1px solid #c9d1de;border-radius:6px;box-sizing:border-box;font-family:inherit;background:#fff}
+    .en-opt{font-weight:400;color:#6b7280}
+    .en-fine{font-size:12.5px;color:#6b7280;line-height:1.6;margin:8px 0}
+    .en-fine a{color:#1b3a6e}
+    .en-choices{border:none;padding:0;margin:8px 0 4px;display:grid;gap:8px}
+    .en-choices label{display:flex;gap:10px;align-items:flex-start;border:1px solid #d5e0f0;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:15px;color:#1f2937}
+    .en-choices label:has(input:checked){border-color:#1b3a6e;background:#f2f6fc}
+    .en-choices input{margin-top:3px;width:18px;height:18px;flex:0 0 auto}
+    .en-choices small{display:block;color:#6b7280;font-size:13px}
+    .en-check{display:flex!important;gap:8px;align-items:center;font-weight:500!important;color:#374151!important;font-size:14px!important}
+    .en-check input{width:18px!important;height:18px}
+    .en-sign{margin-top:18px;border-top:1px dashed #c9d1de;padding-top:6px}
+    .en-sign-head{display:flex;justify-content:space-between;align-items:center}
+    .en-link{background:none;border:none;color:#1b3a6e;text-decoration:underline;cursor:pointer;font-size:14px}
+    #sigPad{display:block;width:100%;height:170px;border:2px dashed #9aa9c2;border-radius:8px;background:#fffdf7;touch-action:none;cursor:crosshair}
+    .en-sign-line{position:relative;margin:-48px 18px 30px;border-bottom:1px solid #9aa9c2;height:18px;pointer-events:none}
+    .en-sign-line span{position:absolute;left:0;bottom:2px;color:#9aa9c2;font-size:14px}
+    .en-submit{width:100%;margin-top:18px}
+    .en-err{color:#b42318;font-weight:600;margin-top:10px;font-size:15px}
+    .en-done{width:58px;height:58px;border-radius:50%;background:#16a34a;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+    .en-receipt h2{text-align:center;color:#1b3a6e;font-size:26px;margin:4px 0 8px}
+    .en-receipt .en-lede{text-align:center}
+    .en-rtable{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:15px}
+    .en-rtable td{padding:9px 6px;border-bottom:1px solid #edf0f4;vertical-align:top}
+    .en-rtable td:first-child{color:#6b7280;width:42%}
+    .en-rtable td:last-child{color:#111827;font-weight:600}
+    .en-rsig{text-align:center;margin:6px 0 10px}
+    .en-rsig img{max-width:320px;width:100%;border-bottom:1px solid #9aa9c2}
+    .en-rsig div{font-size:13px;color:#6b7280;margin-top:4px}
+    .en-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .en-btn{flex:1 1 220px;margin:0!important}
+    @media(max-width:600px){.en-body{padding:20px 16px}.en-grid{grid-template-columns:1fr}.en-logo{font-size:24px}.en-statement{font-size:16px}}
+    @media print{nav,footer,.page-hero,.no-print,.skip-link,.mobile-nav-toggle{display:none!important}section{padding:0!important}.en-card{box-shadow:none}}
+  </style>
+  <link rel="stylesheet" href="site-enhancements.css" />
+  <script src="i18n.js"></script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-text"><span class="julio">JULIO </span><span class="guzman">GUZMAN</span></div>
+    <div class="nav-logo-box">For Mayor</div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="plan.html">My Plan</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+    <a href="donate.html" class="nav-donate">Donate</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Endorsement Card</div>
+  <h1>Endorse Julio Guzman for Mayor</h1>
+</div>
+
+<section style="background:#fff;">
+  <div class="en-wrap">
+    <form id="endorseForm" class="en-card" novalidate>
+      <div class="en-band">
+        <div class="en-logo"><span class="j">JULIO</span> <span class="g">GUZMAN</span> <span class="b">FOR MAYOR</span></div>
+        <div class="en-band-sub">Official Endorsement Card</div>
+      </div>
+      <div class="en-body">
+        <p class="en-lede">Thank you for standing with Julio. Fill in your information, choose how your name may be used, and sign with your finger or mouse. You will get a receipt right away.</p>
+
+        <div class="en-statement" aria-live="polite">
+          <span>I,</span> <strong id="stmtName">[your name]</strong><span>, endorse Julio Guzman for Mayor of the City of Homestead in the 2027 municipal election.</span>
+        </div>
+
+        <div class="en-grid">
+          <div class="en-field en-span2">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" autocomplete="name" required maxlength="120">
+          </div>
+          <div class="en-field">
+            <label for="email">Email <span class="en-opt">(for your receipt)</span></label>
+            <input id="email" type="email" autocomplete="email" inputmode="email" required maxlength="200">
+          </div>
+          <div class="en-field">
+            <label for="phone">Mobile phone <span class="en-opt">(optional)</span></label>
+            <input id="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20">
+          </div>
+          <div class="en-field">
+            <label for="city">City or neighborhood</label>
+            <input id="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="Homestead">
+          </div>
+          <div class="en-field">
+            <label for="titleOrg">Title or organization <span class="en-opt">(optional)</span></label>
+            <input id="titleOrg" type="text" maxlength="160" placeholder="e.g. Small business owner, Pastor, Retired teacher">
+          </div>
+        </div>
+        <p class="en-fine">A title or organization is shown for identification only. It does not mean that organization endorses Julio unless it has authorized it.</p>
+
+        <fieldset class="en-choices">
+          <legend>How may we use your name?</legend>
+          <label><input type="radio" name="listing" value="name"><span class="lbl">List my name publicly as an endorser<small>On the website, mailers and social media</small></span></label>
+          <label><input type="radio" name="listing" value="name_title"><span class="lbl">List my name and title publicly<small>Title shown for identification only</small></span></label>
+          <label><input type="radio" name="listing" value="private"><span class="lbl">Keep my endorsement private<small>Counted, but never published</small></span></label>
+        </fieldset>
+
+        <div class="en-field">
+          <label for="quote">Why are you supporting Julio? <span class="en-opt">(optional)</span></label>
+          <textarea id="quote" rows="3" maxlength="300"></textarea>
+          <label class="en-check"><input type="checkbox" id="quoteOk"> <span>The campaign may share my words with my name.</span></label>
+        </div>
+
+        <div class="en-sign">
+          <div class="en-sign-head"><label for="sigPad">Sign here</label><button type="button" id="sigClear" class="en-link">Clear</button></div>
+          <canvas id="sigPad" aria-label="Signature pad: draw your signature"></canvas>
+          <div class="en-sign-line"><span>&#10005;</span></div>
+          <div class="en-field">
+            <label for="sigTyped">Type your full name to confirm your signature</label>
+            <input id="sigTyped" type="text" maxlength="120" autocomplete="off">
+          </div>
+          <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature.</p>
+        </div>
+
+        <p class="en-fine" id="consentText">By signing, you agree that the Julio Guzman for Mayor campaign may contact you about your endorsement and campaign updates by email, text message and phone, using the information you provided. Message and data rates may apply. Reply STOP to stop texts; you can opt out of any channel at any time. You can change or withdraw your endorsement at any time by emailing info@julioformayor.com. Details in our <a href="privacy.html">Privacy Policy</a>.</p>
+
+        <button type="submit" id="submitBtn" class="btn-primary en-submit">Sign my endorsement</button>
+        <p id="err" class="en-err" role="alert"></p>
+      </div>
+    </form>
+
+    <div id="receipt" class="en-card en-receipt" hidden aria-live="polite">
+      <div class="en-band">
+        <div class="en-logo"><span class="j">JULIO</span> <span class="g">GUZMAN</span> <span class="b">FOR MAYOR</span></div>
+        <div class="en-band-sub">Endorsement Receipt</div>
+      </div>
+      <div class="en-body">
+        <div class="en-done">&#10003;</div>
+        <h2 id="rThanks"></h2>
+        <p id="rIntro" class="en-lede"></p>
+        <table class="en-rtable">
+          <tr><td>Receipt number</td><td id="rCode"></td></tr>
+          <tr><td>Signed</td><td id="rDate"></td></tr>
+          <tr><td>Name</td><td id="rName"></td></tr>
+          <tr id="rCityRow"><td>City</td><td id="rCity"></td></tr>
+          <tr id="rTitleRow"><td>Title / organization</td><td id="rTitle"></td></tr>
+          <tr><td>How your name may be used</td><td id="rListing"></td></tr>
+        </table>
+        <div class="en-statement" id="rStatement"></div>
+        <div class="en-rsig"><img id="rSig" alt="Your signature"><div id="rSigName"></div></div>
+        <p class="en-fine">To change how your name is used or to withdraw your endorsement, email info@julioformayor.com.</p>
+        <div class="en-actions no-print">
+          <button type="button" id="printBtn" class="btn-outline en-btn">Print or save as PDF</button>
+          <button type="button" id="shareBtn" class="btn-primary en-btn">Invite a friend to endorse</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div><span class="name-line name-julio">JULIO </span><span class="name-line name-guzman">GUZMAN</span></div>
+      <div class="for-mayor-box">For Mayor</div>
+      <p>Together, we're building a brighter future for Homestead. Our Children · Our Community · Our Future.</p>
+      <p style="margin-top:6px;font-size:12px">+1 (786) 229-0157 &nbsp;·&nbsp; info@julioformayor.com</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="plan.html">My Plan</a><a href="news.html">News</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Social</h4><a href="https://www.facebook.com/CouncilmanGuzman/" target="_blank">Facebook</a><a href="https://x.com/julioguzman44" target="_blank">X / Twitter</a><a href="https://www.instagram.com/julioguzman_homestead/" target="_blank">Instagram</a><a href="https://www.tiktok.com/@julioguzmanhomestead" target="_blank">TikTok</a></div>
+  </div>
+  <div class="footer-bottom">
+    Political advertisement paid for and approved by Julio Guzman, Nonpartisan, for Mayor of Homestead. &nbsp;·&nbsp; 47 N Krome Ave, Homestead, FL 33030 &nbsp;·&nbsp; <a href="privacy.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const SB_URL = 'https://jngtuihzliqvfmfkjapp.supabase.co';
+  const SB_KEY = 'sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk';
+  const STATEMENT_VERSION = 'endorse_v1_2026-11-13';
+  const CONSENT_VERSION = 'endorse_contact_v1_2026-11-13';
+  const $ = id => document.getElementById(id);
+  const T = (s, v) => { let r = (window.JG_I18N && window.JG_I18N.t) ? window.JG_I18N.t(s) : s; if (v) Object.keys(v).forEach(k => { r = r.split('{' + k + '}').join(v[k]); }); return r; };
+  const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
+  const params = new URLSearchParams(location.search);
+
+  // Prefill from a personal link: endorse.html?name=Maria%20Lopez&ref=julio
+  if (params.get('name')) $('fullName').value = params.get('name').slice(0, 120);
+  const ref = (params.get('ref') || '').replace(/[^\w-]/g, '').slice(0, 40);
+
+  function updateStatement() { $('stmtName').textContent = clean($('fullName').value) || T('[your name]'); }
+  $('fullName').addEventListener('input', updateStatement); updateStatement();
+  document.addEventListener('jg:langchange', () => setTimeout(() => { updateStatement(); if (lastReceipt) showReceipt(lastReceipt); }, 400));
+
+  // ---- Signature pad ----
+  const pad = $('sigPad'); const ctx = pad.getContext('2d');
+  let drawing = false, ink = 0, last = null;
+  function sizePad() {
+    const r = pad.getBoundingClientRect(), dpr = Math.max(window.devicePixelRatio || 1, 1);
+    const keep = ink ? pad.toDataURL() : null;
+    pad.width = Math.round(r.width * dpr); pad.height = Math.round(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0d2147';
+    if (keep) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = keep; }
+  }
+  sizePad(); window.addEventListener('resize', sizePad);
+  const pos = e => { const r = pad.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  pad.addEventListener('pointerdown', e => { drawing = true; last = pos(e); pad.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x, last.y, 1.1, 0, Math.PI * 2); ctx.fillStyle = '#0d2147'; ctx.fill(); e.preventDefault(); });
+  pad.addEventListener('pointermove', e => { if (!drawing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); ink += Math.hypot(p.x - last.x, p.y - last.y); last = p; e.preventDefault(); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => pad.addEventListener(t, () => { drawing = false; }));
+  $('sigClear').addEventListener('click', () => { ctx.clearRect(0, 0, pad.width, pad.height); ink = 0; });
+
+  function signaturePng() {
+    // Export on a white background, scaled to a compact size for storage and the receipt.
+    const r = pad.getBoundingClientRect(), w = 600, h = Math.round(600 * r.height / r.width);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(pad, 0, 0, w, h);
+    return c.toDataURL('image/png');
+  }
+
+  // ---- Submit ----
+  const ERR = {
+    invalid_name: 'Please enter your first and last name.',
+    invalid_email: 'Please enter a valid email address so we can send your receipt.',
+    invalid_phone: 'Please enter a 10-digit phone number, or leave it blank.',
+    invalid_listing: 'Please choose how we may use your name.',
+    signature_mismatch: 'Please type your full name exactly as entered above to confirm your signature.',
+    invalid_signature: 'Please sign in the box above.',
+  };
+  function fail(code) { $('err').textContent = T(ERR[code] || 'Something went wrong. Please try again, or email info@julioformayor.com.'); }
+
+  $('endorseForm').addEventListener('submit', async e => {
+    e.preventDefault(); $('err').textContent = '';
+    const name = clean($('fullName').value), email = clean($('email').value);
+    const listing = (document.querySelector('input[name=listing]:checked') || {}).value;
+    if (name.length < 3 || !name.includes(' ')) return fail('invalid_name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('invalid_email');
+    const phone = $('phone').value.replace(/\D/g, '').slice(-10);
+    if ($('phone').value.trim() && phone.length !== 10) return fail('invalid_phone');
+    if (!listing) return fail('invalid_listing');
+    if (ink < 40) return fail('invalid_signature');
+    if (clean($('sigTyped').value).toLowerCase() !== name.toLowerCase()) return fail('signature_mismatch');
+
+    const statement = clean(document.querySelector('#endorseForm .en-statement').textContent);
+    const payload = {
+      full_name: name, email, phone, city: clean($('city').value), title_org: clean($('titleOrg').value),
+      public_listing: listing, quote: clean($('quote').value), quote_ok: $('quoteOk').checked && !!clean($('quote').value),
+      statement_text: statement, statement_version: STATEMENT_VERSION,
+      signature_typed: clean($('sigTyped').value), signature_png: signaturePng(),
+      esign_text: clean($('esignText').textContent),
+      consent_text: clean($('consentText').textContent), consent_version: CONSENT_VERSION,
+      language: (window.JG_I18N && window.JG_I18N.lang) || 'en', source: 'web:endorse' + (ref ? ':' + ref : ''), page: location.pathname
+    };
+    const btn = $('submitBtn'); btn.disabled = true; btn.textContent = T('Signing…');
+    try {
+      const r = await fetch(SB_URL + '/rest/v1/rpc/submit_endorsement', {
+        method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ p: payload })
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) { const m = String(data.message || ''); return fail(Object.keys(ERR).find(k => m.includes(k)) || 'other'); }
+      lastReceipt = { ...payload, receipt_code: data.receipt_code, signed_at: data.signed_at, updated: data.status === 'updated' };
+      showReceipt(lastReceipt);
+    } catch (err) { fail('other'); }
+    finally { btn.disabled = false; btn.textContent = T('Sign my endorsement'); }
+  });
+
+  // ---- Receipt ----
+  let lastReceipt = null;
+  const LISTING = { name: 'Your name may be listed publicly as an endorser.', name_title: 'Your name and title may be listed publicly (title for identification only).', private: 'Private: your endorsement will not be published.' };
+  function showReceipt(x) {
+    const lang = (window.JG_I18N && window.JG_I18N.lang) || 'en';
+    const loc = lang === 'es' ? 'es-US' : (lang === 'ht' ? 'fr-HT' : 'en-US');
+    const d = new Date(x.signed_at || Date.now());
+    $('rThanks').textContent = T('Thank you, {name}!', { name: x.full_name.split(' ')[0] });
+    $('rIntro').textContent = (x.updated ? T('Your endorsement was updated.') + ' ' : '') + T('Your signed endorsement was received. A copy of this receipt is being emailed to {email}.', { email: x.email });
+    $('rCode').textContent = x.receipt_code;
+    $('rDate').textContent = d.toLocaleString(loc, { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/New_York' }) + ' ET';
+    $('rName').textContent = x.full_name;
+    $('rCity').textContent = x.city; $('rCityRow').hidden = !x.city;
+    $('rTitle').textContent = x.title_org; $('rTitleRow').hidden = !x.title_org;
+    $('rListing').textContent = T(LISTING[x.public_listing]);
+    $('rStatement').textContent = x.statement_text;
+    $('rSig').src = x.signature_png;
+    $('rSigName').textContent = T('Signed electronically by {name}', { name: x.signature_typed });
+    $('endorseForm').hidden = true; $('receipt').hidden = false;
+    document.querySelector('.page-hero').scrollIntoView({ behavior: 'smooth' });
+  }
+  $('printBtn').addEventListener('click', () => window.print());
+  $('shareBtn').addEventListener('click', async () => {
+    const url = 'https://julioformayor.com/endorse.html';
+    const text = T('I just endorsed Julio Guzman for Mayor of Homestead. Add your name too:');
+    if (navigator.share) { try { await navigator.share({ title: 'Endorse Julio Guzman for Mayor', text, url }); } catch (e) {} }
+    else { try { await navigator.clipboard.writeText(text + ' ' + url); $('shareBtn').textContent = T('Link copied!'); } catch (e) { location.href = 'mailto:?subject=' + encodeURIComponent('Endorse Julio Guzman for Mayor') + '&body=' + encodeURIComponent(text + ' ' + url); } }
+  });
+})();
+</script>
+
+  <script src="site.js" defer></script>
+</body>
+</html>

@@ -116,6 +116,24 @@
     <div class="tablewrap"><table id="supTbl"></table></div>
     <p class="muted">Follow-up status and notes save immediately. Use <b>Edit</b> to correct a record or record an opt-out. Every change is written to the contact log with who made it.</p>
   </div>
+
+  <div class="card">
+    <h2>Endorsements</h2>
+    <div class="filters">
+      <select id="eFilter">
+        <option value="active">Active endorsements</option>
+        <option value="public">OK to list publicly</option>
+        <option value="unverified">Not yet verified</option>
+        <option value="withdrawn">Withdrawn</option>
+        <option value="all">All</option>
+      </select>
+      <input id="eSearch" placeholder="Search name, email, city, title" style="min-width:220px" />
+      <button class="btn secondary" id="eExportBtn">Export CSV</button>
+      <span class="muted" id="eCount"></span>
+    </div>
+    <div class="tablewrap"><table id="endTbl"></table></div>
+    <p class="muted">Endorsers sign at <b>julioformayor.com/endorse.html</b> and get an emailed receipt automatically. Only list a name publicly the way the person chose, and mark it <b>Verified</b> after you confirm it is really them (for example, a quick call or text). <b>Withdraw</b> if someone asks to be removed.</p>
+  </div>
 </main>
 
 <div id="editModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
@@ -241,6 +259,7 @@
       sb.from('v_pledge_by_channel').select('*')
     ]);
     if (sup.error) { alert('Could not load supporters: ' + sup.error.message); return; }
+    loadEndorsements();
     rows = sup.data || [];
     renderKpis(); renderDaily(daily.data || []); renderChannels(chan.data || []);
     fillFilterOptions(); renderSupporters();
@@ -502,6 +521,66 @@
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a.download = `pledges_${$('fSegment').value}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  };
+
+  // ---- Endorsements ----
+  let ends = [];
+  const LIST_LABEL = { name: 'Name', name_title: 'Name + title', private: 'Private' };
+  async function loadEndorsements() {
+    const { data, error } = await sb.from('v_endorsements').select('*').order('updated_at', { ascending: false });
+    if (error) { $('endTbl').innerHTML = `<tr><td>Could not load endorsements: ${esc(error.message)}</td></tr>`; return; }
+    ends = data || []; renderEndorsements();
+  }
+  function endFiltered() {
+    const f = $('eFilter').value, q = $('eSearch').value.trim().toLowerCase();
+    return ends.filter(r => {
+      if (f === 'active' && r.status !== 'active') return false;
+      if (f === 'public' && !(r.status === 'active' && r.public_listing !== 'private')) return false;
+      if (f === 'unverified' && !(r.status === 'active' && !r.verified)) return false;
+      if (f === 'withdrawn' && r.status !== 'withdrawn') return false;
+      return !q || [r.full_name, r.email, r.city, r.title_org].some(v => String(v || '').toLowerCase().includes(q));
+    });
+  }
+  function renderEndorsements() {
+    const list = endFiltered();
+    const act = ends.filter(r => r.status === 'active');
+    $('eCount').textContent = `${list.length} shown · ${act.length} active · ${act.filter(r => r.public_listing !== 'private').length} public · ${act.filter(r => r.verified).length} verified`;
+    $('endTbl').innerHTML = '<tr><th>Signed</th><th>Receipt</th><th>Name</th><th>Contact</th><th>City</th><th>Title / org</th><th>Listing</th><th>Quote</th><th>Receipt emailed</th><th>Verified</th><th></th></tr>' +
+      list.map(r => `<tr>
+        <td>${esc((r.updated_at || '').slice(0, 10))}</td><td>${esc(r.receipt_code)}</td><td><b>${esc(r.full_name)}</b></td>
+        <td>${esc(r.email)}${r.phone ? '<br>' + esc(r.phone) : ''}</td><td>${esc(r.city)}</td><td>${esc(r.title_org)}</td>
+        <td>${esc(LIST_LABEL[r.public_listing] || r.public_listing)}</td>
+        <td>${r.quote ? esc(r.quote) + (r.quote_ok ? '' : ' <span class="muted">(not OK to share)</span>') : ''}</td>
+        <td>${r.receipt_sent_at ? esc(r.receipt_sent_at.slice(0, 10)) : '<span class="muted">pending</span>'}</td>
+        <td><input type="checkbox" data-ever="${r.id}" ${r.verified ? 'checked' : ''} ${r.status !== 'active' ? 'disabled' : ''}></td>
+        <td>${r.status === 'active' ? `<button class="btn secondary" data-ewd="${r.id}">Withdraw</button>` : '<span class="muted">Withdrawn</span>'}</td>
+      </tr>`).join('');
+  }
+  $('eFilter').addEventListener('change', renderEndorsements);
+  $('eSearch').addEventListener('input', renderEndorsements);
+  $('endTbl').addEventListener('change', async e => {
+    const id = e.target.dataset.ever; if (!id) return;
+    const { error } = await sb.from('endorsements').update({ verified: e.target.checked }).eq('id', id);
+    if (error) { alert('Could not save: ' + error.message); e.target.checked = !e.target.checked; return; }
+    const r = ends.find(x => x.id === id); if (r) r.verified = e.target.checked; renderEndorsements();
+  });
+  $('endTbl').addEventListener('click', async e => {
+    const id = e.target.dataset.ewd; if (!id) return;
+    const r = ends.find(x => x.id === id);
+    if (!confirm(`Withdraw the endorsement from ${r ? r.full_name : 'this person'}? It will no longer count or be listed.`)) return;
+    const note = `Withdrawn by ${me && me.email ? me.email : 'staff'} on ${new Date().toISOString().slice(0, 10)}`;
+    const { error } = await sb.from('endorsements').update({ status: 'withdrawn', withdrawn_at: new Date().toISOString(), staff_notes: note }).eq('id', id);
+    if (error) { alert('Could not withdraw: ' + error.message); return; }
+    loadEndorsements();
+  });
+  $('eExportBtn').onclick = () => {
+    const cols = ['updated_at','receipt_code','full_name','email','phone','city','title_org','public_listing','quote','quote_ok','status','verified','receipt_sent_at','language','statement_version'];
+    const csvCell = (v) => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+    const csv = [cols.join(','), ...endFiltered().map(r => cols.map(c => csvCell(r[c])).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `endorsements_${$('eFilter').value}_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
   };
 
