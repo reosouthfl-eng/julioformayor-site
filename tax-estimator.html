@@ -291,12 +291,20 @@
   async function findParcel(number, streetTokens, zip) {
     render(() => showMatch(T('Looking up your property…')));
     $('av').value = '';
-    let where = "TRUE_SITE_ADDR LIKE '" + number.replace(/\D/g, '') + " %'";
-    if (zip) where += " AND TRUE_SITE_ZIP_CODE LIKE '" + zip.replace(/\D/g, '').slice(0, 5) + "%'";
-    const url = PA_LAYER + '?where=' + encodeURIComponent(where) +
-      '&outFields=FOLIO,TRUE_SITE_ADDR,TRUE_SITE_UNIT,TRUE_SITE_CITY,ASSESSED_VAL_CUR,ASSESSMENT_YEAR_CUR&resultRecordCount=200&f=json';
+    // The county renamed its address field on Nov 12, 2026 (TRUE_SITE_ADDR -> TRUE_SITE_ADDR_NO_UNIT); try the new name first, then the old one.
+    const query = async (field) => {
+      let where = field + " LIKE '" + number.replace(/\D/g, '') + " %'";
+      if (zip) where += " AND TRUE_SITE_ZIP_CODE LIKE '" + zip.replace(/\D/g, '').slice(0, 5) + "%'";
+      const url = PA_LAYER + '?where=' + encodeURIComponent(where) +
+        '&outFields=FOLIO,' + field + ',TRUE_SITE_UNIT,TRUE_SITE_CITY,ASSESSED_VAL_CUR,ASSESSMENT_YEAR_CUR&resultRecordCount=200&f=json';
+      const res = await fetch(url).then(x => x.json());
+      (res.features || []).forEach(f => { f.attributes.TRUE_SITE_ADDR = f.attributes[field]; });
+      return res;
+    };
     try {
-      const r = await fetch(url).then(x => x.json());
+      let r = await query('TRUE_SITE_ADDR_NO_UNIT');
+      if (r.error) r = await query('TRUE_SITE_ADDR');
+      if (r.error) throw new Error('county query failed');
       const feats = (r.features || []).map(f => f.attributes).filter(a => a.ASSESSED_VAL_CUR);
       const want = streetTokens.join(' ');
       const scored = feats.map(a => {
