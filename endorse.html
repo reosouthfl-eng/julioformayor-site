@@ -101,7 +101,7 @@
         <div class="en-band-sub">Official Endorsement Card</div>
       </div>
       <div class="en-body">
-        <p class="en-lede">Thank you for standing with Julio. Fill in your information, choose how your name may be used, and sign with your finger or mouse. You will get a receipt right away.</p>
+        <p class="en-lede">Thank you for standing with Julio. Fill in your information and sign with your finger or mouse. It takes about a minute, and you will get a receipt right away.</p>
 
         <div class="en-statement" aria-live="polite">
           <span>I,</span> <strong id="stmtName">[your name]</strong><span>, endorse Julio Guzman for Mayor of the City of Homestead in the 2027 municipal election.</span>
@@ -131,19 +131,6 @@
         </div>
         <p class="en-fine">A title or organization is shown for identification only. It does not mean that organization endorses Julio unless it has authorized it.</p>
 
-        <fieldset class="en-choices">
-          <legend>How may we use your name?</legend>
-          <label><input type="radio" name="listing" value="name"><span class="lbl">List my name publicly as an endorser<small>On the website, mailers and social media</small></span></label>
-          <label><input type="radio" name="listing" value="name_title"><span class="lbl">List my name and title publicly<small>Title shown for identification only</small></span></label>
-          <label><input type="radio" name="listing" value="private"><span class="lbl">Keep my endorsement private<small>Counted, but never published</small></span></label>
-        </fieldset>
-
-        <div class="en-field">
-          <label for="quote">Why are you supporting Julio? <span class="en-opt">(optional)</span></label>
-          <textarea id="quote" rows="3" maxlength="300"></textarea>
-          <label class="en-check"><input type="checkbox" id="quoteOk"> <span>The campaign may share my words with my name.</span></label>
-        </div>
-
         <div class="en-sign">
           <div class="en-sign-head"><label for="sigPad">Sign here</label><button type="button" id="sigClear" class="en-link">Clear</button></div>
           <canvas id="sigPad" aria-label="Signature pad: draw your signature"></canvas>
@@ -152,7 +139,7 @@
             <label for="sigTyped">Type your full name to confirm your signature</label>
             <input id="sigTyped" type="text" maxlength="120" autocomplete="off">
           </div>
-          <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature.</p>
+          <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature. The campaign may list my name (and title, if given) publicly as an endorser.</p>
         </div>
 
         <p class="en-fine" id="consentText">By signing, you agree that the Julio Guzman for Mayor campaign may contact you about your endorsement and campaign updates by email, text message and phone, using the information you provided. Message and data rates may apply. Reply STOP to stop texts; you can opt out of any channel at any time. You can change or withdraw your endorsement at any time by emailing info@julioformayor.com. Details in our <a href="privacy.html">Privacy Policy</a>.</p>
@@ -211,7 +198,7 @@
 (() => {
   const SB_URL = 'https://jngtuihzliqvfmfkjapp.supabase.co';
   const SB_KEY = 'sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk';
-  const STATEMENT_VERSION = 'endorse_v1_2026-11-13';
+  const STATEMENT_VERSION = 'endorse_v2_2026-11-13';
   const CONSENT_VERSION = 'endorse_contact_v1_2026-11-13';
   const $ = id => document.getElementById(id);
   const T = (s, v) => { let r = (window.JG_I18N && window.JG_I18N.t) ? window.JG_I18N.t(s) : s; if (v) Object.keys(v).forEach(k => { r = r.split('{' + k + '}').join(v[k]); }); return r; };
@@ -266,19 +253,18 @@
   $('endorseForm').addEventListener('submit', async e => {
     e.preventDefault(); $('err').textContent = '';
     const name = clean($('fullName').value), email = clean($('email').value);
-    const listing = (document.querySelector('input[name=listing]:checked') || {}).value;
+    const listing = clean($('titleOrg').value) ? 'name_title' : 'name';
     if (name.length < 3 || !name.includes(' ')) return fail('invalid_name');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('invalid_email');
     const phone = $('phone').value.replace(/\D/g, '').slice(-10);
     if ($('phone').value.trim() && phone.length !== 10) return fail('invalid_phone');
-    if (!listing) return fail('invalid_listing');
     if (ink < 40) return fail('invalid_signature');
     if (clean($('sigTyped').value).toLowerCase() !== name.toLowerCase()) return fail('signature_mismatch');
 
     const statement = clean(document.querySelector('#endorseForm .en-statement').textContent);
     const payload = {
       full_name: name, email, phone, city: clean($('city').value), title_org: clean($('titleOrg').value),
-      public_listing: listing, quote: clean($('quote').value), quote_ok: $('quoteOk').checked && !!clean($('quote').value),
+      public_listing: listing, quote: null, quote_ok: false,
       statement_text: statement, statement_version: STATEMENT_VERSION,
       signature_typed: clean($('sigTyped').value), signature_png: signaturePng(),
       esign_text: clean($('esignText').textContent),
