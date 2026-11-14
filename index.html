@@ -363,7 +363,15 @@
       border-radius: 8px;
       padding: 28px;
       border-left: 4px solid #f5a623;
+      display: flex;
+      flex-direction: column;
     }
+    .issue-card .read-more { margin-top: auto; align-self: flex-start; }
+    .issue-top { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+    .issue-num { font-size: 28px; font-weight: 900; color: #f5a623; line-height: 1; }
+    .issue-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+    .issue-card .issue-proof { color: #f5a623; font-weight: 700; }
+    @media (min-width: 1101px) { .issues-grid { grid-template-columns: repeat(3, 1fr); } }
     .issue-card h3 {
       font-size: 18px;
       font-weight: 700;
@@ -693,46 +701,48 @@
   <p style="color:rgba(255,255,255,0.65);font-size:16px;max-width:620px;margin-bottom:40px;line-height:1.6;">
     Here are the issues Julio will bring to the Council table and pursue with residents, the city manager, and regional partners.
   </p>
-  <div class="issues-grid" style="grid-template-columns:repeat(2,1fr)">
+  <div class="issues-grid">
 
     <div class="issue-card">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase">Issue #1: Critical Priority</div>
+      <div class="issue-top"><span class="issue-num">01</span><span class="issue-tag">Permits &amp; City Services</span></div>
       <h3>Faster Permits, Better City Services</h3>
       <p>Applicants need a clearer process, reliable status updates, and timely decisions. Julio will seek public reporting on permit timelines and practical improvements to city services.</p>
-      <p style="color:#f5a623;font-weight:700;">As Chair of the Homestead Business Development Task Force, Julio is already working on it.</p>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:12px;">See how Julio would work with the Council and city manager on permitting.</p>
+      <p class="issue-proof">As Chair of the Homestead Business Development Task Force, Julio is already working on it.</p>
       <a href="plan.html#permitting" class="read-more">Full Plan &rsaquo;</a>
     </div>
 
     <div class="issue-card">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase">Issue #2: Critical Priority</div>
+      <div class="issue-top"><span class="issue-num">02</span><span class="issue-tag">Safety</span></div>
       <h3>Public Safety</h3>
       <p>Every family deserves to feel safe. Julio will support professional policing, community trust, and youth programs through the Council's policy and budget process.</p>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:12px;">See Julio's public safety priorities.</p>
       <a href="plan.html#safety" class="read-more">Full Plan &rsaquo;</a>
     </div>
 
     <div class="issue-card">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase">Issue #3: High Priority</div>
+      <div class="issue-top"><span class="issue-num">03</span><span class="issue-tag">Infrastructure</span></div>
       <h3>Traffic &amp; Transportation</h3>
       <p>Traffic affects daily life across Homestead. Julio will advocate with FDOT and Miami-Dade County while supporting practical safety and mobility projects within the city.</p>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:12px;">See Julio's transportation priorities.</p>
       <a href="plan.html#traffic" class="read-more">Full Plan &rsaquo;</a>
     </div>
 
     <div class="issue-card">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase">Issue #4: High Priority</div>
+      <div class="issue-top"><span class="issue-num">04</span><span class="issue-tag">Economy</span></div>
       <h3>Economic Development &amp; Downtown</h3>
       <p>A stronger downtown can support local jobs and businesses. Julio will bring ideas to the Council and redevelopment partners, then track what those efforts deliver.</p>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:12px;">See Julio's downtown and economic development priorities.</p>
       <a href="plan.html#downtown" class="read-more">Full Plan &rsaquo;</a>
     </div>
 
-    <div class="issue-card" style="grid-column:1/-1;max-width:600px;margin:0 auto">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase">Issue #5: High Priority</div>
+    <div class="issue-card">
+      <div class="issue-top"><span class="issue-num">05</span><span class="issue-tag">Opportunity</span></div>
+      <h3>Jobs &amp; Workforce Development</h3>
+      <p>Homestead residents should have more opportunities to build a career close to home. Julio will connect employers, schools, and workforce organizations around the skills local jobs require.</p>
+      <a href="plan.html#jobs" class="read-more">Full Plan &rsaquo;</a>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-top"><span class="issue-num">06</span><span class="issue-tag">Housing</span></div>
       <h3>Housing Affordability</h3>
       <p>Housing costs are putting pressure on longtime residents and young families. Julio will support more housing choices and seek funding partners for homes working people can afford.</p>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:12px;">See Julio's housing priorities and the steps that require Council action.</p>
       <a href="plan.html#housing" class="read-more">Full Plan &rsaquo;</a>
     </div>
 

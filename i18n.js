@@ -139,7 +139,7 @@
 
   function load(code) {
     if (code === 'en') { dict = {}; return Promise.resolve(); }
-    return fetch('i18n/' + code + '.json?v=2026-11-13f', { cache: 'force-cache' })
+    return fetch('i18n/' + code + '.json?v=2026-11-13g', { cache: 'force-cache' })
       .then(function (r) { return r.ok ? r.json() : {}; })
       .then(function (d) { dict = d || {}; })
       .catch(function () { dict = {}; });
