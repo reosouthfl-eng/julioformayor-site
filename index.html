@@ -372,6 +372,14 @@
     .issue-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
     .issue-card .issue-proof { color: #f5a623; font-weight: 700; }
     @media (min-width: 1101px) { .issues-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px) {
+      .issues-grid { gap: 12px !important; margin-top: 24px !important; }
+      .issue-card { padding: 18px 18px 16px !important; }
+      .issue-top { margin-bottom: 6px; }
+      .issue-num { font-size: 22px; }
+      .issue-card h3 { font-size: 17px; margin-bottom: 6px; }
+      .issue-card p { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+    }
     .issue-card h3 {
       font-size: 18px;
       font-weight: 700;
