@@ -17,6 +17,9 @@
   <meta name="twitter:image" content="https://julioformayor.com/images/endorse-share.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 <title>Endorse Julio Guzman for Mayor | Official Endorsement Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" />
   <link rel="stylesheet" href="shared.css" />
   <style>
     .en-wrap{max-width:760px;margin:0 auto}
@@ -47,9 +50,11 @@
     .en-sign{margin-top:18px;border-top:1px dashed #c9d1de;padding-top:6px}
     .en-sign-head{display:flex;justify-content:space-between;align-items:center}
     .en-link{background:none;border:none;color:#1b3a6e;text-decoration:underline;cursor:pointer;font-size:14px}
-    #sigPad{display:block;width:100%;height:170px;border:2px dashed #9aa9c2;border-radius:8px;background:#fffdf7;touch-action:none;cursor:crosshair}
-    .en-sign-line{position:relative;margin:-48px 18px 30px;border-bottom:1px solid #9aa9c2;height:18px;pointer-events:none}
-    .en-sign-line span{position:absolute;left:0;bottom:2px;color:#9aa9c2;font-size:14px}
+    .en-sigbox{position:relative;height:120px;border:2px dashed #9aa9c2;border-radius:8px;background:#fffdf7;display:flex;align-items:center;padding:0 22px 14px 44px;overflow:hidden}
+    .en-sigbox::after{content:"";position:absolute;left:18px;right:18px;bottom:28px;border-bottom:1px solid #9aa9c2}
+    .en-sigbox::before{content:"\2715";position:absolute;left:18px;bottom:32px;color:#9aa9c2;font-size:14px}
+    #sigPreview{font-family:'Dancing Script',cursive;font-weight:600;font-size:42px;color:#0d2147;line-height:1;white-space:nowrap;position:relative;z-index:1}
+    #sigPreview.empty{font-family:inherit;font-size:15px;font-weight:400;color:#9aa9c2}
     .en-submit{width:100%;margin-top:18px}
     .en-err{color:#b42318;font-weight:600;margin-top:10px;font-size:15px}
     .en-done{width:58px;height:58px;border-radius:50%;background:#16a34a;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
@@ -101,7 +106,7 @@
         <div class="en-band-sub">Official Endorsement Card</div>
       </div>
       <div class="en-body">
-        <p class="en-lede">Thank you for standing with Julio. Fill in your information and sign with your finger or mouse. It takes about a minute, and you will get a receipt right away.</p>
+        <p class="en-lede">Thank you for standing with Julio. Enter your name and email, and your name becomes your signature. It takes less than a minute, and you will get a receipt right away.</p>
 
         <div class="en-statement" aria-live="polite">
           <span>I,</span> <strong id="stmtName">[your name]</strong><span>, endorse Julio Guzman for Mayor of the City of Homestead in the 2027 municipal election.</span>
@@ -109,20 +114,12 @@
 
         <div class="en-grid">
           <div class="en-field en-span2">
-            <label for="fullName">Full name</label>
+            <label for="fullName">Full name <span class="en-opt">(this becomes your signature)</span></label>
             <input id="fullName" type="text" autocomplete="name" required maxlength="120">
           </div>
           <div class="en-field">
             <label for="email">Email <span class="en-opt">(for your receipt)</span></label>
             <input id="email" type="email" autocomplete="email" inputmode="email" required maxlength="200">
-          </div>
-          <div class="en-field">
-            <label for="phone">Mobile phone <span class="en-opt">(optional)</span></label>
-            <input id="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20">
-          </div>
-          <div class="en-field">
-            <label for="city">City or neighborhood</label>
-            <input id="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="Homestead">
           </div>
           <div class="en-field">
             <label for="titleOrg">Title or organization <span class="en-opt">(optional)</span></label>
@@ -132,17 +129,12 @@
         <p class="en-fine">A title or organization is shown for identification only. It does not mean that organization endorses Julio unless it has authorized it.</p>
 
         <div class="en-sign">
-          <div class="en-sign-head"><label for="sigPad">Sign here</label><button type="button" id="sigClear" class="en-link">Clear</button></div>
-          <canvas id="sigPad" aria-label="Signature pad: draw your signature"></canvas>
-          <div class="en-sign-line"><span>&#10005;</span></div>
-          <div class="en-field">
-            <label for="sigTyped">Type your full name to confirm your signature</label>
-            <input id="sigTyped" type="text" maxlength="120" autocomplete="off">
-          </div>
+          <div class="en-sign-head"><label>Your signature</label></div>
+          <div class="en-sigbox" aria-live="polite"><div id="sigPreview" class="empty">Type your full name above to create your signature</div></div>
           <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature. The campaign may list my name (and title, if given) publicly as an endorser.</p>
         </div>
 
-        <p class="en-fine" id="consentText">By signing, you agree that the Julio Guzman for Mayor campaign may contact you about your endorsement and campaign updates by email, text message and phone, using the information you provided. Message and data rates may apply. Reply STOP to stop texts; you can opt out of any channel at any time. You can change or withdraw your endorsement at any time by emailing info@julioformayor.com. Details in our <a href="privacy.html">Privacy Policy</a>.</p>
+        <p class="en-fine" id="consentText">By signing, you agree that the Julio Guzman for Mayor campaign may email you about your endorsement and campaign updates. You can unsubscribe at any time. You can change or withdraw your endorsement at any time by emailing info@julioformayor.com. Details in our <a href="privacy.html">Privacy Policy</a>.</p>
 
         <button type="submit" id="submitBtn" class="btn-primary en-submit">Sign my endorsement</button>
         <p id="err" class="en-err" role="alert"></p>
@@ -198,8 +190,8 @@
 (() => {
   const SB_URL = 'https://jngtuihzliqvfmfkjapp.supabase.co';
   const SB_KEY = 'sb_publishable_-FEW-wNxEmcU7_fJGlhm8A_ffYkakgk';
-  const STATEMENT_VERSION = 'endorse_v2_2026-11-13';
-  const CONSENT_VERSION = 'endorse_contact_v1_2026-11-13';
+  const STATEMENT_VERSION = 'endorse_v3_2026-11-17';
+  const CONSENT_VERSION = 'endorse_contact_v2_2026-11-17';
   const $ = id => document.getElementById(id);
   const T = (s, v) => { let r = (window.JG_I18N && window.JG_I18N.t) ? window.JG_I18N.t(s) : s; if (v) Object.keys(v).forEach(k => { r = r.split('{' + k + '}').join(v[k]); }); return r; };
   const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
@@ -211,31 +203,24 @@
 
   function updateStatement() { $('stmtName').textContent = clean($('fullName').value) || T('[your name]'); }
   $('fullName').addEventListener('input', updateStatement); updateStatement();
-  document.addEventListener('jg:langchange', () => setTimeout(() => { updateStatement(); if (lastReceipt) showReceipt(lastReceipt); }, 400));
+  document.addEventListener('jg:langchange', () => setTimeout(() => { updateStatement(); if (typeof updateSignature === 'function') updateSignature(); if (lastReceipt) showReceipt(lastReceipt); }, 400));
 
-  // ---- Signature pad ----
-  const pad = $('sigPad'); const ctx = pad.getContext('2d');
-  let drawing = false, ink = 0, last = null;
-  function sizePad() {
-    const r = pad.getBoundingClientRect(), dpr = Math.max(window.devicePixelRatio || 1, 1);
-    const keep = ink ? pad.toDataURL() : null;
-    pad.width = Math.round(r.width * dpr); pad.height = Math.round(r.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0d2147';
-    if (keep) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = keep; }
+  // ---- Typed signature: the full name is shown in a handwriting font and saved as an image ----
+  const SIG_FONT = "600 64px 'Dancing Script', cursive";
+  function updateSignature() {
+    const n = clean($('fullName').value), el = $('sigPreview');
+    if (n) { el.textContent = n; el.classList.remove('empty'); el.style.fontSize = n.length > 24 ? '28px' : (n.length > 16 ? '34px' : '42px'); }
+    else { el.textContent = T('Type your full name above to create your signature'); el.classList.add('empty'); el.style.fontSize = ''; }
   }
-  sizePad(); window.addEventListener('resize', sizePad);
-  const pos = e => { const r = pad.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
-  pad.addEventListener('pointerdown', e => { drawing = true; last = pos(e); pad.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x, last.y, 1.1, 0, Math.PI * 2); ctx.fillStyle = '#0d2147'; ctx.fill(); e.preventDefault(); });
-  pad.addEventListener('pointermove', e => { if (!drawing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); ink += Math.hypot(p.x - last.x, p.y - last.y); last = p; e.preventDefault(); });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => pad.addEventListener(t, () => { drawing = false; }));
-  $('sigClear').addEventListener('click', () => { ctx.clearRect(0, 0, pad.width, pad.height); ink = 0; });
-
-  function signaturePng() {
-    // Export on a white background, scaled to a compact size for storage and the receipt.
-    const r = pad.getBoundingClientRect(), w = 600, h = Math.round(600 * r.height / r.width);
-    const c = document.createElement('canvas'); c.width = w; c.height = h;
-    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(pad, 0, 0, w, h);
+  $('fullName').addEventListener('input', updateSignature); updateSignature();
+  async function signaturePng(name) {
+    try { await document.fonts.load(SIG_FONT, name); } catch (e) {}
+    const w = 600, h = 170, c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h);
+    let size = 64; x.font = SIG_FONT;
+    while (x.measureText(name).width > w - 60 && size > 24) { size -= 2; x.font = "600 " + size + "px 'Dancing Script', cursive"; }
+    x.strokeStyle = '#9aa9c2'; x.lineWidth = 1; x.beginPath(); x.moveTo(24, h - 34); x.lineTo(w - 24, h - 34); x.stroke();
+    x.fillStyle = '#0d2147'; x.textBaseline = 'alphabetic'; x.fillText(name, 30, h - 44);
     return c.toDataURL('image/png');
   }
 
@@ -243,10 +228,9 @@
   const ERR = {
     invalid_name: 'Please enter your first and last name.',
     invalid_email: 'Please enter a valid email address so we can send your receipt.',
-    invalid_phone: 'Please enter a 10-digit phone number, or leave it blank.',
     invalid_listing: 'Please choose how we may use your name.',
-    signature_mismatch: 'Please type your full name exactly as entered above to confirm your signature.',
-    invalid_signature: 'Please sign in the box above.',
+    signature_mismatch: 'Please check your full name and try again.',
+    invalid_signature: 'We could not create your signature. Please check your name and try again.',
   };
   function fail(code) { $('err').textContent = T(ERR[code] || 'Something went wrong. Please try again, or email info@julioformayor.com.'); }
 
@@ -256,17 +240,13 @@
     const listing = clean($('titleOrg').value) ? 'name_title' : 'name';
     if (name.length < 3 || !name.includes(' ')) return fail('invalid_name');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('invalid_email');
-    const phone = $('phone').value.replace(/\D/g, '').slice(-10);
-    if ($('phone').value.trim() && phone.length !== 10) return fail('invalid_phone');
-    if (ink < 40) return fail('invalid_signature');
-    if (clean($('sigTyped').value).toLowerCase() !== name.toLowerCase()) return fail('signature_mismatch');
 
     const statement = clean(document.querySelector('#endorseForm .en-statement').textContent);
     const payload = {
-      full_name: name, email, phone, city: clean($('city').value), title_org: clean($('titleOrg').value),
+      full_name: name, email, phone: '', city: null, title_org: clean($('titleOrg').value),
       public_listing: listing, quote: null, quote_ok: false,
       statement_text: statement, statement_version: STATEMENT_VERSION,
-      signature_typed: clean($('sigTyped').value), signature_png: signaturePng(),
+      signature_typed: name, signature_png: await signaturePng(name),
       esign_text: clean($('esignText').textContent),
       consent_text: clean($('consentText').textContent), consent_version: CONSENT_VERSION,
       language: (window.JG_I18N && window.JG_I18N.lang) || 'en', source: 'web:endorse' + (ref ? ':' + ref : ''), page: location.pathname
