@@ -53,8 +53,10 @@
     .en-sigbox{position:relative;height:120px;border:2px dashed #9aa9c2;border-radius:8px;background:#fffdf7;display:flex;align-items:center;padding:0 22px 14px 44px;overflow:hidden}
     .en-sigbox::after{content:"";position:absolute;left:18px;right:18px;bottom:28px;border-bottom:1px solid #9aa9c2}
     .en-sigbox::before{content:"\2715";position:absolute;left:18px;bottom:32px;color:#9aa9c2;font-size:14px}
-    #sigPreview{font-family:'Dancing Script',cursive;font-weight:600;font-size:42px;color:#0d2147;line-height:1;white-space:nowrap;position:relative;z-index:1}
-    #sigPreview.empty{font-family:inherit;font-size:15px;font-weight:400;color:#9aa9c2}
+    .en-sigbox{cursor:text}
+    .en-sigbox:focus-within{border-color:#1b3a6e;border-style:solid}
+    #fullName{font-family:'Dancing Script',cursive;font-weight:600;font-size:42px;color:#0d2147;line-height:1.2;width:100%;border:none;outline:none;background:transparent;padding:0;position:relative;z-index:1}
+    #fullName::placeholder{font-family:inherit;font-size:16px;font-weight:400;color:#8a97ad;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
     .en-submit{width:100%;margin-top:18px}
     .en-err{color:#b42318;font-weight:600;margin-top:10px;font-size:15px}
     .en-done{width:58px;height:58px;border-radius:50%;background:#16a34a;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
@@ -106,32 +108,21 @@
         <div class="en-band-sub">Official Endorsement Card</div>
       </div>
       <div class="en-body">
-        <p class="en-lede">Thank you for standing with Julio. Enter your name and email, and your name becomes your signature. It takes less than a minute, and you will get a receipt right away.</p>
+        <p class="en-lede">Thank you for standing with Julio. Enter your email, then sign by typing your full name in the signature box. It takes less than a minute, and you will get a receipt right away.</p>
 
         <div class="en-statement" aria-live="polite">
           <span>I,</span> <strong id="stmtName">[your name]</strong><span>, endorse Julio Guzman for Mayor of the City of Homestead in the 2027 municipal election.</span>
         </div>
 
-        <div class="en-grid">
-          <div class="en-field en-span2">
-            <label for="fullName">Full name <span class="en-opt">(this becomes your signature)</span></label>
-            <input id="fullName" type="text" autocomplete="name" required maxlength="120">
-          </div>
-          <div class="en-field">
-            <label for="email">Email <span class="en-opt">(for your receipt)</span></label>
-            <input id="email" type="email" autocomplete="email" inputmode="email" required maxlength="200">
-          </div>
-          <div class="en-field">
-            <label for="titleOrg">Title or organization <span class="en-opt">(optional)</span></label>
-            <input id="titleOrg" type="text" maxlength="160" placeholder="e.g. Small business owner, Pastor, Retired teacher">
-          </div>
+        <div class="en-field">
+          <label for="email">Email <span class="en-opt">(for your receipt)</span></label>
+          <input id="email" type="email" autocomplete="email" inputmode="email" required maxlength="200">
         </div>
-        <p class="en-fine">A title or organization is shown for identification only. It does not mean that organization endorses Julio unless it has authorized it.</p>
 
         <div class="en-sign">
-          <div class="en-sign-head"><label>Your signature</label></div>
-          <div class="en-sigbox" aria-live="polite"><div id="sigPreview" class="empty">Type your full name above to create your signature</div></div>
-          <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature. The campaign may list my name (and title, if given) publicly as an endorser.</p>
+          <div class="en-sign-head"><label for="fullName">Sign here</label></div>
+          <div class="en-sigbox" id="sigBox"><input id="fullName" type="text" autocomplete="name" required maxlength="120" placeholder="Tap here and type your full name to sign" aria-label="Type your full name to sign"></div>
+          <p class="en-fine" id="esignText">By signing, I confirm the information above is true, that I am endorsing of my own free will, and that my electronic signature has the same legal effect as my handwritten signature. The campaign may list my name publicly as an endorser.</p>
         </div>
 
         <p class="en-fine" id="consentText">By signing, you agree that the Julio Guzman for Mayor campaign may email you about your endorsement and campaign updates. You can unsubscribe at any time. You can change or withdraw your endorsement at any time by emailing info@julioformayor.com. Details in our <a href="privacy.html">Privacy Policy</a>.</p>
@@ -203,16 +194,13 @@
 
   function updateStatement() { $('stmtName').textContent = clean($('fullName').value) || T('[your name]'); }
   $('fullName').addEventListener('input', updateStatement); updateStatement();
-  document.addEventListener('jg:langchange', () => setTimeout(() => { updateStatement(); if (typeof updateSignature === 'function') updateSignature(); if (lastReceipt) showReceipt(lastReceipt); }, 400));
+  document.addEventListener('jg:langchange', () => setTimeout(() => { updateStatement(); if (lastReceipt) showReceipt(lastReceipt); }, 400));
 
-  // ---- Typed signature: the full name is shown in a handwriting font and saved as an image ----
+  // ---- Typed signature: the signature box is the name field, shown in a handwriting font ----
   const SIG_FONT = "600 64px 'Dancing Script', cursive";
-  function updateSignature() {
-    const n = clean($('fullName').value), el = $('sigPreview');
-    if (n) { el.textContent = n; el.classList.remove('empty'); el.style.fontSize = n.length > 24 ? '28px' : (n.length > 16 ? '34px' : '42px'); }
-    else { el.textContent = T('Type your full name above to create your signature'); el.classList.add('empty'); el.style.fontSize = ''; }
-  }
-  $('fullName').addEventListener('input', updateSignature); updateSignature();
+  function sizeSignature() { const n = $('fullName').value.length; $('fullName').style.fontSize = n > 24 ? '28px' : (n > 16 ? '34px' : '42px'); }
+  $('fullName').addEventListener('input', sizeSignature); sizeSignature();
+  $('sigBox').addEventListener('click', () => $('fullName').focus());
   async function signaturePng(name) {
     try { await document.fonts.load(SIG_FONT, name); } catch (e) {}
     const w = 600, h = 170, c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -237,13 +225,13 @@
   $('endorseForm').addEventListener('submit', async e => {
     e.preventDefault(); $('err').textContent = '';
     const name = clean($('fullName').value), email = clean($('email').value);
-    const listing = clean($('titleOrg').value) ? 'name_title' : 'name';
+    const listing = 'name';
     if (name.length < 3 || !name.includes(' ')) return fail('invalid_name');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('invalid_email');
 
     const statement = clean(document.querySelector('#endorseForm .en-statement').textContent);
     const payload = {
-      full_name: name, email, phone: '', city: null, title_org: clean($('titleOrg').value),
+      full_name: name, email, phone: '', city: null, title_org: null,
       public_listing: listing, quote: null, quote_ok: false,
       statement_text: statement, statement_version: STATEMENT_VERSION,
       signature_typed: name, signature_png: await signaturePng(name),
