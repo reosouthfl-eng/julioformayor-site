@@ -168,3 +168,8 @@ body { overflow-wrap: break-word; }
 
 /* Footer phone and email: full white so they are easy to read on the navy footer */
 .footer-brand p.footer-phone { color: #fff !important; }
+.footer-brand p.footer-phone a,
+.footer-brand p.footer-phone a[href^="tel"],
+footer a[href^="tel"],
+footer a[x-apple-data-detectors] { color: #fff !important; text-decoration: none !important; }
+.footer-brand p.footer-phone a:hover { text-decoration: underline !important; }
