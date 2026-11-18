@@ -165,3 +165,6 @@ body { overflow-wrap: break-word; }
   .hero { padding: 64px 40px 48px !important; gap: 32px !important; }
   .hero-photo { margin: -64px -40px -48px -10px !important; }
 }
+
+/* Footer phone and email: full white so they are easy to read on the navy footer */
+.footer-brand p.footer-phone { color: #fff !important; }
